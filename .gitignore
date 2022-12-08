@@ -12,3 +12,10 @@ web-build/
 
 # macOS
 .DS_Store
+
+# Custom
+/node_modules/
+/__tests__/
+/package-lock.json
+.idea
+.vscode
