@@ -8,6 +8,7 @@ class DBManager {
         UtilityStorageManager.getProfileUid().then((uid) => {
             DBManager.db = SQLite.openDatabase("Twit-tok-db");
             // TODO: Controllare se sensibile a sql-injection (non utile per il momento perchè non sono previsti input dell'utente in questo codice).
+            // TODO: Rimietti i nomi nel DB
             const profile_table = "CREATE TABLE IF NOT EXISTS Profile(uid INTEGER PRIMARY KEY, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000), pversion SMALLINT, FOREIGN KEY(uid) REFERENCES Followed_users(followed));";
             const followed_user_table = "CREATE TABLE IF NOT EXISTS Followed_users(uid INTEGER PRIMARY KEY, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000) NOT NULL, pversion SMALLINT NOT NULL, follower INTEGER NOT NULL);";
             const profile_trigger = "CREATE TRIGGER unique_profile BEFORE INSERT ON Profile FOR EACH ROW BEGIN SELECT RAISE(ABORT, \"User already exists\") FROM Profile WHERE uid <> " + uid + "; END;";
