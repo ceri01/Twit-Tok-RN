@@ -22,7 +22,7 @@ class EditXAlignButton extends Component {
         }
     }
 
-    handleAlignament() {
+    handleAlignment() {
         if (this.state.alignX < 2) {
             this.state.alignX++;
         } else {
@@ -34,8 +34,9 @@ class EditXAlignButton extends Component {
         return (
             <View style={styles.container}>
                 <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.handleAlignament();
+                    this.handleAlignment();
                     this.handleIcon();
+                    this.forceUpdate();
                     this.props.onPress(this.state.alignX);
                 }}>
                     <View style={styles.button}>
@@ -47,15 +48,14 @@ class EditXAlignButton extends Component {
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
+        alignItems: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "#6200ee",
         padding: 10,
         height: 50,
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
         borderRadius: 100
     }
 });
+
 
 
 export default EditXAlignButton;

@@ -1,4 +1,4 @@
-import Icon from "react-native-vector-icons/FontAwesome"
+ import Icon from "react-native-vector-icons/FontAwesome"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
 import {Component} from "react";
 
@@ -41,25 +41,24 @@ class FontTypeButton extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        justifyContent: "center",
-        paddingHorizontal: 10,
-        paddingVertical: 10
-    },
-    button: {
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#6200ee",
-        padding: 10,
-        height: 50,
-        width: 50,
-        borderRadius: 100
-    },
-    touchableHighlight: {
-        borderRadius: 100
-    }
-});
+
+ const styles = StyleSheet.create({
+     container: {
+         alignItems: "center",
+         paddingHorizontal: 10,
+         paddingVertical: 10
+     },
+     button: {
+         backgroundColor: "#6200ee",
+         padding: 10,
+         height: 50,
+         width: 50,
+         borderRadius: 100
+     },
+     touchableHighlight: {
+         borderRadius: 100
+     }
+ });
 
 
 export default FontTypeButton;

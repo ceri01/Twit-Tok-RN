@@ -4,25 +4,26 @@ import {Component} from "react";
 
 class EditYAlignButton extends Component {
     state = {
-        alignY: 1
+        alignY: 1,
+        icon: <Icon name="format-align-middle" size={30} color="white"></Icon>
     }
-    icon = <Icon name="format-align-middle" size={30} color="white"></Icon>
+
 
     handleIcon() {
         switch (this.state.alignY) {
             case 1:
-                this.icon = <Icon name="format-align-middle" size={30} color="white"></Icon>
+                this.state.icon = <Icon name="format-align-middle" size={30} color="white"></Icon>
                 break;
             case 2:
-                this.icon = <Icon name="format-align-bottom" size={30} color="white"></Icon>
+                this.state.icon = <Icon name="format-align-bottom" size={30} color="white"></Icon>
                 break;
             default:
-                this.icon = <Icon name="format-align-top" size={30} color="white"></Icon>
-                break
+                this.state.icon = <Icon name="format-align-top" size={30} color="white"></Icon>
+                break;
         }
     }
 
-    handleAlignament() {
+    handleAlignment() {
         if (this.state.alignY < 2) {
             this.state.alignY++;
         } else {
@@ -34,12 +35,14 @@ class EditYAlignButton extends Component {
         return (
             <View style={styles.container}>
                 <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.handleAlignament();
+                    this.handleAlignment();
                     this.handleIcon();
+                    this.forceUpdate();
+                    console.log(this.state.icon)
                     this.props.onPress(this.state.alignY);
                 }}>
                     <View style={styles.button}>
-                        {this.icon}
+                        {this.state.icon}
                     </View>
                 </TouchableHighlight>
             </View>
@@ -49,13 +52,11 @@ class EditYAlignButton extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
+        alignItems: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "#6200ee",
         padding: 10,
         height: 50,

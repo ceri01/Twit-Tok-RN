@@ -29,7 +29,8 @@ class FollowUnfollowButton extends Component {
         return (
             <View style={styles.container}>
                 <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.changeState()
+                    this.changeState();
+                    this.forceUpdate();
                     this.props.onPress(this.state.contentToShow)
                 }}>
                     <View style={styles.button}>
@@ -43,15 +44,15 @@ class FollowUnfollowButton extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: 10,
         paddingVertical: 10,
+        height: 60,
+        width: 120
     },
     button: {
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "#6200ee",
-        paddingHorizontal: 15,
         padding: 10,
         borderRadius: 5
     },
@@ -63,6 +64,5 @@ const styles = StyleSheet.create({
         fontSize: 19
     }
 });
-
 
 export default FollowUnfollowButton;

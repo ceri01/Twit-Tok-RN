@@ -34,13 +34,11 @@ class FontSize extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
+        alignItems: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: "#6200ee",
         padding: 10,
         height: 50,
@@ -51,6 +49,7 @@ const styles = StyleSheet.create({
         borderRadius: 100
     }
 });
+
 
 
 export default FontSize;
