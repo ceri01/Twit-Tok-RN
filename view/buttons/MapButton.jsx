@@ -2,7 +2,7 @@ import Icon from "react-native-vector-icons/FontAwesome5"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
 import {Component} from "react";
 
-class FontSize extends Component {
+class MapButton extends Component {
     icon = <Icon name="map-marked-alt" size={30} color="white"></Icon>
 
     render() {
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default FontSize;
+export default MapButton;
