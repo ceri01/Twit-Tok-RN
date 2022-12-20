@@ -2,7 +2,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
 import {Component} from "react";
 
-class EditYAlignButton extends Component {
+class FontSize extends Component {
     state = {
         size: 1
     }
@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default EditYAlignButton;
+export default FontSize;
