@@ -9,6 +9,7 @@ class FollowUnfollowButton extends Component {
 
     constructor(props) {
         super(props)
+        this.state.follow = this.props.follow;
         if(this.props.follow === true) {
             this.state.contentToShow = <Icon name="user-unfollow" color="white" size={20}></Icon>
         } else {
