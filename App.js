@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import UserProfile from "./view/UserProfile";
+import UserProfile from "./view/Profile";
 import AddTwok from "./view/AddTwok";
 import Wall from "./view/Wall";
 import Icon from "react-native-vector-icons/FontAwesome";

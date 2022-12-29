@@ -4,19 +4,24 @@ import {StyleSheet, Text, View, StatusBar, SafeAreaView} from "react-native";
 class Wall extends Component{
     render() {
         return (
-            <SafeAreaView style={style.container}>
-                <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
-                <Text>Bacheca</Text>
+            <SafeAreaView style={style.safeViewArea}>
+                <StatusBar barStyle="light-content" backgroundColor="#6200ee" />
+                <View style={style.container}>
+                    <Text>Bacheca</Text>
+                </View>
             </SafeAreaView>
         );
     }
 }
 
 const style = StyleSheet.create({
+    safeViewArea : {
+        flex: 1,
+    },
     container: {
         flex: 1,
-        alignItems: "flex-end",
-        justifyContent: "flex-end",
+        alignItems: "center",
+        justifyContent: "center",
     }
 });
 
