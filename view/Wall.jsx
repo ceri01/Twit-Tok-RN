@@ -1,27 +1,49 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, StatusBar, SafeAreaView} from "react-native";
+import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar} from "react-native";
+import TwokRow from "./twok/TwokRow";
 
-class Wall extends Component{
+const DATA = [
+    {tid: 1, text: "Ciao"},
+    {tid: 2, text: "Come"},
+    {tid: 3, text: "Stai"},
+    {tid: 4, text: "Che schifo"},
+    {tid: 5, text: "kaffee"},
+    {tid: 6, text: "TestTest"},
+];
+
+// TODO: Sistemare la parte di viewmodel per prendere i dati correttamente
+
+class Wall extends Component {
     render() {
         return (
             <SafeAreaView style={style.safeViewArea}>
-                <StatusBar barStyle="light-content" backgroundColor="#6200ee" />
-                <View style={style.container}>
-                    <Text>Bacheca</Text>
-                </View>
+                <FlatList
+                    style={style.listStyle}
+                    data={DATA}
+                    renderItem={(twok) => {
+                        return <TwokRow data={twok.item}/>
+                    }}
+                    keyExtractor={(twok) => twok.tid}
+                    snapToInterval={Dimensions.get('window').height - StatusBar.currentHeight - 110} // 110 is dimension of navigation bar
+                    snapToAlignment="start"
+                    decelerationRate="fast"
+                    onScrollEndDrag={() => {}} // TODO: Valutare se bosogna fare qualcosa ogni volta che avviene uno scroll
+                />
+                <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
             </SafeAreaView>
         );
     }
 }
 
-const style = StyleSheet.create({
-    safeViewArea : {
+const style = StyleSheet.create({ // TODO: Sistemare i colori in base ai twok da mostrare
+    safeViewArea: {
         flex: 1,
-    },
-    container: {
-        flex: 1,
+        backgroundColor: "yellow",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
+    },
+    listStyle: {
+        width: "100%"
     }
 });
 
