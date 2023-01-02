@@ -3,12 +3,12 @@ import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar} from "react-n
 import TwokRow from "./twok/TwokRow";
 
 const DATA = [
-    {tid: 1, text: "Ciao"},
-    {tid: 2, text: "Come"},
-    {tid: 3, text: "Stai"},
-    {tid: 4, text: "Che schifo"},
-    {tid: 5, text: "kaffee"},
-    {tid: 6, text: "TestTest"},
+    {tid: 1, text: "Ciao", name: "mimmo"},
+    {tid: 2, text: "Come", name: "caloggero"},
+    {tid: 3, text: "Stai", name: "franco"},
+    {tid: 4, text: "Che schifo", name: "guglielmo"},
+    {tid: 5, text: "kaffee", name: "anna"},
+    {tid: 6, text: "TestTest", name: "franco"},
 ];
 
 // TODO: Sistemare la parte di viewmodel per prendere i dati correttamente

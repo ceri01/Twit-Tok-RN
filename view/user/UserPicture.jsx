@@ -1,13 +1,22 @@
 import {Component} from "react";
-import {StyleSheet, View} from "react-native";
-import ImageLoad from "react-native-image-placeholder";
+import {Image, StyleSheet, View} from "react-native";
 
 class UserPicture extends Component {
+
+    pictureDimension() {
+        if (this.props.changePicDimension) {
+            return ({
+                height: 40,
+                width: 40
+            });
+        }
+        return style.img
+    }
     render() {
         return (
             <View style={style.imgContainer}>
-                <ImageLoad
-                    style={style.img}
+                <Image
+                    style={this.pictureDimension()}
                     source={require('../../assets/favicon.png')} />
             </View>
         );
@@ -21,8 +30,8 @@ const style = StyleSheet.create({
         alignItems: "center",
     },
     img: {
-        height: 70,
-        width: 70,
+        height: 50,
+        width: 50,
     }
 });
 
