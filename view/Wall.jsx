@@ -21,9 +21,10 @@ class Wall extends Component {
                     style={style.listStyle}
                     data={DATA}
                     renderItem={(twok) => {
-                        return <TwokRow data={twok.item}/>
+                        return <TwokRow data={twok.item} isInWall={true}/>
                     }}
                     keyExtractor={(twok) => twok.tid}
+                    disableIntervalMomentum={true}
                     snapToInterval={Dimensions.get('window').height - StatusBar.currentHeight - 110} // 110 is dimension of navigation bar
                     snapToAlignment="start"
                     decelerationRate="fast"
