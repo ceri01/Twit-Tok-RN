@@ -1,7 +1,7 @@
 import {LinearGradient} from "expo-linear-gradient"
 import * as React from "react";
-import {Dimensions, StyleSheet} from "react-native"
-import {Gesture, GestureDetector, GestureHandlerRootView} from "react-native-gesture-handler";
+import {Dimensions, StyleSheet, Text, View} from "react-native"
+import {Gesture, GestureDetector, GestureHandlerRootView, PanGestureHandler} from "react-native-gesture-handler";
 import Animated, {
     interpolateColor,
     useAnimatedStyle,
@@ -49,14 +49,11 @@ const EditColorSlider = (props) => {
 
     const tapGestureEvent = Gesture.Tap()
         .onBegin((event) => {
-            translateY.value = withSpring(-24);
-            scale.value = withSpring(1.2);
-            console.log(event.absoluteX)
-            translateX.value = withTiming(event.absoluteX - (SLIDER_WIDTH / 1.8))
+            translateX.value = withTiming(event.absoluteX - (SLIDER_WIDTH / 1.8), {
+                duration: 0,
+            })
         })
         .onFinalize(() => {
-            translateY.value = withSpring(0);
-            scale.value = withSpring(1);
         });
 
     const animatedPickerStyle = useAnimatedStyle(() => {
@@ -74,7 +71,7 @@ const EditColorSlider = (props) => {
         const backgroundColor = interpolateColor(translateX.value, inputRange, COLORS);
         props.onColorChange(backgroundColor);
         return {
-          backgroundColor
+            backgroundColor
         };
     })
 
@@ -96,15 +93,14 @@ const EditColorSlider = (props) => {
             </Animated.View>
         </GestureDetector>
     </GestureHandlerRootView>
-
-
 }
 
 const style = StyleSheet.create({
     gestureContainer: {
-        alignItems: "center",
+        width: SLIDER_WIDTH,
         justifyContent: "center",
-        flex: 1
+        alignItems: "center",
+        backgroundColor: "red"
     },
     gradient: {
         position: "absolute",
@@ -115,12 +111,12 @@ const style = StyleSheet.create({
         borderRadius: 12/2
     },
     picker: {
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: "#abc",
         width: 24,
         height: 24,
         borderRadius: 12,
-        alignItems: "center",
-        justifyContent: "center"
     },
     internalPicker: {
         width: 12,
