@@ -2,11 +2,11 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
 import {Component} from "react";
 
-class FontSize extends Component {
+class FontSizeButton extends Component {
     state = {
         size: 1
     }
-    icon = <Icon name="format-size" size={30} color="white"></Icon>
+    icon = <Icon name="format-size" size={20} color="white"></Icon>
 
     handleTextSize() {
         if (this.state.size < 2) {
@@ -35,14 +35,16 @@ class FontSize extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
+        justifyContent: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: "#6200ee",
-        padding: 10,
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderRadius: 100
     },
     touchableHighlight: {
@@ -52,4 +54,4 @@ const styles = StyleSheet.create({
 
 
 
-export default FontSize;
+export default FontSizeButton;

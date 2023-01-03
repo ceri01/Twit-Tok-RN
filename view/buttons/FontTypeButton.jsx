@@ -7,7 +7,7 @@ class FontTypeButton extends Component {
         type: 0,
         font: "Arial"
     }
-    icon = <Icon name="font" size={30} color="white"></Icon>
+    icon = <Icon name="font" size={20} color="white"></Icon>
 
     handleTextType() {
         switch (this.state.type) {
@@ -45,14 +45,16 @@ class FontTypeButton extends Component {
  const styles = StyleSheet.create({
      container: {
          alignItems: "center",
+         justifyContent: "center",
          paddingHorizontal: 10,
          paddingVertical: 10
      },
      button: {
+         justifyContent: "center",
+         alignItems: "center",
          backgroundColor: "#6200ee",
-         padding: 10,
-         height: 50,
-         width: 50,
+         height: 40,
+         width: 40,
          borderRadius: 100
      },
      touchableHighlight: {

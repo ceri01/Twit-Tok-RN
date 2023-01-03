@@ -6,9 +6,11 @@ class ConfirmButton extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {}}>
+                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
+                    this.props.onConfirm()
+                }}>
                     <View style={styles.button}>
-                        <Icon name="check" size={30} color="white"></Icon>
+                        <Icon name="check" size={20} color="white"></Icon>
                     </View>
                 </TouchableHighlight>
             </View>
@@ -20,14 +22,16 @@ class ConfirmButton extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
+        justifyContent: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
-        backgroundColor: "#6200ee",
-        padding: 10,
-        height: 50,
-        width: 50,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "green",
+        height: 40,
+        width: 40,
         borderRadius: 100
     },
     touchableHighlight: {

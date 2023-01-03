@@ -5,20 +5,20 @@ import {Component} from "react";
 class EditYAlignButton extends Component {
     state = {
         alignY: 1,
-        icon: <Icon name="format-align-middle" size={30} color="white"></Icon>
+        icon: <Icon name="format-align-middle" size={20} color="white"></Icon>
     }
 
 
     handleIcon() {
         switch (this.state.alignY) {
             case 1:
-                this.state.icon = <Icon name="format-align-middle" size={30} color="white"></Icon>
+                this.state.icon = <Icon name="format-align-middle" size={20} color="white"></Icon>
                 break;
             case 2:
-                this.state.icon = <Icon name="format-align-bottom" size={30} color="white"></Icon>
+                this.state.icon = <Icon name="format-align-bottom" size={20} color="white"></Icon>
                 break;
             default:
-                this.state.icon = <Icon name="format-align-top" size={30} color="white"></Icon>
+                this.state.icon = <Icon name="format-align-top" size={20} color="white"></Icon>
                 break;
         }
     }
@@ -52,14 +52,16 @@ class EditYAlignButton extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
+        justifyContent: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: "#6200ee",
-        padding: 10,
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderRadius: 100
     },
     touchableHighlight: {

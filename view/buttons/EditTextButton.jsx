@@ -8,7 +8,7 @@ class EditTextButton extends Component {
             <View style={styles.container}>
                 <TouchableHighlight style={styles.touchableHighlight} onPress={() => {}}>
                     <View style={styles.button}>
-                        <Icon name="format-text" size={30} color="white"></Icon>
+                        <Icon name="format-text" size={20} color="white"></Icon>
                     </View>
                 </TouchableHighlight>
             </View>
@@ -20,14 +20,16 @@ class EditTextButton extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
+        justifyContent: "center",
         paddingHorizontal: 10,
         paddingVertical: 10
     },
     button: {
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: "#6200ee",
-        padding: 10,
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderRadius: 100
     },
     touchableHighlight: {
