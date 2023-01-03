@@ -38,7 +38,6 @@ class EditYAlignButton extends Component {
                     this.handleAlignment();
                     this.handleIcon();
                     this.forceUpdate();
-                    console.log(this.state.icon)
                     this.props.onPress(this.state.alignY);
                 }}>
                     <View style={styles.button}>
