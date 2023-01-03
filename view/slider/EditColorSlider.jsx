@@ -24,7 +24,7 @@ const COLORS = [
 ];
 
 const EditColorSlider = (props) => {
-    const translateX = useSharedValue(-SLIDER_WIDTH);
+    const translateX = useSharedValue(props.start !== undefined ? props.start : -200);
     const translateY = useSharedValue(0);
     const scale = useSharedValue(1);
     const context = useSharedValue(0);
@@ -100,7 +100,6 @@ const style = StyleSheet.create({
         width: SLIDER_WIDTH,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "red"
     },
     gradient: {
         position: "absolute",
