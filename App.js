@@ -1,23 +1,14 @@
-import {Dimensions, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import { StyleSheet } from 'react-native';
 import {useCallback, useState} from "react";
 import React from "react";
-import EditColorSlider from "./view/slider/EditColorSlider";
-import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-} from "react-native-reanimated";
-import EditYAlignButton from "./view/buttons/EditYAlignButton";
-import EditXAlignButton from "./view/buttons/EditXAlignButton";
-import FontSize from "./view/buttons/FontSize";
+
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from "./view/Profile";
 import AddTwok from "./view/AddTwok";
 import Wall from "./view/Wall";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {SafeAreaProvider} from "react-native-safe-area-context";
-import TwokRow from "./view/twok/TwokRow";
-
 
 const Tab = createBottomTabNavigator();
 
@@ -29,27 +20,8 @@ const DATA = [
     {tid: 5, text: "kaffee"},
     {tid: 6, text: "TestTest"},
 ];
+
 function App() {
-    const [x, setX] = useState(0)
-//  NECESSARI PER PRENDERE IL VALORE DALLO SLIDER
-    /*    const a = useSharedValue(-1)
-
-        const onColorChanged = useCallback((color) => {
-            'worklet';
-            a.value = color
-        }, []);
-
-        const rstyle = useAnimatedStyle(() => {
-            return {
-                color: a.value
-            }
-        })*/
-
-    function handle(el) {
-        console.log(el)
-    }
-
-
     return (
         <SafeAreaProvider>
             <NavigationContainer>
@@ -85,7 +57,6 @@ function App() {
 const style = StyleSheet.create({
     safeViewArea : {
         flex: 1,
-        backgroundColor: "red",
         alignItems: "center",
         justifyContent: "center"
     },

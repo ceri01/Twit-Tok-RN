@@ -24,25 +24,24 @@ const DATA = [
     {"id": 18, name: "Nicola"},
 ]
 
-class Profile extends Component{
-    render() {
-
-        return (
-            <SafeAreaView>
-                <StatusBar barStyle="light-content" backgroundColor="#6200ee" />
-                <View style={style.profile}>
-                    <UserPicture></UserPicture>
-                    <Text style={style.text}>Nome utente</Text>
-                </View>
-                <View>
-                    <FlatList data={DATA}
-                              renderItem={(element) => {return <UserView data={element}></UserView>}}
-                              keyExtractor={(element) => element.id}>
-                    </FlatList>
-                </View>
-            </SafeAreaView>
-        );
-    }
+function Profile() {
+    return (
+        <SafeAreaView>
+            <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
+            <View style={style.profile}>
+                <UserPicture></UserPicture>
+                <Text style={style.text}>Nome utente</Text>
+            </View>
+            <View>
+                <FlatList data={DATA}
+                          renderItem={(element) => {
+                              return <UserView data={element.item}></UserView>
+                          }}
+                          keyExtractor={(element) => element.id}>
+                </FlatList>
+            </View>
+        </SafeAreaView>
+    );
 }
 
 const style = StyleSheet.create({

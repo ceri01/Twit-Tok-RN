@@ -20,7 +20,9 @@ class TwokRow extends Component {
 const style = StyleSheet.create({ // TODO: Sistemare lo stile in base ai twok da mostrare
     user: {
         height: 60,
-        backgroundColor: "red",
+        borderBottomWidth: 1,
+        borderRadius: 30
+
     },
     twokContent: {
         flex: 1,
@@ -31,12 +33,10 @@ const style = StyleSheet.create({ // TODO: Sistemare lo stile in base ai twok da
         flex: 1,
         width: "100%",
         height: Dimensions.get('window').height - StatusBar.currentHeight - 110, // 110 is dimension of navigation bar
-        backgroundColor: "yellow",
     },
     text: {
         fontSize: 40,
         fontWeight: "700",
-        backgroundColor: "green"
     }
 });
 

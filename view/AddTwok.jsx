@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import {
     Dimensions,
     SafeAreaView,
@@ -13,47 +13,94 @@ import EditColorSlider from "./slider/EditColorSlider";
 import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
 import EditXAlignButton from "./buttons/EditXAlignButton";
 import EditYAlignButton from "./buttons/EditYAlignButton";
-import EditTextButton from "./buttons/EditTextButton";
 import ConfirmButton from "./buttons/ConfirmButton";
 import CancelButton from "./buttons/CancelButton";
 import FontSizeButton from "./buttons/FontSizeButton";
 import FontTypeButton from "./buttons/FontTypeButton";
 import MapButton from "./buttons/MapButton";
 
-function AddTwok() {
-    const [alignX, setAlignX] = useState(1);
-    const [alignY, setAlignY] = useState(1);
+function AddTwok({navigation, route}) {
+    const textAlignament = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]]);
+
+    const alignX = useRef(1);
+    const alignY = useRef(1);
+
     const [text, setText] = useState("");
     const [tmpText, setTmpText] = useState("");
-    const [fontType, setfontType] = useState(1);
-    const [fontSize, setfontSize] = useState(1);
+    const [textViewStyle, setTextViewStyle] = useState({
+        flex: 1,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        alignItems: textAlignament.get(alignX.current),
+        justifyContent: textAlignament.get(alignY.current)
+    })
+
     const [map, setMap] = useState(false);
 
     const [modalVisible, setModalVisible] = useState(false)
-    const xBackground = useSharedValue(-1);
-    const xText = useSharedValue(270);
+    const xBackgroundSlider = useSharedValue(-1);
+    const xTextSlider = useSharedValue(270);
+    const fontType = useSharedValue(0);
+    const fontSize = useSharedValue(1);
+
+    const onTextXChanged = (x) => {
+        alignX.current = x
+        setTextViewStyle({
+            flex: 1,
+            paddingVertical: 20,
+            paddingHorizontal: 20,
+            alignItems: textAlignament.get(alignX.current),
+            justifyContent: textAlignament.get(alignY.current)
+        })
+    }
+
+    const onTextYChanged = (y) => {
+        alignY.current = y
+        setTextViewStyle({
+            flex: 1,
+            paddingVertical: 20,
+            paddingHorizontal: 20,
+            alignItems: textAlignament.get(alignX.current),
+            justifyContent: textAlignament.get(alignY.current)
+        })
+    }
+
+    const onFontTypeChanged = useCallback((type) => {
+        'worklet';
+        fontType.value = type
+    }, []);
+
+    const onFontSizeChanged = useCallback((size) => {
+        'worklet';
+        fontSize.value = size
+    }, []);
 
     const onBackgroundColorChanged = useCallback((color) => {
         'worklet';
-        xBackground.value = color;
+        xBackgroundSlider.value = color;
     }, []);
 
     const backgroundStyle = useAnimatedStyle(() => {
         return {
-            backgroundColor: xBackground.value
+            backgroundColor: xBackgroundSlider.value
         }
     });
 
     const onTextColorChanged = useCallback((color) => {
         'worklet';
-        xText.value = color;
+        xTextSlider.value = color;
     }, []);
 
     const textStyle = useAnimatedStyle(() => {
+        const textFontType = new Map([[0, "System"], [1, "monospace"], [2, "serif"]]);
+        console.log(textFontType.get(fontType.value))
         return {
-            color: xText.value
+            color: xTextSlider.value,
+            fontSize: (fontSize.value + 1) * 25,
+            fontFamily: textFontType.get(fontType.value)
         }
     });
+
 
     const handleConfirmTextChange = () => {
         setText(tmpText)
@@ -104,8 +151,8 @@ function AddTwok() {
                                visible={modalVisible}
                                onRequestClose={() => {
                                    setModalVisible(!modalVisible)
-                               }}
-                        >
+                               }
+                               }>
                             <View style={style.modalCenteredView}>
                                 <View style={style.modalView}>
                                     <TextInput style={style.textinput}
@@ -119,16 +166,16 @@ function AddTwok() {
                                 </View>
                             </View>
                         </Modal>
-                        <View style={style.textView}>
-                            <Animated.Text style={textStyle}>{text}</Animated.Text>
+                        <View style={textViewStyle}>
+                            <Animated.Text style={[textStyle]}>{text}</Animated.Text>
                         </View>
                     </Animated.View>
                 </Pressable>
                 <View style={style.buttonsView}>
-                    <EditXAlignButton onPress={setAlignX}></EditXAlignButton>
-                    <EditYAlignButton onPress={setAlignY}></EditYAlignButton>
-                    <FontSizeButton onPress={setAlignX}></FontSizeButton>
-                    <FontTypeButton onPress={setAlignX}></FontTypeButton>
+                    <EditXAlignButton onPress={onTextXChanged}></EditXAlignButton>
+                    <EditYAlignButton onPress={onTextYChanged}></EditYAlignButton>
+                    <FontSizeButton onPress={onFontSizeChanged}></FontSizeButton>
+                    <FontTypeButton onPress={onFontTypeChanged}></FontTypeButton>
                     <MapButton onPress={handleMap}></MapButton>
                     <View style={style.confirmCancelButtons}>
                         <ConfirmButton></ConfirmButton>
@@ -183,10 +230,6 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-end",
         alignItems: "flex-end",
-    },
-    textView: {
-        paddingVertical: 20,
-        paddingHorizontal: 20
     },
     modalView: {
         margin: 10,
