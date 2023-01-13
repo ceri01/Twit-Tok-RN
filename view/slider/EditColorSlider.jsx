@@ -8,6 +8,7 @@ import Animated, {
     useDerivedValue,
     useSharedValue, withSpring, withTiming,
 } from "react-native-reanimated";
+import {useRef, useState} from "react";
 
 
 const SLIDER_WIDTH = Dimensions.get('window').width * 0.9;
@@ -24,6 +25,7 @@ const COLORS = [
 ];
 
 const EditColorSlider = (props) => {
+
     const translateX = useSharedValue(props.start !== undefined ? props.start : -200);
     const translateY = useSharedValue(0);
     const scale = useSharedValue(1);
@@ -32,6 +34,14 @@ const EditColorSlider = (props) => {
     const adjustedTranslateX = useDerivedValue(() => {
         return Math.max(Math.min(translateX.value, SLIDER_WIDTH/2), -(SLIDER_WIDTH/2));
     });
+
+    if (props.isReset.current) {
+        translateX.value = props.start !== undefined ? props.start : -200;
+        context.value = 0;
+        translateY.value = 0;
+        scale.value = 1;
+        props.onReset();
+    }
 
     const panGestureEvent = Gesture.Pan()
         .onStart(() => {

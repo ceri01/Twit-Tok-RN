@@ -18,9 +18,11 @@ import CancelButton from "./buttons/CancelButton";
 import FontSizeButton from "./buttons/FontSizeButton";
 import FontTypeButton from "./buttons/FontTypeButton";
 import MapButton from "./buttons/MapButton";
+import ResetButton from "./buttons/ResetButton";
 
-function AddTwok({navigation, route}) {
+function AddTwok() {
     const textAlignament = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]]);
+    const reset = useRef(false);
 
     const alignX = useRef(1);
     const alignY = useRef(1);
@@ -93,7 +95,6 @@ function AddTwok({navigation, route}) {
 
     const textStyle = useAnimatedStyle(() => {
         const textFontType = new Map([[0, "System"], [1, "monospace"], [2, "serif"]]);
-        console.log(textFontType.get(fontType.value))
         return {
             color: xTextSlider.value,
             fontSize: (fontSize.value + 1) * 25,
@@ -116,21 +117,47 @@ function AddTwok({navigation, route}) {
         setMap(val)
     }
 
+    const handleReset = () => {
+        reset.current = true
+        alignY.current = 1;
+        alignX.current = 1;
+        xBackgroundSlider.value = -1;
+        xTextSlider.value = 270;
+        fontType.value = 0;
+        fontSize.value = 1;
+
+        setTextViewStyle({
+            flex: 1,
+            paddingVertical: 20,
+            paddingHorizontal: 20,
+            alignItems: textAlignament.get(alignX.current),
+            justifyContent: textAlignament.get(alignY.current)
+        });
+        setMap(false);
+        setModalVisible(false);
+        setText("");
+        setTmpText("");
+    }
+
+    const handleSliderReset = () => {
+        reset.current = false;
+    }
+
     const handleTextColorSlider = () => {
         if (text !== "") {
             return (
                 <View style={style.sliders}>
                     <Text>Background color</Text>
-                    <EditColorSlider onColorChange={onBackgroundColorChanged} start={0}/>
+                    <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} isReset={reset} onReset={handleSliderReset}/>
                     <Text>Text Color</Text>
-                    <EditColorSlider onColorChange={onTextColorChanged}/>
+                    <EditColorSlider onColorChange={onTextColorChanged} isReset={reset} onReset={handleSliderReset}/>
                 </View>
             );
         }
         return (
             <View style={style.onlyBackgroundSlider}>
                 <Text>Background color</Text>
-                <EditColorSlider onColorChange={onBackgroundColorChanged} start={0}/>
+                <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} isReset={reset} onReset={handleSliderReset}/>
             </View>
         );
     }
@@ -172,6 +199,7 @@ function AddTwok({navigation, route}) {
                     </Animated.View>
                 </Pressable>
                 <View style={style.buttonsView}>
+                    <ResetButton onPress={handleReset}></ResetButton>
                     <EditXAlignButton onPress={onTextXChanged}></EditXAlignButton>
                     <EditYAlignButton onPress={onTextYChanged}></EditYAlignButton>
                     <FontSizeButton onPress={onFontSizeChanged}></FontSizeButton>
@@ -179,7 +207,6 @@ function AddTwok({navigation, route}) {
                     <MapButton onPress={handleMap}></MapButton>
                     <View style={style.confirmCancelButtons}>
                         <ConfirmButton></ConfirmButton>
-                        <CancelButton></CancelButton>
                     </View>
                 </View>
             </View>
