@@ -6,15 +6,6 @@ import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
 
 class UserView extends Component {
 
-    showFollowUnfollowButton() {
-        if(!this.props.isInWall) {
-            return <View style={style.button}>
-                <FollowUnfollowButton follow={true} onPress={() => {}}></FollowUnfollowButton>
-            </View>
-        }
-        return null;
-    }
-
     render() {
         return (
             <View style={style.userViewContainer}>
@@ -24,7 +15,9 @@ class UserView extends Component {
                 <View style={style.userName}>
                     <UserName userName={this.props.data.name}></UserName>
                 </View>
-                {this.showFollowUnfollowButton()}
+                <View style={style.button}>
+                    <FollowUnfollowButton follow={true} onPress={() => {}}></FollowUnfollowButton>
+                </View>
             </View>
         );
     }

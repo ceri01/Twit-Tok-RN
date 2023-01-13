@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
 import UserView from "./user/UserView";
 import UserPicture from "./user/UserPicture";
+import EditNameButton from "./buttons/EditNameButton";
 
 const DATA = [
     {"id": 1, name: "Mimmo"},
@@ -30,7 +31,10 @@ function Profile() {
             <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
             <View style={style.profile}>
                 <UserPicture></UserPicture>
-                <Text style={style.text}>Nome utente</Text>
+                <View style={style.username}>
+                    <Text style={style.text}>Nome utente</Text>
+                    <EditNameButton></EditNameButton>
+                </View>
             </View>
             <View>
                 <FlatList data={DATA}
@@ -49,6 +53,12 @@ const style = StyleSheet.create({
         height: 150,
         alignItems: "center",
         justifyContent: "center",
+    },
+    username : {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
     },
     followedList: {
         flex: 1,
