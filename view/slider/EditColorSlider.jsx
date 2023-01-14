@@ -8,8 +8,6 @@ import Animated, {
     useDerivedValue,
     useSharedValue, withSpring, withTiming,
 } from "react-native-reanimated";
-import {useRef, useState} from "react";
-
 
 const SLIDER_WIDTH = Dimensions.get('window').width * 0.9;
 const COLORS = [

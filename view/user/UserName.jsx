@@ -19,12 +19,23 @@ class UserName extends Component {
             paddingHorizontal: 10,
         }
     }
-    render() {
-        return (
-            <View style={this.handleStyle()}>
+
+    renderText = () => {
+        if (this.props.isProfileName) {
+            return <Text style={style.text}>{this.props.userName}</Text>;
+        } else {
+            return (
                 <TouchableHighlight onPress={() => {}}>
                     <Text style={style.text}>{this.props.userName}</Text>
                 </TouchableHighlight>
+            );
+        }
+    }
+
+    render() {
+        return (
+            <View style={this.handleStyle()}>
+                {this.renderText()}
             </View>
         );
     }

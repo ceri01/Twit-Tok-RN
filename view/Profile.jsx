@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React, {Component, useRef, useState} from "react";
 import {FlatList, Modal, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, View} from "react-native";
 import UserView from "./user/UserView";
 import UserPicture from "./user/UserPicture";
@@ -6,6 +6,7 @@ import UserName from "./user/UserName";
 import CancelButton from "./buttons/CancelButton";
 import ConfirmButton from "./buttons/ConfirmButton";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import CustomModal from "./modal/CustomModal";
 
 const DATA = [
     {"id": 1, name: "Mimmo"},
@@ -29,17 +30,12 @@ const DATA = [
 ]
 
 function Profile() {
-    const [username, setUsername] = useState("Test");
-    const [tmpUsername, setTmpUsername] = useState(username);
-    const [modalVisible, setModalVisible] = useState(false)
+    const [username, setUsername] = useState("Test"); // TODO: fix default username
+    const [modalVisible, setModalVisible] = useState(false);
+    const reset = useRef(false); // flag to reset page
 
-    const handleConfirmNewName = () => {
-        setUsername(tmpUsername)
-        setModalVisible(!modalVisible)
-    }
-
-    const handleCancelNewName = () => {
-        setModalVisible(!modalVisible)
+    const handleSliderReset = () => {
+        reset.current = false;
     }
 
     return (
@@ -57,26 +53,14 @@ function Profile() {
                                }
                                }>
                         <View style={style.button}>
-                            <Modal animationType={"fade"}
-                                   transparent={true}
-                                   visible={modalVisible}
-                                   onRequestClose={() => {
-                                       setModalVisible(!modalVisible)
-                                   }
-                                   }>
-                                <View style={style.modalCenteredView}>
-                                    <View style={style.modalView}>
-                                        <TextInput style={style.textinput}
-                                                   onChangeText={(newName) => setTmpUsername(newName)}
-                                                   value={tmpUsername}
-                                        />
-                                        <View style={style.modalButtons}>
-                                            <CancelButton onCancel={handleCancelNewName}/>
-                                            <ConfirmButton onConfirm={handleConfirmNewName}/>
-                                        </View>
-                                    </View>
-                                </View>
-                            </Modal>
+                            <CustomModal visibilaity={modalVisible}
+                                         onChangeVisibility={setModalVisible}
+                                         text={username}
+                                         onChangeText={setUsername}
+                                         isReset={reset}
+                                         onReset={handleSliderReset}
+                                         isName={true}>
+                            </CustomModal>
                             <Icon name="edit" size={20} color="white"></Icon>
                         </View>
                     </Pressable>
