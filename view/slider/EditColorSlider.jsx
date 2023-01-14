@@ -76,10 +76,10 @@ const EditColorSlider = (props) => {
 
     const animatedInternalPickerStyle = useAnimatedStyle(() => {
         const inputRange = COLORS.map((_, index) => ((index - Math.floor(COLORS.length/2)) / COLORS.length) * SLIDER_WIDTH);
-        const backgroundColor = interpolateColor(translateX.value, inputRange, COLORS);
-        props.onColorChange(backgroundColor);
+        const color = interpolateColor(translateX.value, inputRange, COLORS);
+        props.onColorChange(color);
         return {
-            backgroundColor
+            backgroundColor: color
         };
     })
 
