@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
-import {useCallback, useState} from "react";
 import React from "react";
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from "./view/Profile";
@@ -12,20 +10,12 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
-const DATA = [
-    {tid: 1, text: "Ciao"},
-    {tid: 2, text: "Come"},
-    {tid: 3, text: "Stai"},
-    {tid: 4, text: "Che schifo"},
-    {tid: 5, text: "kaffee"},
-    {tid: 6, text: "TestTest"},
-];
-
 function App() {
     return (
         <SafeAreaProvider>
             <NavigationContainer>
                 <Tab.Navigator
+                    initialRouteName="Wall"
                     screenOptions={({ route }) => ({
                         tabBarIcon: () => {
                             let iconName;
@@ -64,6 +54,5 @@ const style = StyleSheet.create({
         width: "100%"
     }
 });
-
 
 export default App;
