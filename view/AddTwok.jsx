@@ -6,7 +6,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Pressable
+    Pressable, Platform
 } from "react-native";
 import EditColorSlider from "./slider/EditColorSlider";
 import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
@@ -94,7 +94,10 @@ function AddTwok() {
     }, []);
 
     const twokTextAnimatedStyle = useAnimatedStyle(() => {
-        const textFontType = new Map([[0, "System"], [1, "monospace"], [2, "serif"]]);
+        let textFontType = new Map([[0, "System"], [1, "monospace"], [2, "serif"]]);
+        if (Platform.OS === 'ios') {
+            textFontType = new Map([[0, "System"], [1, "Menlo"], [2, "Palatino"]]);
+        }
         return {
             color: twokTextColorData.value,
             fontSize: (fontSizeData.value + 1) * 20,
