@@ -1,12 +1,10 @@
-import React, {Component, useRef, useState} from "react";
-import {FlatList, Modal, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, View} from "react-native";
+import React, {useRef, useState} from "react";
+import {FlatList, Pressable, SafeAreaView, StatusBar, StyleSheet, View} from "react-native";
 import UserView from "./user/UserView";
 import UserPicture from "./user/UserPicture";
 import UserName from "./user/UserName";
-import CancelButton from "./buttons/CancelButton";
-import ConfirmButton from "./buttons/ConfirmButton";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import CustomModal from "./modal/CustomModal";
+import CustomTextModal from "./modal/CustomTextModal";
 
 const DATA = [
     {"id": 1, name: "Mimmo"},
@@ -45,7 +43,7 @@ function Profile() {
                 <UserPicture></UserPicture>
                 <View style={style.usernameView}>
                     <View style={style.username}>
-                        <UserName isProfileName={true} userName={username}></UserName>
+                        <UserName isProfileName={true} userName={username}/>
                     </View>
                     <Pressable style={style.editButton}
                                onPress={() => {
@@ -53,14 +51,14 @@ function Profile() {
                                }
                                }>
                         <View style={style.button}>
-                            <CustomModal visibilaity={modalVisible}
-                                         onChangeVisibility={setModalVisible}
-                                         text={username}
-                                         onChangeText={setUsername}
-                                         isReset={reset}
-                                         onReset={handleSliderReset}
-                                         isName={true}>
-                            </CustomModal>
+                            <CustomTextModal visibility={modalVisible}
+                                             onChangeVisibility={setModalVisible}
+                                             text={username}
+                                             onChangeText={setUsername}
+                                             isReset={reset}
+                                             onReset={handleSliderReset}
+                                             isName={true}>
+                            </CustomTextModal>
                             <Icon name="edit" size={20} color="white"></Icon>
                         </View>
                     </Pressable>
@@ -69,7 +67,7 @@ function Profile() {
             <View>
                 <FlatList data={DATA}
                           renderItem={(element) => {
-                              return <UserView data={element.item}></UserView>
+                              return <UserView data={element.item}/>
                           }}
                           keyExtractor={(element) => element.id}>
                 </FlatList>

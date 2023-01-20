@@ -1,52 +1,56 @@
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
-import {Component} from "react";
+import {useRef, useState} from "react";
 
-class EditYAlignButton extends Component {
-    state = {
-        alignY: 1,
-        icon: <Icon name="format-align-middle" size={20} color="white"></Icon>
+const EditYAlignButton = (props) => {
+    const alignY = useRef(1);
+    const reset = useRef(false)
+    const [icon, setIcon] = useState(<Icon name="format-align-middle" size={20} color="white"/>);
+
+    if (reset.current !== props.reset) {
+        reset.current = props.reset
+        props.onReset();
+        alignY.current = 1;
+        setIcon(<Icon name="format-align-middle" size={20} color="white"/>);
+    } else {
+        reset.current = false;
     }
 
-
-    handleIcon() {
-        switch (this.state.alignY) {
+    function handleIcon() {
+        switch (alignY.current) {
             case 1:
-                this.state.icon = <Icon name="format-align-middle" size={20} color="white"></Icon>
+                setIcon(<Icon name="format-align-middle" size={20} color="white"/>);
                 break;
             case 2:
-                this.state.icon = <Icon name="format-align-bottom" size={20} color="white"></Icon>
+                setIcon(<Icon name="format-align-bottom" size={20} color="white"/>);
                 break;
             default:
-                this.state.icon = <Icon name="format-align-top" size={20} color="white"></Icon>
+                setIcon(<Icon name="format-align-top" size={20} color="white"/>);
                 break;
         }
     }
 
-    handleAlignment() {
-        if (this.state.alignY < 2) {
-            this.state.alignY++;
+    function handleAlignment() {
+        if (alignY.current < 2) {
+            alignY.current++;
         } else {
-            this.state.alignY = 0;
+            alignY.current = 0;
         }
     }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.handleAlignment();
-                    this.handleIcon();
-                    this.forceUpdate();
-                    this.props.onPress(this.state.alignY);
-                }}>
-                    <View style={styles.button}>
-                        {this.state.icon}
-                    </View>
-                </TouchableHighlight>
-            </View>
-        );
-    }
+    return (
+        <View style={styles.container}>
+            <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
+                handleAlignment();
+                handleIcon();
+                props.onPress(alignY.current);
+            }}>
+                <View style={styles.button}>
+                    {icon}
+                </View>
+            </TouchableHighlight>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -68,6 +72,5 @@ const styles = StyleSheet.create({
         borderRadius: 100
     }
 });
-
 
 export default EditYAlignButton;

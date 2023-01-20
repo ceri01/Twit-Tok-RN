@@ -17,11 +17,12 @@ import FontSizeButton from "./buttons/FontSizeButton";
 import FontTypeButton from "./buttons/FontTypeButton";
 import MapButton from "./buttons/MapButton";
 import ResetButton from "./buttons/ResetButton";
-import CustomModal from "./modal/CustomModal";
+import CustomTextModal from "./modal/CustomTextModal";
+import CustomMapModal from "./modal/CustomMapModal";
 
 const ALIGNAMENTS = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]]);
 
-function AddTwok() {
+function AddTwok({navigation}) {
     // Data to be provided to the server (through model)
     const alignXData = useRef(1);
     const alignYData = useRef(1);
@@ -31,11 +32,12 @@ function AddTwok() {
     // these two data must be adapted to be sended
     const backgroundColorData = useSharedValue(-1);
     const twokTextColorData = useSharedValue(270);
-    const latitudeData = useRef(1.0);
-    const longitudeData = useRef(1.0);
+    const latitudeData = useRef(41.902784);
+    const longitudeData = useRef(12.496366);
 
     const reset = useRef(false); // flag to reset page
-    const [modalVisible, setModalVisible] = useState(false) // flag to display modal
+    const [textModalVisible, setTextModalVisible] = useState(false) // flag to display text modal
+    const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
     const [textViewStyle, setTextViewStyle] = useState({
         flex: 1,
         paddingVertical: 20,
@@ -43,7 +45,6 @@ function AddTwok() {
         alignItems: ALIGNAMENTS.get(alignXData.current),
         justifyContent: ALIGNAMENTS.get(alignYData.current)
     }) // style of twok preview
-
 
     const onTextXChanged = (x) => {
         alignXData.current = x
@@ -105,11 +106,33 @@ function AddTwok() {
         }
     });
 
-    const handleMap = (val) => {
-        return true // TODO: implement map
+    const handleLatitude = (latitude) => {
+        latitudeData.current = latitude;
     }
 
-    const handleReset = () => {
+    const handleLongitude = (longitude) => {
+        longitudeData.current = longitude;
+    }
+
+    const handleMap = () => {
+        setMapModalVisible(true);
+    }
+
+    const showMap = () => {
+        if (mapModalVisible) {
+            return <CustomMapModal visibility={mapModalVisible}
+                                   onChangeVisibility={setMapModalVisible}
+                                   latitude={latitudeData}
+                                   longitude={longitudeData}
+                                   onChangeLatitude={handleLatitude}
+                                   onChangeLongitude={handleLongitude}
+                                   isReset={reset}
+                                   onReset={handleReset}>
+            </CustomMapModal>
+        }
+    }
+
+    const resetPageState = () => {
         reset.current = true
         alignYData.current = 1;
         alignXData.current = 1;
@@ -117,7 +140,6 @@ function AddTwok() {
         twokTextColorData.value = 270;
         fontTypeData.value = 0;
         fontSizeData.value = 1;
-
         setTextViewStyle({
             flex: 1,
             paddingVertical: 20,
@@ -125,12 +147,15 @@ function AddTwok() {
             alignItems: ALIGNAMENTS.get(alignXData.current),
             justifyContent: ALIGNAMENTS.get(alignYData.current)
         });
-        handleMap(true) // TODO: change parameter
-        setModalVisible(false);
+        latitudeData.current = 41.902784;
+        longitudeData.current = 12.496366;
+        handleMap(false);
+        setTextModalVisible(false);
+        setMapModalVisible(false);
         setTwokTextData("");
     }
 
-    const handleSliderReset = () => {
+    const handleReset = () => {
         reset.current = false;
     }
 
@@ -139,16 +164,19 @@ function AddTwok() {
             return (
                 <View style={style.slidersView}>
                     <Text>Background color</Text>
-                    <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} isReset={reset} onReset={handleSliderReset}/>
+                    <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} reset={reset.current}
+                                     onReset={handleReset}/>
                     <Text>Text Color</Text>
-                    <EditColorSlider onColorChange={onTwokTextColorChanged} isReset={reset} onReset={handleSliderReset}/>
+                    <EditColorSlider onColorChange={onTwokTextColorChanged} reset={reset.current}
+                                     onReset={handleReset}/>
                 </View>
             );
         }
         return (
             <View style={style.backgroundSliderView}>
                 <Text>Background color</Text>
-                <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} isReset={reset} onReset={handleSliderReset}/>
+                <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} reset={reset.current}
+                                 onReset={handleReset}/>
             </View>
         );
     }
@@ -159,26 +187,29 @@ function AddTwok() {
             <View style={style.mainContainer}>
                 <Pressable style={style.twokPressableView}
                            onPress={() => {
-                               setModalVisible(true)
+                               setTextModalVisible(true)
                            }}
                 >
                     <Animated.View style={[style.twokBackground, backgroundColorAnimatedStyle]}>
-                        <CustomModal visibility={modalVisible}
-                                     onChangeVisibility={setModalVisible}
-                                     text={twokTextData}
-                                     onChangeText={setTwokTextData}
-                                     isReset={reset}
-                                     onReset={handleSliderReset}>
-                        </CustomModal>
+                        <CustomTextModal visibility={textModalVisible}
+                                         onChangeVisibility={setTextModalVisible}
+                                         text={twokTextData}
+                                         onChangeText={setTwokTextData}
+                                         isReset={reset}
+                                         onReset={handleReset}>
+                        </CustomTextModal>
                         <View style={textViewStyle}>
                             <Animated.Text style={[twokTextAnimatedStyle]}>{twokTextData}</Animated.Text>
                         </View>
                     </Animated.View>
                 </Pressable>
+                {showMap()}
                 <View style={style.buttonsView}>
-                    <ResetButton onPress={handleReset}></ResetButton>
-                    <EditXAlignButton onPress={onTextXChanged}></EditXAlignButton>
-                    <EditYAlignButton onPress={onTextYChanged}></EditYAlignButton>
+                    <ResetButton onPress={resetPageState}></ResetButton>
+                    <EditXAlignButton reset={reset.current} onReset={handleReset}
+                                      onPress={onTextXChanged}></EditXAlignButton>
+                    <EditYAlignButton reset={reset.current} onReset={handleReset}
+                                      onPress={onTextYChanged}></EditYAlignButton>
                     <FontSizeButton onPress={onFontSizeChanged}></FontSizeButton>
                     <FontTypeButton onPress={onFontTypeChanged}></FontTypeButton>
                     <MapButton onPress={handleMap}></MapButton>

@@ -1,25 +1,20 @@
 import Icon from "react-native-vector-icons/FontAwesome5"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
-import {Component} from "react";
 
-class MapButton extends Component {
-    icon = <Icon name="map-marked-alt" size={20} color="white"></Icon>
+const MapButton = (props) => {
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.props.onPress(true);
-                }}>
-                    <View style={styles.button}>
-                        {this.icon}
-                    </View>
-                </TouchableHighlight>
-            </View>
-        );
-    }
+    return (
+        <View style={styles.container}>
+            <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
+                props.onPress(true);
+            }}>
+                <View style={styles.button}>
+                    <Icon name="map-marked-alt" size={20} color="white"></Icon>
+                </View>
+            </TouchableHighlight>
+        </View>
+    );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -40,7 +35,5 @@ const styles = StyleSheet.create({
         borderRadius: 100
     }
 });
-
-
 
 export default MapButton;

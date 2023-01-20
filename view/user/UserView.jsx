@@ -1,26 +1,26 @@
-import {Component} from "react";
 import {StyleSheet, View} from "react-native";
 import UserName from "./UserName";
 import UserPicture from "./UserPicture";
 import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
 
-class UserView extends Component {
-
-    render() {
-        return (
-            <View style={style.userViewContainer}>
-                <View style={style.pic}>
-                    <UserPicture changePicDimension={this.props.isInWall}></UserPicture>
-                </View>
-                <View style={style.userName}>
-                    <UserName userName={this.props.data.name}></UserName>
-                </View>
-                <View style={style.button}>
-                    <FollowUnfollowButton follow={true} onPress={() => {}}></FollowUnfollowButton>
-                </View>
-            </View>
-        );
+const UserView = (props) => {
+    function onChangeFollow(value) {
+        console.log() // TODO: handle
     }
+
+    return (
+        <View style={style.userViewContainer}>
+            <View style={style.pic}>
+                <UserPicture changePicDimension={props.isInWall}/>
+            </View>
+            <View style={style.userName}>
+                <UserName userName={props.data.name}/>
+            </View>
+            <View style={style.button}>
+                <FollowUnfollowButton changeFollowStatus={onChangeFollow} follow={true}/>
+            </View>
+        </View>
+    );
 }
 
 const style = StyleSheet.create({

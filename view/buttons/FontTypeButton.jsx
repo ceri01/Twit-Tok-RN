@@ -1,46 +1,38 @@
 import Icon from "react-native-vector-icons/FontAwesome"
 import {StyleSheet, TouchableHighlight, View} from "react-native";
-import {Component} from "react";
+import {useRef, useState} from "react";
 
-class FontTypeButton extends Component {
-    state = {
-        type: 0,
-        font: "Arial"
-    }
-    icon = <Icon name="font" size={20} color="white"></Icon>
+const FontTypeButton = (props) => {
 
-    handleTextType() {
-        switch (this.state.type) {
+    const type = useRef(0);
+    const [icon, _] = useState(<Icon name="font" size={20} color="white"/>);
+
+    function handleTextType() {
+        switch (type.current) {
             case 0:
-                this.state.type++;
-                this.state.font = "Times New Roman";
+                type.current++;
                 break;
             case 1:
-                this.state.type++;
-                this.state.font = "ourier New";
+                type.current++;
                 break;
             default:
-                this.state.type = 0;
-                this.state.font = "Arial";
+                type.current = 0;
         }
     }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.handleTextType();
-                    this.props.onPress(this.state.type, this.state.font);
-                }}>
-                    <View style={styles.button}>
-                        {this.icon}
-                    </View>
-                </TouchableHighlight>
-            </View>
-        );
-    }
+    return (
+        <View style={styles.container}>
+            <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
+                handleTextType();
+                props.onPress(type.current);
+            }}>
+                <View style={styles.button}>
+                    {icon}
+                </View>
+            </TouchableHighlight>
+        </View>
+    );
 }
-
 
 const styles = StyleSheet.create({
     container: {

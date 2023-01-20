@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar} from "react-native";
 import TwokRow from "./twok/TwokRow";
 

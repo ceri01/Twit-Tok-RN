@@ -1,23 +1,19 @@
 import {StyleSheet, TouchableHighlight, View} from "react-native";
 import Icon from "react-native-vector-icons/AntDesign"
-import {Component} from "react";
 
-class ResetButton extends Component {
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.props.onPress()
-                }}>
-                    <View style={styles.button}>
-                        <Icon name="close" size={20} color="white"></Icon>
-                    </View>
-                </TouchableHighlight>
-            </View>
-        );
-    }
+const ResetButton = (props) => {
+    return (
+        <View style={styles.container}>
+            <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
+                props.onPress()
+            }}>
+                <View style={styles.button}>
+                    <Icon name="close" size={20} color="white"></Icon>
+                </View>
+            </TouchableHighlight>
+        </View>
+    );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -38,7 +34,5 @@ const styles = StyleSheet.create({
         borderRadius: 100
     }
 });
-
-
 
 export default ResetButton;

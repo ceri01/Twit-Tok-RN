@@ -1,10 +1,8 @@
-import {Component} from "react";
 import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
 
-class UserName extends Component {
-
-    handleStyle = () => {
-        if (!this.props.isProfileName) {
+const UserName = (props) => {
+    function handleStyle() {
+        if (!props.isProfileName) {
             return {
                 flex: 1,
                 justifyContent: "center",
@@ -20,25 +18,24 @@ class UserName extends Component {
         }
     }
 
-    renderText = () => {
-        if (this.props.isProfileName) {
-            return <Text style={style.text}>{this.props.userName}</Text>;
+    function renderText() {
+        if (props.isProfileName) {
+            return <Text style={style.text}>{props.userName}</Text>;
         } else {
             return (
-                <TouchableHighlight onPress={() => {}}>
-                    <Text style={style.text}>{this.props.userName}</Text>
+                <TouchableHighlight onPress={() => {
+                }}>
+                    <Text style={style.text}>{props.userName}</Text>
                 </TouchableHighlight>
             );
         }
     }
 
-    render() {
-        return (
-            <View style={this.handleStyle()}>
-                {this.renderText()}
-            </View>
-        );
-    }
+    return (
+        <View style={handleStyle()}>
+            {renderText()}
+        </View>
+    );
 }
 
 const style = StyleSheet.create({

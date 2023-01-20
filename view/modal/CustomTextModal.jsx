@@ -3,7 +3,7 @@ import CancelButton from "../buttons/CancelButton";
 import ConfirmButton from "../buttons/ConfirmButton";
 import React, {useState} from "react";
 
-function CustomModal(props) {
+function CustomTextModal(props) {
     /* this text is for support editing of twok text
        isn't duplicate data, but is necessary to better graphic effect
      */
@@ -26,11 +26,11 @@ function CustomModal(props) {
 
     return (
         <Modal animationType={"fade"}
-                     transparent={true}
-                     visible={props.visibility}
-                     onRequestClose={() => {
-                         props.onChangeVisibility(!props.visibility)
-                     }}
+               transparent={true}
+               visible={props.visibility}
+               onRequestClose={() => {
+                   props.onChangeVisibility(!props.visibility)
+               }}
         >
             <View style={style.modalCenteredView}>
                 <View style={style.modalView}>
@@ -88,4 +88,4 @@ const style = StyleSheet.create({
     }
 })
 
-export default CustomModal;
+export default CustomTextModal;

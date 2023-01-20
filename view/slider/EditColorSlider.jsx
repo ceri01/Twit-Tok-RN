@@ -1,6 +1,6 @@
 import {LinearGradient} from "expo-linear-gradient"
 import * as React from "react";
-import {Dimensions, StyleSheet, Text, View} from "react-native"
+import {Dimensions, StyleSheet} from "react-native"
 import {Gesture, GestureDetector, GestureHandlerRootView, PanGestureHandler} from "react-native-gesture-handler";
 import Animated, {
     interpolateColor,
@@ -8,6 +8,8 @@ import Animated, {
     useDerivedValue,
     useSharedValue, withSpring, withTiming,
 } from "react-native-reanimated";
+import {useRef, useState} from "react";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const SLIDER_WIDTH = Dimensions.get('window').width * 0.9;
 const COLORS = [
@@ -23,22 +25,27 @@ const COLORS = [
 ];
 
 const EditColorSlider = (props) => {
-
     const translateX = useSharedValue(props.start !== undefined ? props.start : -200);
     const translateY = useSharedValue(0);
     const scale = useSharedValue(1);
     const context = useSharedValue(0);
+    const reset = useRef(false);
+    const [reRender, setReRender] = useState(0)
 
     const adjustedTranslateX = useDerivedValue(() => {
         return Math.max(Math.min(translateX.value, SLIDER_WIDTH/2), -(SLIDER_WIDTH/2));
     });
 
-    if (props.isReset.current) {
-        translateX.value = props.start !== undefined ? props.start : -200;
+    if (reset.current !== props.reset) {
+        reset.current = props.reset;
         context.value = 0;
         translateY.value = 0;
         scale.value = 1;
+        translateX.value = props.start !== undefined ? props.start : -200;
         props.onReset();
+        setReRender(reRender + 1);
+    } else {
+        reset.current = false;
     }
 
     const panGestureEvent = Gesture.Pan()
@@ -82,7 +89,6 @@ const EditColorSlider = (props) => {
             backgroundColor: color
         };
     })
-
 
     return <GestureHandlerRootView style={style.gestureContainer}>
         <GestureDetector gesture={tapGestureEvent}>

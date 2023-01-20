@@ -1,29 +1,27 @@
-import {Component} from "react";
 import {Image, StyleSheet, View} from "react-native";
 
-class UserPicture extends Component {
-
-    pictureDimension() {
-        if (this.props.changePicDimension) {
+const UserPicture = (props) => {
+    function pictureDimension() {
+        if (props.changePicDimension) {
             return ({
                 height: 40,
                 width: 40
             });
         }
-        return style.img
+        return styles.img
     }
-    render() {
-        return (
-            <View style={style.imgContainer}>
-                <Image
-                    style={this.pictureDimension()}
-                    source={require('../../assets/favicon.png')} />
-            </View>
-        );
-    }
+
+    // TODO: Fix with user pic
+    return (
+        <View style={styles.imgContainer}>
+            <Image
+                style={pictureDimension()}
+                source={require('../../assets/favicon.png')}/>
+        </View>
+    );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     imgContainer: {
         flex: 1,
         justifyContent: "center",
@@ -34,7 +32,5 @@ const style = StyleSheet.create({
         width: 50,
     }
 });
-
-
 
 export default UserPicture;

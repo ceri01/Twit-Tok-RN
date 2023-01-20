@@ -1,46 +1,31 @@
 import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons"
-import {Component} from "react";
+import {Component, useState} from "react";
 
-class FollowUnfollowButton extends Component {
-    state = {
-        contentToShow: null
-    }
+const FollowUnfollowButton = (props) => {
+    const [contentToShow, setContentToShow] = useState(props.follow ? <Icon name="user-unfollow" color="white" size={20}/> : <Text style={styles.text}>Segui</Text>);
 
-    constructor(props) {
-        super(props)
-        this.state.follow = this.props.follow;
-        if(this.props.follow === true) {
-            this.state.contentToShow = <Icon name="user-unfollow" color="white" size={20}></Icon>
+    function changeState() {
+        if(props.follow) {
+            props.changeFollowStatus(!props.follow)
+            setContentToShow(<Text style={styles.text}>Segui</Text>);
         } else {
-            this.state.contentToShow = <Text style={styles.text}>Segui</Text>
+            props.changeFollowStatus(!props.follow)
+            setContentToShow(<Icon name="user-unfollow" color="white" size={20}/>);
         }
     }
-
-    changeState() {
-        if(this.state.follow === true) {
-            this.state.follow = false
-            this.state.contentToShow = <Text style={styles.text}>Segui</Text>
-        } else {
-            this.state.follow = true
-            this.state.contentToShow = <Icon name="user-unfollow" color="white" size={20}></Icon>
-        }
-    }
-    render() {
-        return (
-            <View style={styles.container}>
-                <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                    this.changeState();
-                    this.forceUpdate();
-                    this.props.onPress(this.state.contentToShow)
-                }}>
-                    <View style={styles.button}>
-                        {this.state.contentToShow}
-                    </View>
-                </TouchableHighlight>
-            </View>
-        );
-    }
+    return (
+        <View style={styles.container}>
+            <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
+                changeState();
+                props.onPress(contentToShow)
+            }}>
+                <View style={styles.button}>
+                    {contentToShow}
+                </View>
+            </TouchableHighlight>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
