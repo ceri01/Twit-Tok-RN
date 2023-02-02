@@ -7,7 +7,7 @@ class TwokRow extends Component {
         return (
             <View style={style.twokStyle}>
                 <View style={style.user}>
-                    <UserView data={this.props.data} isInWall={this.props.isInWall}></UserView>
+                    <UserView data={this.props.data}></UserView>
                 </View>
                 <View style={style.twokContent}>
                     <Text style={style.text}>{this.props.data.text}</Text>

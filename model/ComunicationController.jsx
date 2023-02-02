@@ -1,7 +1,7 @@
 import API from "../config/config.js"
 export default class ComunicationController {
     static async _call(endpoint, parameters) {
-        console.log(parameters)
+        console.log("ComunicationController -> _Call: " + parameters);
         let response = await fetch(API.BASE_URL + endpoint, {
             method: 'POST',
             headers: {
@@ -33,6 +33,7 @@ export default class ComunicationController {
 
     static setProfile = async (sid, name, picture) => {
         const endpoint = API.SETPROFILE;
+        if(name.length > 20) throw new Error("name must be a amximum of 20 characters long")
         const parameters = {
             sid: sid,
             name: name,

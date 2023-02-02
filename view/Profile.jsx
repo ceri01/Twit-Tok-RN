@@ -6,6 +6,8 @@ import UserName from "./user/UserName";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import CustomTextModal from "./modal/CustomTextModal";
 
+import {getProfileName} from "../viewmodel/ProfileUserHandler"
+
 const DATA = [
     {"id": 1, name: "Mimmo"},
     {"id": 2, name: "Caloggero"},
@@ -36,11 +38,13 @@ function Profile() {
         reset.current = false;
     }
 
+    getProfileName()
+
     return (
         <SafeAreaView>
             <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
             <View style={style.profile}>
-                <UserPicture></UserPicture>
+                <UserPicture changePicDimension={true} source=""></UserPicture>
                 <View style={style.usernameView}>
                     <View style={style.username}>
                         <UserName isProfileName={true} userName={username}/>
@@ -67,7 +71,7 @@ function Profile() {
             <View>
                 <FlatList data={DATA}
                           renderItem={(element) => {
-                              return <UserView data={element.item}/>
+                              return <UserView data={element.item} isProfile={true}/>
                           }}
                           keyExtractor={(element) => element.id}>
                 </FlatList>

@@ -1,11 +1,13 @@
 import {Image, StyleSheet, View} from "react-native";
+import {getPictureSource} from "../../viewmodel/pictureHandler"
+
 
 const UserPicture = (props) => {
     function pictureDimension() {
         if (props.changePicDimension) {
             return ({
-                height: 40,
-                width: 40
+                height: 90,
+                width: 90
             });
         }
         return styles.img
@@ -16,7 +18,7 @@ const UserPicture = (props) => {
         <View style={styles.imgContainer}>
             <Image
                 style={pictureDimension()}
-                source={require('../../assets/favicon.png')}/>
+                source={{uri: getPictureSource(props.source)}}/>
         </View>
     );
 }
@@ -28,8 +30,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     img: {
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
     }
 });
 

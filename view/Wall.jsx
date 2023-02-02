@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar} from "react-native";
 import TwokRow from "./twok/TwokRow";
 
@@ -20,7 +20,7 @@ function Wall() {
                 style={style.listStyle}
                 data={DATA}
                 renderItem={(twok) => {
-                    return <TwokRow data={twok.item} isInWall={true}/>
+                    return <TwokRow data={twok.item}/>
                 }}
                 keyExtractor={(twok) => twok.tid}
                 disableIntervalMomentum={true}

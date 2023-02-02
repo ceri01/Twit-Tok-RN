@@ -1,58 +1,46 @@
-import { StyleSheet } from 'react-native';
-import React from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Profile from "./view/Profile";
-import AddTwok from "./view/AddTwok";
-import Wall from "./view/Wall";
-import Icon from "react-native-vector-icons/FontAwesome";
+import React, {useRef, useState} from "react";
+import Register from "./view/Register";
 import {SafeAreaProvider} from "react-native-safe-area-context";
+import Main from "./view/Main";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import {NavigationContainer} from "@react-navigation/native";
+import {initEnvironment} from "./viewmodel/initApp";
+import {StyleSheet, Text} from "react-native";
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 function App() {
-    return (
-        <SafeAreaProvider>
-            <NavigationContainer>
-                <Tab.Navigator
-                    initialRouteName="Wall"
-                    screenOptions={({ route }) => ({
-                        tabBarIcon: () => {
-                            let iconName;
-                            if (route.name === 'Wall') {
-                                iconName = "home";
-                            } else if (route.name === 'Profile') {
-                                iconName = "user-o";
-                            } else  {
-                                iconName = "plus-circle";
-                            }
-                            return <Icon name={iconName} size={30} color="white"></Icon>
-                        },
-                        tabBarActiveTintColor: 'white',
-                        tabBarInactiveTintColor: "#6200ee",
-                        tabBarStyle: {
-                            backgroundColor: "#6200ee"
-                        }
-                    })}
-                >
-                    <Tab.Screen name="Wall" component={Wall}></Tab.Screen>
-                    <Tab.Screen name="NewTwok" component={AddTwok}></Tab.Screen>
-                    <Tab.Screen name="Profile" component={Profile}></Tab.Screen>
-                </Tab.Navigator>
-            </NavigationContainer>
-        </SafeAreaProvider>
-    );
+    const load = useRef("")
+    const [isLoading, setIsLoading] = useState(true);
+    if (isLoading) {
+        initEnvironment().then((res) => {
+            load.current = res
+            setIsLoading(false)
+        })
+        return (
+            <Text style={style.loading}>Loading...</Text>
+        );
+    } else {
+        return (
+            <SafeAreaProvider>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName={load.current}
+                                     screenOptions={{headerShown: false}}>
+                        <Stack.Screen name="Register" component={Register}/>
+                        <Stack.Screen name="Main" component={Main}/>
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </SafeAreaProvider>
+        );
+    }
+
 }
 
 const style = StyleSheet.create({
-    safeViewArea : {
-        flex: 1,
+    loading: {
         alignItems: "center",
         justifyContent: "center"
     },
-    listStyle: {
-        width: "100%"
-    }
-});
+})
 
 export default App;

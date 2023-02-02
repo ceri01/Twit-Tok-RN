@@ -1,13 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class UtilityStorageManager {
+
+    static async firstStart() {
+        await AsyncStorage.setItem("@First_start", "true");
+    }
+
     static async isFirstStart() {
-        if(await AsyncStorage.getItem("@First_start") !== null) {
-            return true;
-        } else {
-            await AsyncStorage.setItem("@First_start", "true");
-            return false;
-        }
+        return await AsyncStorage.getItem("@First_start") === null;
     }
 
     static async getSid() {
@@ -32,7 +32,6 @@ class UtilityStorageManager {
     static async getProfileUid() {
         let uid = await AsyncStorage.getItem("@Uid");
         if(uid !== null) {
-            console.log("dentro la utility strg " + uid)
             return uid;
         } else {
             return undefined;

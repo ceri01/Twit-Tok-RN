@@ -11,7 +11,7 @@ const UserView = (props) => {
     return (
         <View style={style.userViewContainer}>
             <View style={style.pic}>
-                <UserPicture changePicDimension={props.isInWall}/>
+                <UserPicture/>
             </View>
             <View style={style.userName}>
                 <UserName userName={props.data.name}/>
