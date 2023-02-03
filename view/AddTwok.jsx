@@ -6,7 +6,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Pressable, Platform
+    Pressable, Platform, Modal, Alert
 } from "react-native";
 import EditColorSlider from "./slider/EditColorSlider";
 import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
@@ -19,8 +19,11 @@ import MapButton from "./buttons/MapButton";
 import ResetButton from "./buttons/ResetButton";
 import CustomTextModal from "./modal/CustomTextModal";
 import CustomMapModal from "./modal/CustomMapModal";
+import {getColorHex} from "../viewmodel/TwokHandler";
+import {sendTwok} from "../viewmodel/TwokHandler";
 
 const ALIGNAMENTS = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]]);
+const PAGE_WIDTH = Dimensions.get('window').width * 0.9;
 
 function AddTwok({navigation}) {
     // Data to be provided to the server (through model)
@@ -29,12 +32,16 @@ function AddTwok({navigation}) {
     const fontTypeData = useSharedValue(0);
     const fontSizeData = useSharedValue(1);
     const [twokTextData, setTwokTextData] = useState("");
-    // these two data must be adapted to be sended
-    const backgroundColorData = useSharedValue(-1);
-    const twokTextColorData = useSharedValue(270);
-    const latitudeData = useRef(41.902784);
-    const longitudeData = useRef(12.496366);
+    const latitudeData = useRef(null);
+    const longitudeData = useRef(null);
 
+    // these two data must be adapted to be sended
+    const positionOfBgColorPicker = useSharedValue(0); // used to generate hex code of backfround color
+    const positionOfTextColorPicker = useSharedValue(0); // used to generate hex code of text color
+
+    // data used to manage view
+    const backgroundColorData = useSharedValue(-1); // value to set color of view (value unsuitable to be passed to the server)
+    const twokTextColorData = useSharedValue(270); // value to set color of Text (value unsuitable to be passed to the server)
     const reset = useRef(false); // flag to reset page
     const [textModalVisible, setTextModalVisible] = useState(false) // flag to display text modal
     const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
@@ -78,8 +85,9 @@ function AddTwok({navigation}) {
         fontSizeData.value = size
     }, []);
 
-    const onBackgroundColorChanged = useCallback((color) => {
+    const onBackgroundColorChanged = useCallback((color, val) => {
         'worklet';
+        positionOfBgColorPicker.value = val
         backgroundColorData.value = color;
     }, []);
 
@@ -89,8 +97,9 @@ function AddTwok({navigation}) {
         }
     });
 
-    const onTwokTextColorChanged = useCallback((color) => {
+    const onTwokTextColorChanged = useCallback((color, val) => {
         'worklet';
+        positionOfTextColorPicker.value = val
         twokTextColorData.value = color;
     }, []);
 
@@ -122,8 +131,8 @@ function AddTwok({navigation}) {
         if (mapModalVisible) {
             return <CustomMapModal visibility={mapModalVisible}
                                    onChangeVisibility={setMapModalVisible}
-                                   latitude={latitudeData}
-                                   longitude={longitudeData}
+                                   latitude={latitudeData.current}
+                                   longitude={longitudeData.current}
                                    onChangeLatitude={handleLatitude}
                                    onChangeLongitude={handleLongitude}
                                    isReset={reset}
@@ -147,8 +156,8 @@ function AddTwok({navigation}) {
             alignItems: ALIGNAMENTS.get(alignXData.current),
             justifyContent: ALIGNAMENTS.get(alignYData.current)
         });
-        latitudeData.current = 41.902784;
-        longitudeData.current = 12.496366;
+        latitudeData.current = null;
+        longitudeData.current = null;
         handleMap(false);
         setTextModalVisible(false);
         setMapModalVisible(false);
@@ -160,11 +169,11 @@ function AddTwok({navigation}) {
     }
 
     const renderSlider = () => {
-        if (twokTextData !== "") {
+        if (twokTextData.trim() !== "") {
             return (
                 <View style={style.slidersView}>
                     <Text>Background color</Text>
-                    <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} reset={reset.current}
+                    <EditColorSlider onColorChange={onBackgroundColorChanged} start={200} reset={reset.current}
                                      onReset={handleReset}/>
                     <Text>Text Color</Text>
                     <EditColorSlider onColorChange={onTwokTextColorChanged} reset={reset.current}
@@ -175,7 +184,7 @@ function AddTwok({navigation}) {
         return (
             <View style={style.backgroundSliderView}>
                 <Text>Background color</Text>
-                <EditColorSlider onColorChange={onBackgroundColorChanged} start={0} reset={reset.current}
+                <EditColorSlider onColorChange={onBackgroundColorChanged} start={200} reset={reset.current}
                                  onReset={handleReset}/>
             </View>
         );
@@ -214,7 +223,21 @@ function AddTwok({navigation}) {
                     <FontTypeButton onPress={onFontTypeChanged}></FontTypeButton>
                     <MapButton onPress={handleMap}></MapButton>
                     <View style={style.ConfirmButtonView}>
-                        <ConfirmButton></ConfirmButton>
+                        <ConfirmButton onConfirm={() => {
+                            sendTwok(twokTextData,
+                                getColorHex(positionOfBgColorPicker.value, PAGE_WIDTH),
+                                getColorHex(positionOfTextColorPicker.value, PAGE_WIDTH),
+                                fontSizeData.value,
+                                fontTypeData.value,
+                                alignXData.current,
+                                alignYData.current,
+                                latitudeData.current,
+                                longitudeData.current).then(() => {
+                                console.log("twok sent")
+                            }).catch(() => {
+                                Alert.alert("Network Error", "Check your connection")
+                            })
+                        }}></ConfirmButton>
                     </View>
                 </View>
             </View>
