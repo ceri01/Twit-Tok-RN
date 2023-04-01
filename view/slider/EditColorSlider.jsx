@@ -9,9 +9,9 @@ import Animated, {
     useSharedValue, withSpring, withTiming,
 } from "react-native-reanimated";
 import {useRef, useState} from "react";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const SLIDER_WIDTH = Dimensions.get('window').width * 0.9;
+const CIRCLE_PICKER_SIZE = 24
 const COLORS = [
     'red',
     'purple',
@@ -25,7 +25,7 @@ const COLORS = [
 ];
 
 const EditColorSlider = (props) => {
-    const translateX = useSharedValue(props.start !== undefined ? props.start : -200);
+    const translateX = useSharedValue(props.start !== undefined ? props.start : 0);
     const translateY = useSharedValue(0);
     const scale = useSharedValue(1);
     const context = useSharedValue(0);
@@ -33,7 +33,7 @@ const EditColorSlider = (props) => {
     const [reRender, setReRender] = useState(0)
 
     const adjustedTranslateX = useDerivedValue(() => {
-        return Math.max(Math.min(translateX.value, SLIDER_WIDTH/2), -(SLIDER_WIDTH/2));
+        return Math.min(Math.max(translateX.value, 0), SLIDER_WIDTH);
     });
 
     if (reset.current !== props.reset) {
@@ -41,7 +41,7 @@ const EditColorSlider = (props) => {
         context.value = 0;
         translateY.value = 0;
         scale.value = 1;
-        translateX.value = props.start !== undefined ? props.start : -200;
+        translateX.value = props.start !== undefined ? props.start : SLIDER_WIDTH - 15;
         props.onReset();
         setReRender(reRender + 1);
     } else {
@@ -64,7 +64,7 @@ const EditColorSlider = (props) => {
 
     const tapGestureEvent = Gesture.Tap()
         .onBegin((event) => {
-            translateX.value = withTiming(event.absoluteX - (SLIDER_WIDTH / 1.8), {
+            translateX.value = withTiming(event.absoluteX - CIRCLE_PICKER_SIZE, {
                 duration: 0,
             })
         })
@@ -82,11 +82,11 @@ const EditColorSlider = (props) => {
     });
 
     const animatedInternalPickerStyle = useAnimatedStyle(() => {
-        const inputRange = COLORS.map((_, index) => ((index - Math.floor(COLORS.length/2)) / COLORS.length) * SLIDER_WIDTH);
-        const color = interpolateColor(translateX.value, inputRange, COLORS);
-        props.onColorChange(color);
+        const inputRange = COLORS.map((_, index) => (index / COLORS.length) * SLIDER_WIDTH);
+        const color = interpolateColor(adjustedTranslateX.value, inputRange, COLORS, "RGB");
+        props.onColorChange(color, adjustedTranslateX.value);
         return {
-            backgroundColor: color
+          backgroundColor: color
         };
     })
 
@@ -111,9 +111,8 @@ const EditColorSlider = (props) => {
 
 const style = StyleSheet.create({
     gestureContainer: {
-        width: SLIDER_WIDTH,
         justifyContent: "center",
-        alignItems: "center",
+        width: SLIDER_WIDTH,
     },
     gradient: {
         position: "absolute",
@@ -127,13 +126,13 @@ const style = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#abc",
-        width: 24,
-        height: 24,
+        width: CIRCLE_PICKER_SIZE,
+        height: CIRCLE_PICKER_SIZE,
         borderRadius: 12,
     },
     internalPicker: {
-        width: 12,
-        height: 12,
+        width: CIRCLE_PICKER_SIZE / 2,
+        height: CIRCLE_PICKER_SIZE / 2,
         borderRadius: 6,
         borderWidth: 1.0,
         borderColor: 'rgba(0,0,0,0.2)',

@@ -1,5 +1,5 @@
 import {Image, StyleSheet, View} from "react-native";
-import {getPictureSource} from "../../viewmodel/pictureHandler"
+import {createPictureSource} from "../../viewmodel/pictureHandler"
 
 
 const UserPicture = (props) => {
@@ -18,7 +18,7 @@ const UserPicture = (props) => {
         <View style={styles.imgContainer}>
             <Image
                 style={pictureDimension()}
-                source={{uri: getPictureSource(props.source)}}/>
+                source={{uri: createPictureSource(props.source)}}/>
         </View>
     );
 }

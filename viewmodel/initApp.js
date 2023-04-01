@@ -1,36 +1,41 @@
 import UtilityStorageManager from "../model/UtilityStorageManager";
-import DBManager from "../model/DBManager";
-import {Alert} from "react-native";
 import ComunicationController from "../model/ComunicationController";
+import {Alert, Image} from "react-native";
+import DefaultImage from "../assets/favicon.png";
+import database from "../model/DBManager";
 
 export async function initProfile(name, pic) {
-    if (name !== null && pic !== null) {
-        let sid = await UtilityStorageManager.getSid();
-        await ComunicationController.setProfile(sid, name, pic);
-        DBManager.database.updateProfilePicture(pic);
-        DBManager.database.updateProfileName(name);
-    } else {
-        Alert.alert("Input error", "Missing name or picture");
-    }
+    let sid = await UtilityStorageManager.getSid();
+    database().updateProfileName(name, () => {
+        if (pic !== null) {
+            database().updateProfilePicture(pic, async () => {
+                await ComunicationController.setProfile(sid, name, pic);
+            }, () => {
+                Alert.alert("Input Error", "Picture format not valid")
+            });
+        } else {
+            let defaultPic = Image.resolveAssetSource(DefaultImage).uri
+            database().updateProfilePicture(defaultPic, async () => {
+                await ComunicationController.setProfile(sid, name, defaultPic);
+            }, () => {
+                Alert.alert("Input Error", "Picture format not valid")
+            });
+        }
+    }, () => {
+        Alert.alert("Input Error", "Name format not valid")
+    });
 }
 
 export async function initEnvironment() {
-    let firstStart = await UtilityStorageManager.isFirstStart()
+    // TODO: fixare questa parte nel caso in cui manchi la connessioe
+    let firstStart = await UtilityStorageManager.isFirstStart();
     if (firstStart) {
         await UtilityStorageManager.firstStart();
-        let register = "Rxvl9SVDA3ADaoKIVV3X" // await ComunicationController.register();
+        let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"} // await ComunicationController.register();
         await UtilityStorageManager.setSid(register.sid.toString());
         let profile = await ComunicationController.getProfile(register.sid.toString());
         await UtilityStorageManager.setProfileUid(profile.uid.toString());
-        DBManager.database = new DBManager(await UtilityStorageManager.getProfileUid());
-        return "Register";
-    } else {
-        DBManager.database = new DBManager(await UtilityStorageManager.getProfileUid());
-        return "Main";
+        database();
+        await UtilityStorageManager.DBInit();
     }
-}
-
-export async function resetEnv() {
-    let sid = await UtilityStorageManager.getSid()
-    console.log(sid)
 }

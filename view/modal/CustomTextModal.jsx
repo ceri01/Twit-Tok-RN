@@ -26,11 +26,11 @@ function CustomTextModal(props) {
 
     return (
         <Modal animationType={"fade"}
-               transparent={true}
-               visible={props.visibility}
-               onRequestClose={() => {
-                   props.onChangeVisibility(!props.visibility)
-               }}
+                     transparent={true}
+                     visible={props.visibility}
+                     onRequestClose={() => {
+                         props.onChangeVisibility(!props.visibility)
+                     }}
         >
             <View style={style.modalCenteredView}>
                 <View style={style.modalView}>

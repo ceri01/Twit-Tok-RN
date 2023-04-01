@@ -53,7 +53,7 @@ function CustomMapModal(props) {
                     <View style={style.waitingContainer}>
                         <Text style={{fontSize: 25, fontStyle: "italic"}}>Waiting for position...</Text>
                     </View>
-                </View>);
+            </View>);
         }
     }
 

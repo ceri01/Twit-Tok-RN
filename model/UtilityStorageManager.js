@@ -10,6 +10,14 @@ class UtilityStorageManager {
         return await AsyncStorage.getItem("@First_start") === null;
     }
 
+    static async DBIsInit() {
+        return await AsyncStorage.getItem("@DB") !== null;
+    }
+
+    static async DBInit() {
+        await AsyncStorage.setItem("@DB", "true");
+    }
+
     static async getSid() {
         let sid = await AsyncStorage.getItem("@Sid");
         if(sid !== null) {
@@ -32,7 +40,7 @@ class UtilityStorageManager {
     static async getProfileUid() {
         let uid = await AsyncStorage.getItem("@Uid");
         if(uid !== null) {
-            return uid;
+            return parseInt(uid);
         } else {
             return undefined;
         }

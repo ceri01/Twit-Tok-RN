@@ -40,3 +40,60 @@ export async function sendTwok(text, bgcol, fontcol, fontsize, fonttype, Xalign,
         }
     }
 }
+
+function between(val) {
+    return val < 0 || val > 3
+}
+
+
+export function isValid(twok) {
+    let regex = /([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/
+    if (!(regex.test(twok.bgcol) && regex.test(twok.fontcol))) {
+        // console.log("colore sbagliato")
+        return false;
+    }
+    if ((twok.lat === null && twok.lon !== null) || (twok.lat !== null && twok.lon === null)) {
+        // console.log("posizione sbagliata")
+        return false;
+    }
+    for (const element of [twok.fontsize, twok.fonttype, twok.halign, twok.valign]) {
+        if (between(element) && typeof element === "number") {
+            // console.log("font o align sbagliati")
+            return false;
+        }
+    }
+    return true;
+}
+
+export async function getTwoks(uid) {
+    const sid = await UtilityStorageManager.getSid();
+    const tmpArr = []
+
+    if (uid !== undefined) {
+        for (let i = 0; i < 8; i++) {
+            let twok = await ComunicationController.getTwok(sid, uid);
+            if (isValid(twok)) {
+                tmpArr.push(twok);
+            } else {
+                i--;
+            }
+        }
+    } else {
+        for (let i = 0; i < 8; i++) {
+            let twok = await ComunicationController.getTwok(sid);
+            if (isValid(twok)) {
+                tmpArr.push(twok);
+            } else {
+                i--;
+            }
+        }
+    }
+    return tmpArr;
+}
+
+async function getTwoksWithTid(tid) {
+    const sid = await UtilityStorageManager.getSid();
+    const tmpArr = [];
+    tmpArr.unshift(await ComunicationController.getTwok(sid, tid));
+    return tmpArr;
+}

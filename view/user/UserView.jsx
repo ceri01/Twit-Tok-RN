@@ -2,22 +2,35 @@ import {StyleSheet, View} from "react-native";
 import UserName from "./UserName";
 import UserPicture from "./UserPicture";
 import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
+import {addFollow, removeFollow} from "../../viewmodel/FollowHandler";
+import {useRef} from "react";
+
 
 const UserView = (props) => {
-    function onChangeFollow(value) {
-        console.log() // TODO: handle
+    const followStatus = useRef(props.followed);
+
+    function follow(followed) {
+        followStatus.current = followed;
+        addFollow(props.uid);
     }
+
+    function unfollow(followed) {
+        followStatus.current = followed;
+        removeFollow(props.uid);
+    }
+
+    // user picture => getUserPicture(props.uid, props.pversion)
 
     return (
         <View style={style.userViewContainer}>
             <View style={style.pic}>
-                <UserPicture/>
+                <UserPicture source="aaa"/>
             </View>
             <View style={style.userName}>
-                <UserName userName={props.data.name}/>
+                <UserName userName={props.name}/>
             </View>
             <View style={style.button}>
-                <FollowUnfollowButton changeFollowStatus={onChangeFollow} follow={true}/>
+                <FollowUnfollowButton follow={follow} unfollow={unfollow} isFollow={followStatus.current} />
             </View>
         </View>
     );

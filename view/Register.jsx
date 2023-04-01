@@ -1,22 +1,22 @@
 import {Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, View} from "react-native";
 import RegisterButton from "./buttons/RegisterButton"
 import {useState} from "react";
-import {openImagePicker, getPictureSource} from "../viewmodel/pictureHandler";
+import {openImagePicker, createPictureSource} from "../viewmodel/pictureHandler";
 import DefaultImage from "../assets/favicon.png";
 import ChooseImageButton from "./buttons/ChooseImageButton";
-import {initProfile} from "../viewmodel/initApp";
+import {initEnvironment, initProfile} from "../viewmodel/initApp";
 
 function Register({ navigation }) {
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
     function getImage() {
         openImagePicker().then((result) => {
-            console.log(result)
             if (!result.canceled) {
                 if (result.length > 137000) {
                     Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
                 }
-                setImage(getPictureSource(result));
+                console.log(result)
+                setImage(createPictureSource(result));
             }
         }).catch((err) => {
             Alert.alert("Error", "Image not selected, default icon setted.");
@@ -35,21 +35,23 @@ function Register({ navigation }) {
                     setName(value)
                 }}/>
                 <Text style={style.text}>Insert your profile pic (optional)</Text>
-                {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />}
+                {image && <Image source={{ uri: createPictureSource(image) }} style={{ width: 100, height: 100 }} />}
                 <ChooseImageButton onPress={getImage}/>
             </View>
             <View style={style.button}>
                 <RegisterButton onPress={() => {
-                    if (name.length > 0) {
-                        initProfile(name, image).then(() => {
-                            navigation.navigate("Main", {screen: "Wall"})
-                        }).catch((err) => {
-                            Alert.alert("Error", "An error has occurred\n" + err);
+                    if (typeof(name) === "string" && name.length > 0) {
+                        console.log("\n" + image + "\n########")
+                        initEnvironment().then(() => {
+                            initProfile(name, image).then(() => {
+                                navigation.navigate("Main", {screen: "Wall"})
+                            }).catch((err) => {
+                                Alert.alert("Error", "An error has occurred\n" + err);
+                            })
                         })
                     } else {
                         Alert.alert("Missing name", "Insert a name.");
                     }
-
                 }}/>
             </View>
         </SafeAreaView>

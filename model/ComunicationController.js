@@ -1,7 +1,6 @@
 import API from "../config/config.js"
 export default class ComunicationController {
     static async _call(endpoint, parameters) {
-        console.log("ComunicationController -> _Call: " + parameters);
         let response = await fetch(API.BASE_URL + endpoint, {
             method: 'POST',
             headers: {
@@ -12,7 +11,7 @@ export default class ComunicationController {
         });
         const status = response.status;
         if (status === 200) {
-            console.log("HTTP reaquest successful")
+            // console.log("HTTP reaquest successful")
             return await response.json();
         } else {
             return new Error("HTTP request failed, HTTP status: " + status);

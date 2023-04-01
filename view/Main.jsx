@@ -6,19 +6,21 @@ import AddTwok from "./AddTwok";
 import Wall from "./Wall";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {SafeAreaProvider} from "react-native-safe-area-context";
+import database from "../model/DBManager";
 
 const Tab = createBottomTabNavigator();
 
 function Main({ navigation }) {
     React.useEffect(() => navigation.addListener('beforeRemove', (event) => {
-        event.preventDefault()
-    }),
+            event.preventDefault()
+        }),
         [navigation]
     );
+    database() // call database here to init reference to database all times
     return (
         <SafeAreaProvider>
             <Tab.Navigator
-                initialRouteName="Wall"
+                initialRouteName="Options"
                 screenOptions={({route}) => ({
                     tabBarIcon: () => {
                         let iconName;
@@ -32,6 +34,7 @@ function Main({ navigation }) {
                         return <Icon name={iconName} size={30} color="white"></Icon>
                     },
                     tabBarActiveTintColor: 'white',
+                    headerShown: false,
                     tabBarInactiveTintColor: "#6200ee",
                     tabBarStyle: {
                         backgroundColor: "#6200ee"

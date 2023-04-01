@@ -1,41 +1,75 @@
-import React, {Component} from "react";
-import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar} from "react-native";
+import React, {useRef, useState} from "react";
+import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} from "react-native";
 import TwokRow from "./twok/TwokRow";
-
-const DATA = [
-    {tid: 1, text: "SIUUU", name: "mimmo"},
-    {tid: 2, text: "SIUUU", name: "caloggero"},
-    {tid: 3, text: "StaSIUU", name: "franco"},
-    {tid: 4, text: "Che schifo", name: "guglielmo"},
-    {tid: 5, text: "kaffee", name: "anna"},
-    {tid: 6, text: "TestTest", name: "franco"},
-];
-
-// TODO: Sistemare la parte di viewmodel per prendere i dati correttamente
+import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
+import safeAreaView from "react-native/Libraries/Components/SafeAreaView/SafeAreaView";
 
 function Wall() {
+    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
+    const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
+
+    if (listUpdater === 0) {
+        initWall().then(() => {
+            setListUpdater(listUpdater + 1)
+        }).catch((err) => {
+            console.log(err)
+        });
+    } else if (!listrefresher) {
+        resetBuffer().then(() => {
+            setListrefresher(true);
+        });
+    }
+
+    function displayContent() {
+        if (listrefresher) {
+            return (
+                <FlatList
+                    style={style.listStyle}
+                    extraData={listrefresher}
+                    data={getData()}
+                    renderItem={(twok) => {
+                        return <TwokRow data={twok.item}/>
+                    }}
+                    keyExtractor={(item, index) => {
+                        return index.toString()
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    disableIntervalMomentum={true}
+                    snapToInterval={Dimensions.get('window').height - 90} // 90 is dimension of navigation bar
+                    snapToAlignment="start"
+                    decelerationRate="fast"
+                    onEndReached={(info) => {
+                        updateBuffer().then((res) => {
+                            if (res) {
+                                setListrefresher(false)
+                            } else {
+                                setListUpdater(listUpdater + 1);
+                            }
+                        });
+                    }}
+                    onEndReachedThreshold={2}
+                />
+            );
+        } else {
+            return (
+                <View style={style.waiting}>
+                    <Text style={{fontSize: 30, fontStyle: "italic"}}>Waiting...</Text>
+                </View>
+            );
+        }
+    }
+
     return (
         <SafeAreaView style={style.safeViewArea}>
-            <FlatList
-                style={style.listStyle}
-                data={DATA}
-                renderItem={(twok) => {
-                    return <TwokRow data={twok.item}/>
-                }}
-                keyExtractor={(twok) => twok.tid}
-                disableIntervalMomentum={true}
-                snapToInterval={Dimensions.get('window').height - StatusBar.currentHeight - 110} // 110 is dimension of navigation bar
-                snapToAlignment="start"
-                decelerationRate="fast"
-                onScrollEndDrag={() => {
-                }} // TODO: Valutare se bosogna fare qualcosa ogni volta che avviene uno scroll
-            />
+            {displayContent()}
             <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
         </SafeAreaView>
     );
+
 }
 
-const style = StyleSheet.create({ // TODO: Sistemare i colori in base ai twok da mostrare
+const style = StyleSheet.create({
     safeViewArea: {
         flex: 1,
         alignItems: "center",
@@ -43,6 +77,11 @@ const style = StyleSheet.create({ // TODO: Sistemare i colori in base ai twok da
     },
     listStyle: {
         width: "100%"
+    },
+    waiting: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
     }
 });
 

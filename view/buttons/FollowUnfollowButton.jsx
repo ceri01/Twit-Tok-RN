@@ -1,27 +1,31 @@
 import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons"
-import {Component, useState} from "react";
+import {Component, useRef, useState} from "react";
 
 const FollowUnfollowButton = (props) => {
-    const [contentToShow, setContentToShow] = useState(props.follow ? <Icon name="user-unfollow" color="white" size={20}/> : <Text style={styles.text}>Segui</Text>);
+    const contentToShow = useRef(props.isFollow ?
+        <Icon name="user-unfollow" color="white" size={20}/> : <Text style={styles.text}>Segui</Text>);
 
     function changeState() {
-        if(props.follow) {
-            props.changeFollowStatus(!props.follow)
-            setContentToShow(<Text style={styles.text}>Segui</Text>);
+        if (props.isFollow) {
+            contentToShow.current = <Text style={styles.text}>Segui</Text>;
+            props.unfollow(!props.follow)
+            //setContentToShow(<Text style={styles.text}>Segui</Text>);
         } else {
-            props.changeFollowStatus(!props.follow)
-            setContentToShow(<Icon name="user-unfollow" color="white" size={20}/>);
+            contentToShow.current = <Icon name="user-unfollow" color="white" size={20}/>;
+            props.follow(!props.follow)
+            // setContentToShow(<Icon name="user-unfollow" color="white" size={20}/>);
         }
     }
+
     return (
         <View style={styles.container}>
             <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
                 changeState();
-                props.onPress(contentToShow)
+                props.follow(contentToShow)
             }}>
                 <View style={styles.button}>
-                    {contentToShow}
+                    {contentToShow.current}
                 </View>
             </TouchableHighlight>
         </View>
