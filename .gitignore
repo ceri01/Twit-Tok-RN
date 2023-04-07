@@ -18,4 +18,4 @@ web-build/
 /__tests__/
 /package-lock.json
 .idea
-.vscode
+.vscode!/yarn.lock
