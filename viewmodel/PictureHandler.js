@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import {Image} from "react-native";
 import DefaultImage from "../assets/favicon.png";
-import ComunicationController from "../model/ComunicationController";
+import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
 import database from "../model/DBManager";
 
@@ -29,7 +29,7 @@ export function getUserPicture(uid, pversion) { // to be refactored
                 pic = result
             } else if (result.pversion !== pversion) {
                 UtilityStorageManager.getSid().then((sid) => {
-                    ComunicationController.getPicture(sid, uid).then((res) => {
+                    CommunicationController.getPicture(sid, uid).then((res) => {
                         database().updateUserPicture(uid, res.picture, res.pversion);
                         pic = res.picture;
                     });
@@ -37,7 +37,7 @@ export function getUserPicture(uid, pversion) { // to be refactored
             }
         } else {
             UtilityStorageManager.getSid().then((sid) => {
-                ComunicationController.getPicture(sid, uid).then((res) => {
+                CommunicationController.getPicture(sid, uid).then((res) => {
                     if (res.picture === null) {
                         database().addUserPicture(res.uid, Image.resolveAssetSource(DefaultImage).uri, 0);
                         pic = Image.resolveAssetSource(DefaultImage).uri;

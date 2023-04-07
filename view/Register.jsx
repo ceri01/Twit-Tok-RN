@@ -1,7 +1,7 @@
 import {Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, View} from "react-native";
 import RegisterButton from "./buttons/RegisterButton"
 import {useState} from "react";
-import {openImagePicker, createPictureSource} from "../viewmodel/pictureHandler";
+import {openImagePicker, createPictureSource} from "../viewmodel/PictureHandler";
 import DefaultImage from "../assets/favicon.png";
 import ChooseImageButton from "./buttons/ChooseImageButton";
 import {initEnvironment, initProfile} from "../viewmodel/initApp";

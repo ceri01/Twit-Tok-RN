@@ -1,6 +1,6 @@
 import {interpolateColor} from "react-native-reanimated";
 import UtilityStorageManager from "../model/UtilityStorageManager";
-import ComunicationController from "../model/ComunicationController";
+import CommunicationController from "../model/CommunicationController";
 import {Alert} from "react-native";
 
 const COLORS = [
@@ -34,9 +34,9 @@ export async function sendTwok(text, bgcol, fontcol, fontsize, fonttype, Xalign,
         return Alert.alert("Error", "Missing text")
     } else {
         if (lat !== undefined && lon !== undefined) {
-            await ComunicationController.addTwok(sid, text, bgcol, fontcol, fontsize, fonttype, Xalign, Yalign, lat, lon)
+            await CommunicationController.addTwok(sid, text, bgcol, fontcol, fontsize, fonttype, Xalign, Yalign, lat, lon)
         } else {
-            await ComunicationController.addTwok(sid, text, bgcol, fontcol, fontsize, fonttype, Xalign, Yalign)
+            await CommunicationController.addTwok(sid, text, bgcol, fontcol, fontsize, fonttype, Xalign, Yalign)
         }
     }
 }
@@ -71,7 +71,7 @@ export async function getTwoks(uid) {
 
     if (uid !== undefined) {
         for (let i = 0; i < 8; i++) {
-            let twok = await ComunicationController.getTwok(sid, uid);
+            let twok = await CommunicationController.getTwok(sid, uid);
             if (isValid(twok)) {
                 tmpArr.push(twok);
             } else {
@@ -80,7 +80,7 @@ export async function getTwoks(uid) {
         }
     } else {
         for (let i = 0; i < 8; i++) {
-            let twok = await ComunicationController.getTwok(sid);
+            let twok = await CommunicationController.getTwok(sid);
             if (isValid(twok)) {
                 tmpArr.push(twok);
             } else {
@@ -94,6 +94,6 @@ export async function getTwoks(uid) {
 async function getTwoksWithTid(tid) {
     const sid = await UtilityStorageManager.getSid();
     const tmpArr = [];
-    tmpArr.unshift(await ComunicationController.getTwok(sid, tid));
+    tmpArr.unshift(await CommunicationController.getTwok(sid, tid));
     return tmpArr;
 }

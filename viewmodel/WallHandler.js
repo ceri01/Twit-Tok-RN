@@ -1,6 +1,6 @@
 import TwokBuffer from "../model/TwokBuffer";
 import {getTwoks} from "./TwokHandler";
-import ComunicationController from "../model/ComunicationController";
+import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
 
 const twoks = new TwokBuffer();
@@ -21,7 +21,7 @@ export function getData() {
 export async function initWall() {
     const elements = await getTwoks();
     let sid = await UtilityStorageManager.getSid();
-    let followed = await ComunicationController.getFollowed(sid)
+    let followed = await CommunicationController.getFollowed(sid)
     elements.map((element) => {
         element.followed = isInFollowed(element.uid, followed);
     });

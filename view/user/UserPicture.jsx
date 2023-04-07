@@ -1,5 +1,5 @@
 import {Image, StyleSheet, View} from "react-native";
-import {createPictureSource} from "../../viewmodel/pictureHandler"
+import {createPictureSource} from "../../viewmodel/PictureHandler"
 
 
 const UserPicture = (props) => {

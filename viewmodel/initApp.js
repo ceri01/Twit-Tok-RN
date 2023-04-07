@@ -1,5 +1,5 @@
 import UtilityStorageManager from "../model/UtilityStorageManager";
-import ComunicationController from "../model/ComunicationController";
+import CommunicationController from "../model/CommunicationController";
 import {Alert, Image} from "react-native";
 import DefaultImage from "../assets/favicon.png";
 import database from "../model/DBManager";
@@ -9,14 +9,14 @@ export async function initProfile(name, pic) {
     database().updateProfileName(name, () => {
         if (pic !== null) {
             database().updateProfilePicture(pic, async () => {
-                await ComunicationController.setProfile(sid, name, pic);
+                await CommunicationController.setProfile(sid, name, pic);
             }, () => {
                 Alert.alert("Input Error", "Picture format not valid")
             });
         } else {
             let defaultPic = Image.resolveAssetSource(DefaultImage).uri
             database().updateProfilePicture(defaultPic, async () => {
-                await ComunicationController.setProfile(sid, name, defaultPic);
+                await CommunicationController.setProfile(sid, name, defaultPic);
             }, () => {
                 Alert.alert("Input Error", "Picture format not valid")
             });
@@ -31,9 +31,9 @@ export async function initEnvironment() {
     let firstStart = await UtilityStorageManager.isFirstStart();
     if (firstStart) {
         await UtilityStorageManager.firstStart();
-        let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"} // await ComunicationController.register();
+        let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"} // await CommunicationController.register();
         await UtilityStorageManager.setSid(register.sid.toString());
-        let profile = await ComunicationController.getProfile(register.sid.toString());
+        let profile = await CommunicationController.getProfile(register.sid.toString());
         await UtilityStorageManager.setProfileUid(profile.uid.toString());
         database();
         await UtilityStorageManager.DBInit();

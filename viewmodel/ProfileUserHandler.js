@@ -1,4 +1,4 @@
-import ComunicationController from "../model/ComunicationController"
+import CommunicationController from "../model/CommunicationController"
 import UtilityStorageManager from "../model/UtilityStorageManager"
 import {Alert} from "react-native";
 import database from "../model/DBManager";
@@ -7,7 +7,7 @@ export function setNewProfileName(name) {
     if (typeof(name) === "string") {
         database().updateProfileName(name);
         UtilityStorageManager.getSid().then((sid) => {
-            ComunicationController.setProfile(sid, name).then(() => {
+            CommunicationController.setProfile(sid, name).then(() => {
                 console.log("name modified")
             })
         })

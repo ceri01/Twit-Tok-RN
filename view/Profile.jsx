@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import CustomTextModal from "./modal/CustomTextModal";
 
 import {getProfile, setNewProfileName} from "../viewmodel/ProfileUserHandler"
-import {createPictureSource} from "../viewmodel/pictureHandler";
+import {createPictureSource} from "../viewmodel/PictureHandler";
 import database from "../model/DBManager";
 
 const DATA = [

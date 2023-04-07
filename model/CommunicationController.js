@@ -1,5 +1,5 @@
 import API from "../config/config.js"
-export default class ComunicationController {
+export default class CommunicationController {
     static async _call(endpoint, parameters) {
         let response = await fetch(API.BASE_URL + endpoint, {
             method: 'POST',
