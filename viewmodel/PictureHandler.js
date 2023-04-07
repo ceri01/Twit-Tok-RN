@@ -3,7 +3,7 @@ import {Image} from "react-native";
 import DefaultImage from "../assets/favicon.png";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
-import database from "../model/DBManager";
+import DBManager from "../model/DBManager";
 
 export const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -21,14 +21,14 @@ export function createPictureSource(rawData) {
 
 export function getUserPicture(uid, pversion) { // to be refactored
     let pic = null
-    database().getUserPicture(uid, (result) => {
+    DBManager.getInstance().getUserPicture(uid, (result) => {
         if (result.length > 0) {
             if(result[0].pversion === pversion) {
                 pic = result
             } else if (result.pversion !== pversion) {
                 UtilityStorageManager.getSid().then((sid) => {
                     CommunicationController.getPicture(sid, uid).then((res) => {
-                        database().updateUserPicture(uid, res.picture, res.pversion);
+                        DBManager.getInstance().updateUserPicture(uid, res.picture, res.pversion);
                         pic = res.picture;
                     });
                 })
@@ -37,10 +37,10 @@ export function getUserPicture(uid, pversion) { // to be refactored
             UtilityStorageManager.getSid().then((sid) => {
                 CommunicationController.getPicture(sid, uid).then((res) => {
                     if (res.picture === null) {
-                        database().addUserPicture(res.uid, Image.resolveAssetSource(DefaultImage).uri, 0);
+                        DBManager.getInstance().addUserPicture(res.uid, Image.resolveAssetSource(DefaultImage).uri, 0);
                         pic = Image.resolveAssetSource(DefaultImage).uri;
                     } else {
-                        database().addUserPicture(res.uid, res.picture, res.pversion);
+                        DBManager.getInstance().addUserPicture(res.uid, res.picture, res.pversion);
                         pic = res.picture;
                     }
                 });

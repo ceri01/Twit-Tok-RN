@@ -4,11 +4,12 @@ import {useState} from "react";
 import {openImagePicker, createPictureSource} from "../viewmodel/PictureHandler";
 import DefaultImage from "../assets/favicon.png";
 import ChooseImageButton from "./buttons/ChooseImageButton";
-import {initEnvironment, initProfile} from "../viewmodel/initApp";
+import {initProfile} from "../viewmodel/initApp";
 
-function Register({ navigation }) {
+function Register({ route, navigation }) {
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
+
     function getImage() {
         openImagePicker().then((result) => {
             if (!result.canceled) {
@@ -40,13 +41,10 @@ function Register({ navigation }) {
             <View style={style.button}>
                 <RegisterButton onPress={() => {
                     if (typeof(name) === "string" && name.length > 0) {
-                        console.log("\n" + image + "\n########")
-                        initEnvironment().then(() => {
-                            initProfile(name, image).then(() => {
-                                navigation.navigate("Main", {screen: "Wall"})
-                            }).catch((err) => {
-                                Alert.alert("Error", "An error has occurred\n" + err);
-                            })
+                        initProfile(name, image).then(() => {
+                            navigation.navigate("Main", {screen: "Wall"})
+                        }).catch((err) => {
+                            Alert.alert("Error", "An error has occurred\n" + err);
                         })
                     } else {
                         Alert.alert("Missing name", "Insert a name.");

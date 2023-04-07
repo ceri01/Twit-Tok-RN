@@ -6,15 +6,20 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {StyleSheet, Text} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
+import {initEnvironment} from "./viewmodel/initApp";
 
 const Stack = createNativeStackNavigator();
 
 function App() {
     const load = useRef("")
     const [isLoading, setIsLoading] = useState(true);
+
     if (isLoading) {
         UtilityStorageManager.isFirstStart().then((res) => {
             if (res) {
+                initEnvironment().then(() => {
+                    console.log("env initialized")
+                })
                 load.current = "Register";
             } else {
                 load.current = "Main";
@@ -37,7 +42,6 @@ function App() {
             </SafeAreaProvider>
         );
     }
-
 }
 
 const style = StyleSheet.create({
