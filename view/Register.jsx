@@ -15,7 +15,6 @@ function Register({ navigation }) {
                 if (result.length > 137000) {
                     Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
                 }
-                console.log(result)
                 setImage(createPictureSource(result));
             }
         }).catch((err) => {
