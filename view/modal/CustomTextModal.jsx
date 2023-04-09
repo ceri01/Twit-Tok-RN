@@ -9,7 +9,7 @@ function CustomTextModal(props) {
      */
     const [currentText, setCurrentText] = useState(props.text);
 
-    if (props.isReset.current !== undefined && props.isReset.current === true) {
+    if (props.isReset.current === true) {
         setCurrentText("")
         props.onReset()
     }
