@@ -1,8 +1,7 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} from "react-native";
 import TwokRow from "./twok/TwokRow";
 import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
-import safeAreaView from "react-native/Libraries/Components/SafeAreaView/SafeAreaView";
 
 function Wall() {
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
