@@ -6,17 +6,17 @@ import AddTwok from "./AddTwok";
 import Wall from "./Wall";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {SafeAreaProvider} from "react-native-safe-area-context";
-import database from "../model/DBManager";
+import {StatusBar} from "react-native";
 
 const Tab = createBottomTabNavigator();
-
+const statusBarHeight = StatusBar.currentHeight;
 function Main({ navigation }) {
     React.useEffect(() => navigation.addListener('beforeRemove', (event) => {
             event.preventDefault()
         }),
         [navigation]
     );
-    database() // call database here to init reference to database all times
+
     return (
         <SafeAreaProvider>
             <Tab.Navigator
@@ -41,10 +41,10 @@ function Main({ navigation }) {
                     }
                 })}
             >
-                <Tab.Screen name="Options" component={Options}></Tab.Screen>
-                <Tab.Screen name="Wall" component={Wall}></Tab.Screen>
-                <Tab.Screen name="NewTwok" component={AddTwok}></Tab.Screen>
-                <Tab.Screen name="Profile" component={Profile}></Tab.Screen>
+                <Tab.Screen name="Options" initialParams={{statusBarHeight: statusBarHeight}} component={Options}></Tab.Screen>
+                <Tab.Screen name="Wall" initialParams={{statusBarHeight: statusBarHeight}} component={Wall}></Tab.Screen>
+                <Tab.Screen name="NewTwok" initialParams={{statusBarHeight: statusBarHeight}} component={AddTwok}></Tab.Screen>
+                <Tab.Screen name="Profile" initialParams={{statusBarHeight: statusBarHeight}} component={Profile}></Tab.Screen>
             </Tab.Navigator>
         </SafeAreaProvider>
     );
