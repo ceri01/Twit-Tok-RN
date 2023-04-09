@@ -6,9 +6,8 @@ export default class DBManager {
     _database = null
 
     constructor() {
-        console.log(DBManager.instance)
         if (DBManager.instance === null) {
-            this._database = SQLite.openDatabase("Twit-tok");
+            this._database = SQLite.openDatabase("Prova2");
             UtilityStorageManager.getProfileUid().then(uid => {
                 const profile_table = "CREATE TABLE IF NOT EXISTS Profile(uid INTEGER PRIMARY KEY, name TEXT, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000), pversion SMALLINT);";
                 const pictures = "CREATE TABLE IF NOT EXISTS Pictures(uid INTEGER PRIMARY KEY, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000) NOT NULL, pversion SMALLINT NOT NULL);";
@@ -50,12 +49,15 @@ export default class DBManager {
                 console.log("2 " + error.message);
             });
         });
+        this._database.closeAsync()
+        this._database.deleteAsync()
     }
 
     getProfileFromDB(onResult, onError) {
         const query = "SELECT * FROM Profile";
         this._database.transaction((transaction) => {
             transaction.executeSql(query, [], (transaction, resultSet) => {
+                console.log(resultSet.rows._array[0])
                 onResult(resultSet.rows._array[0])
             })
         }, error => onError(error))
