@@ -3,21 +3,10 @@ import {createPictureSource} from "../../viewmodel/PictureHandler"
 
 
 const UserPicture = (props) => {
-    function pictureDimension() {
-        if (props.changePicDimension) {
-            return ({
-                height: 90,
-                width: 90
-            });
-        }
-        return styles.img
-    }
-
-    // TODO: Fix with user pic
     return (
         <View style={styles.imgContainer}>
             <Image
-                style={pictureDimension()}
+                style={styles.img}
                 source={{uri: createPictureSource(props.source)}}/>
         </View>
     );
