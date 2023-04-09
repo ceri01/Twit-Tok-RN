@@ -4,7 +4,7 @@ import TwokRow from "./twok/TwokRow";
 import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
 
 function UserWall() {
-    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
+/*    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
 
     if (listUpdater === 0) {
@@ -64,7 +64,7 @@ function UserWall() {
             {displayContent()}
             <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
         </SafeAreaView>
-    );
+    );*/
 
 }
 
