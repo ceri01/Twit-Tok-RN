@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import {Image} from "react-native";
+import {Alert, Image} from "react-native";
 import DefaultImage from "../assets/favicon.png";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
@@ -18,6 +18,20 @@ export function createPictureSource(rawData) {
     }
     return Image.resolveAssetSource(DefaultImage).uri
 }
+
+/*export function getImage(setImage) {
+    openImagePicker().then((result) => {
+        if (!result.canceled) {
+            if (result.length > 137000) {
+                Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
+            }
+            setImage(createPictureSource(result));
+        }
+    }).catch((err) => {
+        Alert.alert("Error", "Image not selected, default icon setted.");
+        setImage(Image.resolveAssetSource(DefaultImage).uri);
+    })
+}*/
 
 export function getUserPicture(uid, pversion) { // to be refactored
     let pic = null

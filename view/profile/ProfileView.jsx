@@ -8,6 +8,10 @@ import ProfileButtons from "./ProfileButtons";
 
 
 const ProfileView = (props) => {
+    function dataEdited() {
+        props.edit()
+    }
+
 /*    const followStatus = useRef(props.followed);
 
     function follow(followed) {
@@ -29,7 +33,7 @@ const ProfileView = (props) => {
             </View>
             <View style={style.profile}>
                 <ProfileName userName={props.profileName}/>
-                <ProfileButtons userName={props.profileName} pic={props.profilePicture}></ProfileButtons>
+                <ProfileButtons userName={props.profileName} pic={props.profilePicture} onPress={dataEdited}></ProfileButtons>
             </View>
             {/*            <View style={style.button}>
                 <FollowUnfollowButton follow={follow} unfollow={unfollow} isFollow={followStatus.current} />

@@ -1,25 +1,38 @@
 import {Pressable, StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import CustomTextModal from "../modal/CustomTextModal";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {setNewProfileName} from "../../viewmodel/ProfileUserHandler";
-import {useRef, useState} from "react";
+import {setNewProfileName, setNewProfilePic} from "../../viewmodel/ProfileUserHandler";
+import {useState} from "react";
+import CustomImageModal from "../modal/CustomImageModal";
 
 const ProfileButtons = (props) => {
     const [modalNameVisible, setModalNameVisible] = useState(false);
     const [modalPicVisible, setModalPicVisible] = useState(false);
+
+    function changeText(name) {
+        setNewProfileName(name).then(() => {
+            props.onPress()
+        })
+    }
+
+    function changePic(pic) {
+        setNewProfilePic(pic).then(() => {
+            props.onPress()
+        })
+    }
+
     return (
         <View style={style.layout}>
             <Pressable style={style.editButton}
                        onPress={() => {
-                           console.log(modalNameVisible.current)
                            setModalNameVisible(!modalNameVisible)
                        }
                        }>
-                <View style={style.button}>
+                <View style={style.textButton}>
                     <CustomTextModal visibility={modalNameVisible}
                                      text={props.userName}
                                      onChangeVisibility={setModalNameVisible}
-                                     onChangeText={setNewProfileName}
+                                     onChangeText={changeText}
                                      isName={true}
                                      isReset={false}>
                     </CustomTextModal>
@@ -31,15 +44,14 @@ const ProfileButtons = (props) => {
                            setModalPicVisible(!modalPicVisible)
                        }
                        }>
-                <View style={style.button}>
-                    {/*                        <CustomTextModal visibility={modalNameVisible}
-                                         onChangeVisibility={setModalNameVisible}
-                                         text={profile.current.name}
-                                         onChangeText={setNewProfileName}
-                                         isReset={reset}
-                                         onReset={handleSliderReset}
-                                         isName={true}>
-                        </CustomTextModal>*/}
+                <View style={style.imageButton}>
+                    <CustomImageModal visibility={modalPicVisible}
+                                      image={props.pic}
+                                      onChangeVisibility={setModalPicVisible}
+                                      onChangeImage={changePic}
+                                      isReset={false}
+                    >
+                    </CustomImageModal>
                     <Icon name="image-edit" size={25} color="white"></Icon>
                 </View>
             </Pressable>
@@ -53,7 +65,13 @@ const style = StyleSheet.create({
         flexDirection: "row",
         padding: 10,
     },
-    button: {
+    textButton: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#6200ee",
+        borderRadius: 5
+    },
+    imageButton: {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#6200ee",

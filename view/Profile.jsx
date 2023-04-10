@@ -38,10 +38,15 @@ const DATA = [
 ]
 
 function Profile({route}) {
-    const reset = useRef(false); // flag to reset page
     const [ready, setReady] = useState(false);
-    let profile = useRef(null)
+    let profile = useRef(null);
 
+    DBManager.getInstance().getProfileFromDB((resultQuery) => {
+        profile.current = resultQuery
+        setReady(true)
+    }, (error) => {
+        console.log("a" + error);
+    })
 
     function profileStyle() {
         return ({
@@ -51,16 +56,8 @@ function Profile({route}) {
         )
     }
 
-    if (profile.current === null) {
-        console.log("kek")
-        DBManager.getInstance().getProfileFromDB((resultQuery) => {
-            console.log("aa" + resultQuery)
-            profile.current = resultQuery
-            setReady(true)
-        }, (error) => {
-            console.log("a" + error);
-        })
-
+    function reload() {
+        setReady(false)
     }
 
     if (ready) {
@@ -68,7 +65,7 @@ function Profile({route}) {
             <SafeAreaView style={profileStyle()}>
                 <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
                 <View style={style.profile}>
-                    <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture}></ProfileView>
+                    <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
                 </View>
                 <View style={style.followed}>
 

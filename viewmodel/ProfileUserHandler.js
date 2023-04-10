@@ -3,16 +3,33 @@ import UtilityStorageManager from "../model/UtilityStorageManager"
 import {Alert} from "react-native";
 import DBManager from "../model/DBManager";
 
-export function setNewProfileName(name) {
+export async function setNewProfileName(name) {
     if (typeof (name) === "string" && name.length <= 99) {
-        DBManager.getInstance().updateProfileName(name, (res) => {
-            console.log(res)
+        await DBManager.getInstance().updateProfileName(name, () => {
+            console.log("name modified database")
         }, (err) => {
-            console.log(err)
+            console.log("errore " + err)
         });
-        UtilityStorageManager.getSid().then((sid) => {
+        await UtilityStorageManager.getSid().then((sid) => {
             CommunicationController.setProfile(sid, name).then(() => {
-                console.log("name modified")
+                console.log("name modified server")
+            })
+        })
+    } else {
+        Alert.alert("Input error", "Bad format of name");
+    }
+}
+
+export async function setNewProfilePic(pic) {
+    if (pic !== undefined && typeof(pic) === "string" && pic.length < 137000) {
+        await DBManager.getInstance().updateProfilePicture(pic, () => {
+            console.log("pic modified database")
+        }, (err) => {
+            console.log("errore " + err)
+        });
+        await UtilityStorageManager.getSid().then((sid) => {
+            CommunicationController.setProfile(sid, null, pic).then(() => {
+                console.log("pic modified server")
             })
         })
     } else {
