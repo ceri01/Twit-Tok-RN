@@ -23,6 +23,7 @@ const style = StyleSheet.create({
     },
     userName: {
         flex: 1,
+        justifyContent: "center",
         paddingHorizontal: 10,
     },
 
