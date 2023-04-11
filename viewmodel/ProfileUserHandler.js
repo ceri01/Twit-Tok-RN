@@ -11,7 +11,7 @@ export async function setNewProfileName(name) {
             console.log("errore " + err)
         });
         await UtilityStorageManager.getSid().then((sid) => {
-            CommunicationController.setProfile(sid, name).then(() => {
+            CommunicationController.setProfileName(sid, name).then(() => {
                 console.log("name modified server")
             })
         })
@@ -28,7 +28,7 @@ export async function setNewProfilePic(pic) {
             console.log("errore " + err)
         });
         await UtilityStorageManager.getSid().then((sid) => {
-            CommunicationController.setProfile(sid, null, pic).then(() => {
+            CommunicationController.setProfilePicture(sid, pic).then(() => {
                 console.log("pic modified server")
             })
         })
