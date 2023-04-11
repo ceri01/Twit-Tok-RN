@@ -1,17 +1,17 @@
-import {Alert, Image, Modal, StyleSheet, TextInput, View} from "react-native";
+import {Alert, Image, Modal, StyleSheet, View} from "react-native";
 import CancelButton from "../buttons/CancelButton";
 import ConfirmButton from "../buttons/ConfirmButton";
 import React, {useState} from "react";
-import {createPictureSource, getImage, openImagePicker} from "../../viewmodel/PictureHandler";
+import {createPictureSource, openImagePicker} from "../../viewmodel/PictureHandler";
 import ChooseImageButton from "../buttons/ChooseImageButton";
 import DefaultImage from "../../assets/favicon.png";
 import ProfilePicture from "../profile/ProfilePicture";
 
 function CustomImageModal(props) {
-    /* this text is for support editing of twok text
+    /* this image is for support editing of twok image
        isn't duplicate data, but is necessary to better graphic effect
      */
-    const [currentImage, setCurrentImage] = useState(props.text);
+    const [currentImage, setCurrentImage] = useState(props.image);
 
     function getImage() { //TODO: Da farci una funzione sola, perchè è uguale a quella in register
         openImagePicker().then((result) => {
@@ -38,9 +38,10 @@ function CustomImageModal(props) {
     }
 
     const handleCancelImageChange = () => {
-        setCurrentImage(props.text)
+        setCurrentImage(props.image)
         props.onChangeVisibility(!props.visibility)
     }
+
 
     return (
         <Modal animationType={"fade"}
@@ -52,14 +53,10 @@ function CustomImageModal(props) {
         >
             <View style={style.modalCenteredView}>
                 <View style={style.modalView}>
+                    <ProfilePicture pic={currentImage}></ProfilePicture>
                     <ChooseImageButton onPress={getImage}></ChooseImageButton>
                     <View style={style.modalButtons}>
-                        <View style={{flex: 6}}>
-                            <View style={style.pic}>
-                                <ProfilePicture pic={currentImage}/>
-                            </View>
-                            <CancelButton onCancel={handleCancelImageChange}/>
-                        </View>
+                        <CancelButton onCancel={handleCancelImageChange}/>
                         <ConfirmButton onConfirm={handleConfirmImageChange}/>
                     </View>
                 </View>
@@ -70,6 +67,7 @@ function CustomImageModal(props) {
 
 const style = StyleSheet.create({
     modalView: {
+        flex: 0.5,
         margin: 10,
         backgroundColor: "white",
         borderRadius: 20,
@@ -96,9 +94,6 @@ const style = StyleSheet.create({
         paddingTop: 20,
         flexDirection: "row"
     },
-    pic: {
-        flexDirection: "column"
-    }
 })
 
 export default CustomImageModal;
