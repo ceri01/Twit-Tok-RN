@@ -12,11 +12,13 @@ const UserView = (props) => {
     function follow(followed) {
         setFollowStatus(followed)
         addFollow(props.uid);
+        props.edit();
     }
 
     function unfollow(followed) {
         setFollowStatus(followed);
         removeFollow(props.uid);
+        props.edit();
     }
 
     return (

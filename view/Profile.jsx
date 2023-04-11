@@ -14,9 +14,9 @@ function Profile({route}) {
         followedUser.current = res
         DBManager.getInstance().getProfileFromDB((resultQuery) => {
             profile.current = resultQuery
-            setReady(true)
+            setReady(true);
         }, (error) => {
-            console.log("a" + error);
+            console.log("errore => " + error);
         })
     })
 
@@ -43,7 +43,7 @@ function Profile({route}) {
                     <FlatList data={followedUser.current}
                               renderItem={(element) => {
                                   // TODO: Metti foto profilo
-                                  return <UserView dimensions={route.params.WindowHeight / 100} name={element.item.name} uid={element.item.uid} followed={true}/>
+                                  return <UserView dimensions={route.params.WindowHeight / 50} name={element.item.name} uid={element.item.uid} followed={true} edit={reload}/>
                               }}
                               keyExtractor={(element) => element.uid}>
                     </FlatList>

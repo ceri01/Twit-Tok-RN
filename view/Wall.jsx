@@ -29,7 +29,7 @@ function Wall({route}) {
                     extraData={listrefresher}
                     data={getData()}
                     renderItem={(twok) => {
-                        return <TwokRow data={twok.item} dimensions={{TabHeight: TabHeight, WindowHeight: route.params.WindowHeight.height, StatusBarHeight: route.params.StatusBarHeight}}/>
+                        return <TwokRow data={twok.item} dimensions={{TabHeight: TabHeight, WindowHeight: route.params.WindowHeight, StatusBarHeight: route.params.StatusBarHeight}}/>
                     }}
                     keyExtractor={(item, index) => {
                         return index.toString()
@@ -37,7 +37,7 @@ function Wall({route}) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     disableIntervalMomentum={true}
-                    snapToInterval={route.params.WindowHeight.height - route.params.StatusBarHeight - TabHeight} // 90 is dimension of navigation bar
+                    snapToInterval={route.params.WindowHeight - route.params.StatusBarHeight - TabHeight} // 90 is dimension of navigation bar
                     snapToAlignment="start"
                     decelerationRate="fast"
                     onEndReached={(info) => {

@@ -33,7 +33,7 @@ function TwokRow(props) {
     return (
         <View>
             <View style={style.user}>
-                <UserView name={props.data.name} pversion={props.data.pversion} uid={props.data.uid} followed={props.data.followed}></UserView>
+                <UserView dimensions={props.dimensions.WindowHeight / 50} name={props.data.name} pversion={props.data.pversion} uid={props.data.uid} followed={props.data.followed} edit={() => {}}/>
             </View>
             <View style={twokStyle()}>
                 <Text style={twokTextStyle()}>{props.data.text}</Text>
