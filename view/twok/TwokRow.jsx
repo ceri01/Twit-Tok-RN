@@ -1,7 +1,9 @@
-import {Dimensions, Platform, StatusBar, StyleSheet, Text, View} from "react-native";
+import {Platform, StyleSheet, Text, View} from "react-native";
 import UserView from "../user/UserView";
+const USERVIEWHEIGHT = 60;
 
 function TwokRow(props) {
+
     const ALIGNAMENTS = ["flex-start", "center", "flex-end"];
     let FONTTYPE = null;
     if (Platform.OS === 'ios') {
@@ -14,6 +16,8 @@ function TwokRow(props) {
         return {
             alignItems: ALIGNAMENTS[props.data.halign],
             justifyContent: ALIGNAMENTS[props.data.valign],
+            height: props.dimensions.WindowHeight - props.dimensions.TabHeight - USERVIEWHEIGHT - props.dimensions.StatusBarHeight,
+            width: "100%",
             backgroundColor: "#" + props.data.bgcol,
         }
     }
@@ -27,7 +31,7 @@ function TwokRow(props) {
     }
 
     return (
-        <View style={style.twokStyle}>
+        <View>
             <View style={style.user}>
                 <UserView name={props.data.name} pversion={props.data.pversion} uid={props.data.uid} followed={props.data.followed}></UserView>
             </View>
@@ -40,14 +44,10 @@ function TwokRow(props) {
 
 const style = StyleSheet.create({
     user: {
-        height: 60,
+        height: USERVIEWHEIGHT,
         borderBottomWidth: 1,
         borderRadius: 30
 
-    },
-    twokStyle: {
-        width: "100%",
-        height: Dimensions.get('window').height, // 90 is dimension of navigation bar
     },
     text: {
         fontSize: 40,

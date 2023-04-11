@@ -2,17 +2,12 @@ import React, {useState} from "react";
 import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} from "react-native";
 import TwokRow from "./twok/TwokRow";
 import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
-
-const windowHeight = Dimensions.get("window").height;
-const navigationBarHeight = windowHeight;
+import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 
 function Wall({route}) {
+    const TabHeight = useBottomTabBarHeight()
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
-    const params = JSON.stringify(route.params)
-    console.log(params)
-
-    console.log(navigationBarHeight)
 
     if (listUpdater === 0) {
         initWall().then(() => {
@@ -34,7 +29,7 @@ function Wall({route}) {
                     extraData={listrefresher}
                     data={getData()}
                     renderItem={(twok) => {
-                        return <TwokRow data={twok.item}/>
+                        return <TwokRow data={twok.item} dimensions={{TabHeight: TabHeight, WindowHeight: route.params.WindowHeight.height, StatusBarHeight: route.params.StatusBarHeight}}/>
                     }}
                     keyExtractor={(item, index) => {
                         return index.toString()
@@ -42,7 +37,7 @@ function Wall({route}) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     disableIntervalMomentum={true}
-                    snapToInterval={Dimensions.get('window').height - navigationBarHeight} // 90 is dimension of navigation bar
+                    snapToInterval={route.params.WindowHeight.height - route.params.StatusBarHeight - TabHeight} // 90 is dimension of navigation bar
                     snapToAlignment="start"
                     decelerationRate="fast"
                     onEndReached={(info) => {
