@@ -1,21 +1,14 @@
 import React, {useRef, useState} from "react";
-import {Dimensions, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
+import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import DBManager from "../model/DBManager";
 import getFollowed from "../viewmodel/FollowHandler";
 
-const {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-} = Dimensions.get('window');
-
 function Profile({route}) {
     const [ready, setReady] = useState(false);
     let profile = useRef(null);
     let followedUser = useRef(null)
-
-    console.log(SCREEN_HEIGHT)
 
     getFollowed().then((res) => {
         followedUser.current = res
@@ -50,7 +43,7 @@ function Profile({route}) {
                     <FlatList data={followedUser.current}
                               renderItem={(element) => {
                                   // TODO: Metti foto profilo
-                                  return <UserView dimensions={SCREEN_HEIGHT / 100} name={element.item.name} uid={element.item.uid} followed={true}/>
+                                  return <UserView dimensions={route.params.WindowHeight / 100} name={element.item.name} uid={element.item.uid} followed={true}/>
                               }}
                               keyExtractor={(element) => element.uid}>
                     </FlatList>
