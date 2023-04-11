@@ -1,51 +1,30 @@
 import React, {useRef, useState} from "react";
-import {FlatList, Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
+import {Dimensions, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
 import UserView from "./user/UserView";
-import UserPicture from "./user/UserPicture";
-import UserName from "./user/UserName";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import CustomTextModal from "./modal/CustomTextModal";
-
-import {getProfile, setNewProfileName} from "../viewmodel/ProfileUserHandler"
-import {createPictureSource} from "../viewmodel/PictureHandler";
-import ProfilePicture from "./profile/ProfilePicture";
-import ProfileName from "./profile/ProfileName";
 import ProfileView from "./profile/ProfileView";
-import NativeStatusBarManagerIOS from "react-native/Libraries/Components/StatusBar/NativeStatusBarManagerIOS";
-import NativeStatusBarManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManagerIOS";
-import database from "../model/DBManager";
 import DBManager from "../model/DBManager";
+import getFollowed from "../viewmodel/FollowHandler";
 
-const DATA = [
-    {"id": 1, name: "Mimmo"},
-    {"id": 2, name: "Caloggero"},
-    {"id": 3, name: "Gennaro"},
-    {"id": 4, name: "Danilo"},
-    {"id": 5, name: "Elena"},
-    {"id": 6, name: "Carmine"},
-    {"id": 7, name: "Alberto"},
-    {"id": 8, name: "Rosario"},
-    {"id": 9, name: "Nicola"},
-    {"id": 10, name: "Mimmo"},
-    {"id": 11, name: "Caloggero"},
-    {"id": 12, name: "Gennaro"},
-    {"id": 13, name: "Danilo"},
-    {"id": 14, name: "Elena"},
-    {"id": 15, name: "Carmine"},
-    {"id": 16, name: "Alberto"},
-    {"id": 17, name: "Rosario"},
-    {"id": 18, name: "Nicola"},
-]
+const {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
 
 function Profile({route}) {
     const [ready, setReady] = useState(false);
     let profile = useRef(null);
+    let followedUser = useRef(null)
 
-    DBManager.getInstance().getProfileFromDB((resultQuery) => {
-        profile.current = resultQuery
-        setReady(true)
-    }, (error) => {
-        console.log("a" + error);
+    console.log(SCREEN_HEIGHT)
+
+    getFollowed().then((res) => {
+        followedUser.current = res
+        DBManager.getInstance().getProfileFromDB((resultQuery) => {
+            profile.current = resultQuery
+            setReady(true)
+        }, (error) => {
+            console.log("a" + error);
+        })
     })
 
     function profileStyle() {
@@ -68,16 +47,14 @@ function Profile({route}) {
                     <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
                 </View>
                 <View style={style.followed}>
-
+                    <FlatList data={followedUser.current}
+                              renderItem={(element) => {
+                                  // TODO: Metti foto profilo
+                                  return <UserView dimensions={SCREEN_HEIGHT / 100} name={element.item.name} uid={element.item.uid} followed={true}/>
+                              }}
+                              keyExtractor={(element) => element.uid}>
+                    </FlatList>
                 </View>
-                {/*            <View>
-                <FlatList data={DATA}
-                          renderItem={(element) => {
-                              return <ProfileView data={element.item} isProfile={true}/>
-                          }}
-                          keyExtractor={(element) => element.id}>
-                </FlatList>
-            </View>*/}
             </SafeAreaView>
         );
     } else {

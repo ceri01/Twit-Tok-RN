@@ -7,7 +7,7 @@ export default class DBManager {
 
     constructor() {
         if (DBManager.instance === null) {
-            this._database = SQLite.openDatabase("Prova8");
+            this._database = SQLite.openDatabase("Prova17");
             UtilityStorageManager.getProfileUid().then(uid => {
                 const profile_table = "CREATE TABLE IF NOT EXISTS Profile(uid INTEGER PRIMARY KEY, name TEXT, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000), pversion SMALLINT);";
                 const pictures = "CREATE TABLE IF NOT EXISTS Pictures(uid INTEGER PRIMARY KEY, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000) NOT NULL, pversion SMALLINT NOT NULL);";
@@ -49,6 +49,7 @@ export default class DBManager {
                 console.log("2 " + error.message);
             });
         });
+        this._database.closeAsync()
         this._database.deleteAsync()
     }
 
