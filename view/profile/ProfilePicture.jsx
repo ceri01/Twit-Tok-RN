@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     img: {
+        aspectRatio: 1,
         height: "80%",
         width: "80%"
     }
