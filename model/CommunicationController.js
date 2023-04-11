@@ -32,11 +32,32 @@ export default class CommunicationController {
 
     static setProfile = async (sid, name, picture) => {
         const endpoint = API.SETPROFILE;
-        if(name.length > 20) throw new Error("name must be a amximum of 20 characters long")
+        if(name.length > 20) throw new Error("name must be a maximum of 20 characters long");
+        if(picture.length > 137000) throw new Error("pic must be a maximum of 100KB");
         const parameters = {
             sid: sid,
             name: name,
             picture: picture
+        };
+        return await this._call(endpoint, parameters);
+    }
+
+    static setProfilePicture = async (sid, picture) => {
+        const endpoint = API.SETPROFILE;
+        if(picture.length > 137000) throw new Error("pic must be a maximum of 100KB");
+        const parameters = {
+            sid: sid,
+            picture: picture
+        };
+        return await this._call(endpoint, parameters);
+    }
+
+    static setProfileName = async (sid, name) => {
+        const endpoint = API.SETPROFILE;
+        if(name.length > 20) throw new Error("name must be a maximum of 20 characters long")
+        const parameters = {
+            sid: sid,
+            name: name,
         };
         return await this._call(endpoint, parameters);
     }
