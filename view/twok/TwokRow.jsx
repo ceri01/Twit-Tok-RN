@@ -12,7 +12,6 @@ function TwokRow(props) {
 
     function twokStyle() {
         return {
-            flex: 1,
             alignItems: ALIGNAMENTS[props.data.halign],
             justifyContent: ALIGNAMENTS[props.data.valign],
             backgroundColor: "#" + props.data.bgcol,
@@ -46,14 +45,9 @@ const style = StyleSheet.create({
         borderRadius: 30
 
     },
-    twokContent: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    },
     twokStyle: {
         width: "100%",
-        height: Dimensions.get('window').height - 90, // 90 is dimension of navigation bar
+        height: Dimensions.get('window').height, // 90 is dimension of navigation bar
     },
     text: {
         fontSize: 40,

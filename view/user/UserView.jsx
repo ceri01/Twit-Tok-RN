@@ -3,23 +3,21 @@ import UserName from "./UserName";
 import UserPicture from "./UserPicture";
 import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
 import {addFollow, removeFollow} from "../../viewmodel/FollowHandler";
-import {useRef} from "react";
+import {useRef, useState} from "react";
 
 
 const UserView = (props) => {
-    const followStatus = useRef(props.followed);
+    const [followStatus, setFollowStatus] = useState(props.followed);
 
     function follow(followed) {
-        followStatus.current = followed;
+        setFollowStatus(followed)
         addFollow(props.uid);
     }
 
     function unfollow(followed) {
-        followStatus.current = followed;
+        setFollowStatus(followed);
         removeFollow(props.uid);
     }
-
-    // user picture => getUserPicture(props.uid, props.pversion)
 
     return (
         <View style={style.userViewContainer}>
@@ -30,7 +28,7 @@ const UserView = (props) => {
                 <UserName userName={props.name}/>
             </View>
             <View style={style.button}>
-                <FollowUnfollowButton follow={follow} unfollow={unfollow} isFollow={followStatus.current} />
+                <FollowUnfollowButton textSize={props.dimensions} follow={follow} unfollow={unfollow} isFollow={followStatus} />
             </View>
         </View>
     );

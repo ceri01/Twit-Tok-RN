@@ -3,9 +3,16 @@ import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} f
 import TwokRow from "./twok/TwokRow";
 import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
 
-function Wall() {
+const windowHeight = Dimensions.get("window").height;
+const navigationBarHeight = windowHeight;
+
+function Wall({route}) {
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
+    const params = JSON.stringify(route.params)
+    console.log(params)
+
+    console.log(navigationBarHeight)
 
     if (listUpdater === 0) {
         initWall().then(() => {
@@ -35,7 +42,7 @@ function Wall() {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     disableIntervalMomentum={true}
-                    snapToInterval={Dimensions.get('window').height - 90} // 90 is dimension of navigation bar
+                    snapToInterval={Dimensions.get('window').height - navigationBarHeight} // 90 is dimension of navigation bar
                     snapToAlignment="start"
                     decelerationRate="fast"
                     onEndReached={(info) => {
