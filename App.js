@@ -7,12 +7,23 @@ import {NavigationContainer} from "@react-navigation/native";
 import {StyleSheet, Text} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
 import {initEnvironment} from "./viewmodel/initApp";
+import * as Sentry from "@sentry/react-native";
+import Constants from "expo-constants";
+
 
 const Stack = createNativeStackNavigator();
 
 function App() {
     const load = useRef("")
     const [isLoading, setIsLoading] = useState(true);
+
+    if (Constants.expoConfig.extra.sentry_dsn !== undefined && Constants.expoConfig.extra.sentry_dsn !== null) {
+        Sentry.init({
+            dsn: Constants.expoConfig.extra.sentry_dsn,
+            tracesSampleRate: 1.0,
+            enableNative: false
+        })
+    }
 
     if (isLoading) {
         UtilityStorageManager.isFirstStart().then((res) => {
