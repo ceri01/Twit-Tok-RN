@@ -3,22 +3,22 @@ import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-n
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import DBManager from "../model/DBManager";
-import getFollowed from "../viewmodel/FollowHandler";
+import getFollowed, {initFollowed} from "../viewmodel/FollowHandler";
 
 function Profile({route}) {
     const [ready, setReady] = useState(false);
     let profile = useRef(null);
-    let followedUser = useRef(null)
 
-    getFollowed().then((res) => {
-        followedUser.current = res
-        DBManager.getInstance().getProfileFromDB((resultQuery) => {
+    DBManager.getInstance().getProfileFromDB((resultQuery) => {
+        initFollowed().then(() => {
             profile.current = resultQuery
             setReady(true);
-        }, (error) => {
-            console.log("errore => " + error);
         })
+    }, (error) => {
+        console.log("errore => " + error);
     })
+
+    console.log(getFollowed())
 
     function profileStyle() {
         return ({
@@ -40,7 +40,7 @@ function Profile({route}) {
                     <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
                 </View>
                 <View style={style.followed}>
-                    <FlatList data={followedUser.current}
+                    <FlatList data={getFollowed()}
                               renderItem={(element) => {
                                   // TODO: Metti foto profilo
                                   return <UserView dimensions={route.params.WindowHeight / 50} name={element.item.name} uid={element.item.uid} followed={true} edit={reload}/>

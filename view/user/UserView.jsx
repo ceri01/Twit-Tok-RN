@@ -3,7 +3,7 @@ import UserName from "./UserName";
 import UserPicture from "./UserPicture";
 import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
 import {addFollow, removeFollow} from "../../viewmodel/FollowHandler";
-import {useRef, useState} from "react";
+import {useState} from "react";
 
 
 const UserView = (props) => {
@@ -11,7 +11,7 @@ const UserView = (props) => {
 
     function follow(followed) {
         setFollowStatus(followed)
-        addFollow(props.uid);
+        addFollow(props.uid, props.name, props.pversion);
         props.edit();
     }
 
