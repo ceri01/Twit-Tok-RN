@@ -23,6 +23,7 @@ function App() {
             dsn: Constants.expoConfig.extra.sentry_dsn,
             enableInExpoDevelopment: true,
             debug: true,
+            enableNative: true,
         })
     }
 

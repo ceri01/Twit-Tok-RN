@@ -20,3 +20,5 @@ web-build/
 .idea
 yarn.lock
 .vscode
+/android/
+/ios/
