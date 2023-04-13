@@ -234,7 +234,7 @@ function AddTwok({route, navigation}) {
                                 alignYData.current,
                                 latitudeData.current,
                                 longitudeData.current).then(() => {
-                                console.log("twok sent")
+                                    resetPageState()
                             }).catch(() => {
                                 Alert.alert("Network Error", "Check your connection")
                             })

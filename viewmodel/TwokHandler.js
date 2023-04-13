@@ -33,7 +33,7 @@ export async function sendTwok(text, bgcol, fontcol, fontsize, fonttype, Xalign,
     if (text === undefined || text.trim().length < 1) {
         return Alert.alert("Error", "Missing text")
     } else {
-        if (lat !== undefined && lon !== undefined) {
+        if (lat !== null && lon !== null) {
             await CommunicationController.addTwok(sid, text, bgcol, fontcol, fontsize, fonttype, Xalign, Yalign, lat, lon)
         } else {
             await CommunicationController.addTwok(sid, text, bgcol, fontcol, fontsize, fonttype, Xalign, Yalign)
