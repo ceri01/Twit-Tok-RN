@@ -28,11 +28,18 @@ function CustomMapModal(props) {
         props.onChangeVisibility(!props.visibility)
     }
 
+    function mapStyle() {
+        return ({
+            width: props.width - 80,
+            height: '100%',
+        })
+    }
+
     function showMap() {
         if (coords.latitude !== null && coords.longitude !== null) {
             return (<View style={style.modalView}>
                 <View style={style.mapContainer}>
-                    <MapView style={style.map}
+                    <MapView style={mapStyle()}
                              initialRegion={{
                                  latitude: coords.latitude,
                                  longitude: coords.longitude,
@@ -104,10 +111,6 @@ const style = StyleSheet.create({
     },
     mapContainer: {
         flex: 0.9,
-    },
-    map: {
-        width: 380,
-        height: '100%',
     },
     waitingContainer: {
         flex: 1,

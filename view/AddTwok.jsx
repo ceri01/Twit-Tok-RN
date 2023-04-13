@@ -25,7 +25,7 @@ import {sendTwok} from "../viewmodel/TwokHandler";
 const ALIGNAMENTS = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]]);
 const PAGE_WIDTH = Dimensions.get('window').width * 0.9;
 
-function AddTwok({navigation}) {
+function AddTwok({route, navigation}) {
     // Data to be provided to the server (through model)
     const alignXData = useRef(1);
     const alignYData = useRef(1);
@@ -130,6 +130,7 @@ function AddTwok({navigation}) {
     const showMap = () => {
         if (mapModalVisible) {
             return <CustomMapModal visibility={mapModalVisible}
+                                   width={route.params.WindowWidth}
                                    onChangeVisibility={setMapModalVisible}
                                    latitude={latitudeData.current}
                                    longitude={longitudeData.current}

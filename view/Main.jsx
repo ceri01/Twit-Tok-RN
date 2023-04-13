@@ -10,6 +10,7 @@ import {Dimensions, StatusBar} from "react-native";
 
 const Tab = createBottomTabNavigator();
 const WindowHeight = Dimensions.get("window").height
+const WindowWidth = Dimensions.get("window").width
 const StatusBarHeight = StatusBar.currentHeight;
 function Main({ navigation }) {
     React.useEffect(() => navigation.addListener('beforeRemove', (event) => {
@@ -44,7 +45,7 @@ function Main({ navigation }) {
             >
                 <Tab.Screen name="Options" component={Options}></Tab.Screen>
                 <Tab.Screen name="Wall" initialParams={{WindowHeight: WindowHeight, StatusBarHeight: StatusBarHeight}} component={Wall}></Tab.Screen>
-                <Tab.Screen name="NewTwok" component={AddTwok}></Tab.Screen>
+                <Tab.Screen name="New Twok" initialParams={{WindowWidth: WindowWidth}} component={AddTwok}></Tab.Screen>
                 <Tab.Screen name="Profile" initialParams={{WindowHeight: WindowHeight, StatusBarHeight: StatusBarHeight}} component={Profile}></Tab.Screen>
             </Tab.Navigator>
         </SafeAreaProvider>
