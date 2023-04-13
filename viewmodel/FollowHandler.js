@@ -6,11 +6,10 @@ const followed = new Followed()
 
 export async function initFollowed() {
     let sid = await UtilityStorageManager.getSid()
-    CommunicationController.getFollowed(sid).then(res => {
-        for (const element of res) {
-            followed.add(element.uid, element)
-        }
-    })
+    let followedList = await CommunicationController.getFollowed(sid)
+    for (const element of followedList) {
+        followed.add(element.uid, element)
+    }
 }
 
 

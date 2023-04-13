@@ -9,10 +9,10 @@ class Followed {
         return this.#followed.size;
     }
 
-    add(elements) {
-        console.log(elements.hasOwnProperty("name") && elements.hasOwnProperty("pversion") && elements.hasOwnProperty("uid"))
-        if (elements.hasOwnProperty("name") && elements.hasOwnProperty("pversion") && elements.hasOwnProperty("uid"))
-        this.#followed.set(elements.uid, elements);
+    add(uid, element) {
+        if (element.hasOwnProperty("name") && element.hasOwnProperty("pversion") && element.hasOwnProperty("uid")) {
+            this.#followed.set(uid, element);
+        }
     }
 
     remove(uid) {

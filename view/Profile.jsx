@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
@@ -8,17 +8,26 @@ import getFollowed, {initFollowed} from "../viewmodel/FollowHandler";
 function Profile({route}) {
     const [ready, setReady] = useState(false);
     let profile = useRef(null);
+    let [followed, setFollowed] = useState(null)
 
-    DBManager.getInstance().getProfileFromDB((resultQuery) => {
-        initFollowed().then(() => {
-            profile.current = resultQuery
-            setReady(true);
+    useEffect(() => {
+        DBManager.getInstance().getProfileFromDB((resultQuery) => {
+            if (!ready) {
+                initFollowed().then(() => {
+                    profile.current = resultQuery
+                    setReady(true);
+                    setFollowed(getFollowed())
+                })
+            } else if (followed != null && getFollowed().length !== followed.length) {
+                console.log("qui")
+                setFollowed(getFollowed())
+            }
+        }, (error) => {
+            console.log("errore => " + error);
         })
-    }, (error) => {
-        console.log("errore => " + error);
     })
 
-    console.log(getFollowed())
+
 
     function profileStyle() {
         return ({
@@ -40,7 +49,7 @@ function Profile({route}) {
                     <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
                 </View>
                 <View style={style.followed}>
-                    <FlatList data={getFollowed()}
+                    <FlatList data={followed}
                               renderItem={(element) => {
                                   // TODO: Metti foto profilo
                                   return <UserView dimensions={route.params.WindowHeight / 50} name={element.item.name} uid={element.item.uid} followed={true} edit={reload}/>
