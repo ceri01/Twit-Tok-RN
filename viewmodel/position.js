@@ -1,4 +1,5 @@
 import * as Location from 'expo-location';
+import {LocationAccuracy} from "expo-location";
 
 export async function getCurrentPosition() {
     let havePermission = false;
@@ -12,7 +13,11 @@ export async function getCurrentPosition() {
         }
     }
     if (havePermission) {
-        const location = await Location.getLastKnownPositionAsync();
+        let location = await Location.getLastKnownPositionAsync();
+        if (location === null) {
+            console.log("lel")
+            location = await Location.getCurrentPositionAsync()
+        }
         console.log("recived position: " + location)
         return [location.coords.latitude, location.coords.longitude]
     }
