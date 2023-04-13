@@ -17,7 +17,6 @@ function App() {
     const load = useRef("")
     const [isLoading, setIsLoading] = useState(true);
 
-    console.log(Constants.expoConfig.extra.sentry_dsn)
     if (Constants.expoConfig.extra.sentry_dsn !== undefined && Constants.expoConfig.extra.sentry_dsn !== null) {
         Sentry.init({
             dsn: Constants.expoConfig.extra.sentry_dsn,
