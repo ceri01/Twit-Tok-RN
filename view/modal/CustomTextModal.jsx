@@ -1,4 +1,4 @@
-import {Modal, StyleSheet, TextInput, View} from "react-native";
+import {Alert, Modal, StyleSheet, TextInput, View} from "react-native";
 import CancelButton from "../buttons/CancelButton";
 import ConfirmButton from "../buttons/ConfirmButton";
 import React, {useState} from "react";
@@ -37,7 +37,11 @@ function CustomTextModal(props) {
                     <TextInput style={style.textInputStyle}
                                maxLength={props.isName ? 19 : 99}
                                onChangeText={(newText) => {
-                                   setCurrentText(newText)
+                                   if (newText.length > 0) {
+                                       setCurrentText(newText)
+                                   } else {
+                                       Alert.alert("Error!", "your name must have atleast one character");
+                                   }
                                }}
                                value={currentText}
                     />
@@ -71,7 +75,7 @@ const style = StyleSheet.create({
     },
     modalCenteredView: {
         flex: 1,
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: "rgba(255,255,255,1)",
         alignItems: "center",
         justifyContent: "center"
     },

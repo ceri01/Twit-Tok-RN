@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native";
+import {FlatList, SafeAreaView, StatusBar, StyleSheet, View} from "react-native";
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import DBManager from "../model/DBManager";
