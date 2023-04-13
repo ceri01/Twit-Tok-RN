@@ -4,10 +4,7 @@ const ProfileName = (props) => {
     return (
         <View style={style.layout}>
             <View style={style.userName}>
-                <TouchableHighlight onPress={() => {
-                }}>
-                    <Text style={style.text}>{props.userName}</Text>
-                </TouchableHighlight>
+                <Text style={style.text}>{props.userName}</Text>
             </View>
         </View>
     );

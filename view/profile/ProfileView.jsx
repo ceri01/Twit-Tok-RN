@@ -12,20 +12,6 @@ const ProfileView = (props) => {
         props.edit()
     }
 
-/*    const followStatus = useRef(props.followed);
-
-    function follow(followed) {
-        followStatus.current = followed;
-        addFollow(props.uid);
-    }
-
-    function unfollow(followed) {
-        followStatus.current = followed;
-        removeFollow(props.uid);
-    }*/
-
-    // user picture => getUserPicture(props.uid, props.pversion)
-
     return (
         <View style={style.ProfileViewContainer}>
             <View style={style.pic}>
