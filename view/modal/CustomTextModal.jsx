@@ -15,8 +15,12 @@ function CustomTextModal(props) {
     }
 
     const handleConfirmTextChange = () => {
-        props.onChangeText(currentText)
-        props.onChangeVisibility(!props.visibility)
+        if (currentText.length > 0 && currentText.replace(/\s/g, '').length !== 0) {
+            props.onChangeText(currentText)
+            props.onChangeVisibility(!props.visibility)
+        } else {
+            Alert.alert("Error!", "your name must have atleast one character");
+        }
     }
 
     const handleCancelTextChange = () => {
@@ -37,11 +41,7 @@ function CustomTextModal(props) {
                     <TextInput style={style.textInputStyle}
                                maxLength={props.isName ? 19 : 99}
                                onChangeText={(newText) => {
-                                   if (newText.length > 0) {
-                                       setCurrentText(newText)
-                                   } else {
-                                       Alert.alert("Error!", "your name must have atleast one character");
-                                   }
+                                   setCurrentText(newText)
                                }}
                                value={currentText}
                     />
