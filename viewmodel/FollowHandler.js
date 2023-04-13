@@ -31,6 +31,10 @@ export function removeFollow(uid) {
     })
 }
 
-export default function getFollowed() {
+export function getFollowed() {
     return followed.getImmutableData()
+}
+
+export function getFollowedLenght() {
+    return followed.getLength()
 }

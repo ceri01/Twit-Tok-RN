@@ -3,7 +3,7 @@ import {FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-n
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import DBManager from "../model/DBManager";
-import getFollowed, {initFollowed} from "../viewmodel/FollowHandler";
+import {getFollowed, getFollowedLenght, initFollowed} from "../viewmodel/FollowHandler";
 
 function Profile({route}) {
     const [ready, setReady] = useState(false);
@@ -11,6 +11,7 @@ function Profile({route}) {
     let [followed, setFollowed] = useState(null)
 
     useEffect(() => {
+        setTimeout(() => {}, 2000)
         DBManager.getInstance().getProfileFromDB((resultQuery) => {
             if (!ready) {
                 initFollowed().then(() => {
@@ -18,10 +19,12 @@ function Profile({route}) {
                     setReady(true);
                     setFollowed(getFollowed())
                 })
-            } else if (followed != null && getFollowed().length !== followed.length) {
+            } else if (followed != null && getFollowedLenght() !== followed.length) {
                 console.log("qui")
                 setFollowed(getFollowed())
             }
+            console.log(getFollowed())
+            console.log(followed)
         }, (error) => {
             console.log("errore => " + error);
         })
