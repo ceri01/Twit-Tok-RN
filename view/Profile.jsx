@@ -11,7 +11,7 @@ function Profile({route}) {
     let [followed, setFollowed] = useState(null)
 
     useEffect(() => {
-        setTimeout(() => {}, 2000)
+        setTimeout(() => {}, 2000); // used to allow followed list in model to update
         DBManager.getInstance().getProfileFromDB((resultQuery) => {
             if (!ready) {
                 initFollowed().then(() => {
@@ -20,37 +20,20 @@ function Profile({route}) {
                     setFollowed(getFollowed())
                 })
             } else if (followed != null && getFollowedLenght() !== followed.length) {
-                console.log("qui")
                 setFollowed(getFollowed())
             }
-            console.log(getFollowed())
-            console.log(followed)
         }, (error) => {
             console.log("errore => " + error);
         })
     })
 
-
-
-    function profileStyle() {
-        return ({
-                flex: 1,
-                flexDirection: "column",
-            }
-        )
-    }
-
     function reload() {
         setReady(false)
     }
 
-    if (ready) {
-        return (
-            <SafeAreaView style={profileStyle()}>
-                <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
-                <View style={style.profile}>
-                    <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
-                </View>
+    function renderFollowed() {
+        if (ready) {
+            return (
                 <View style={style.followed}>
                     <FlatList data={followed}
                               renderItem={(element) => {
@@ -60,17 +43,27 @@ function Profile({route}) {
                               keyExtractor={(element) => element.uid}>
                     </FlatList>
                 </View>
-            </SafeAreaView>
-        );
-    } else {
-        return (
-            <View style={style.waiting}>
-                <Text style={{fontSize: 30, fontStyle: "italic"}}>Waiting...</Text>
-            </View>
-        );
+            )
+        }
     }
 
+    function renderProfile() {
+        if (ready) {
+            return (
+                <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
+            )
+        }
+    }
 
+    return (
+        <SafeAreaView style={style.profileLayout}>
+            <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
+            <View style={style.profile}>
+                {renderProfile()}
+            </View>
+            {renderFollowed()}
+        </SafeAreaView>
+    );
 }
 
 const style = StyleSheet.create({
@@ -87,7 +80,10 @@ const style = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-    },
+    }, profileLayout: {
+        flex: 1,
+        flexDirection: "column",
+    }
 });
 
 export default Profile;
