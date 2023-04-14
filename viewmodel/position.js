@@ -15,12 +15,9 @@ export async function getCurrentPosition() {
     if (havePermission) {
         let location = await Location.getLastKnownPositionAsync();
         if (location === null) {
-            console.log("lel")
             location = await Location.getCurrentPositionAsync()
         }
-        console.log("recived position: " + location)
         return [location.coords.latitude, location.coords.longitude]
     }
-    console.log(havePermission)
     return null
 }

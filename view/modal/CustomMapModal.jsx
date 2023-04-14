@@ -1,4 +1,4 @@
-import {Modal, StyleSheet, Text, View} from "react-native";
+import {Alert, Modal, StyleSheet, Text, View} from "react-native";
 import React, {useState} from "react";
 import MapView, {MarkerAnimated} from "react-native-maps";
 import CancelButton from "../buttons/CancelButton";
@@ -10,8 +10,16 @@ function CustomMapModal(props) {
     const [coords, setCoords] = useState({latitude: props.latitude, longitude: props.longitude});
     if (coords.latitude === null && coords.longitude === null) {
         getCurrentPosition().then((c) => {
-            setCoords({latitude: c[0], longitude: c[1]})
-        }).catch((err) => console.log(err))
+            if (c === false) {
+                Alert.alert("Missing permission!", "The application must have permissions to get locatoin.")
+                props.onChangeVisibility(!props.visibility)
+            } else {
+                setCoords({latitude: c[0], longitude: c[1]})
+            }
+        }).catch(() => {
+            Alert.alert("Error!", "Location not available, check if geolocalization is on.")
+            props.onChangeVisibility(!props.visibility)
+        })
     }
 
     if (props.isReset.current === true) {
