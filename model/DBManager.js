@@ -6,29 +6,37 @@ export default class DBManager {
     _database = null
 
     constructor() {
-        if (DBManager.instance === null) {
-            this._database = SQLite.openDatabase("Prova");
-            UtilityStorageManager.getProfileUid().then(uid => {
-                const profile_table = "CREATE TABLE IF NOT EXISTS Profile(uid INTEGER PRIMARY KEY, name TEXT, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000), pversion SMALLINT);";
-                const pictures = "CREATE TABLE IF NOT EXISTS Pictures(uid INTEGER PRIMARY KEY, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000) NOT NULL, pversion SMALLINT NOT NULL);";
-                const profile_trigger = "CREATE TRIGGER IF NOT EXISTS unique_profile BEFORE INSERT ON Profile FOR EACH ROW BEGIN SELECT RAISE(ABORT, \"User already exists\") FROM Profile WHERE uid <> " + uid + "; END;";
-                const insert_profile = "INSERT INTO Profile(uid, name, picture, pversion) VALUES (" + uid + ", \"\", \"\", 0);";
+        this._database = SQLite.openDatabase("oaoaoao");
+        UtilityStorageManager.DBIsInit().then((res) => {
+            console.log(res)
+            if (!res) {
+                UtilityStorageManager.DBInit().then(() => {
+                    console.log("Database creato")
+                })
+                UtilityStorageManager.getProfileUid().then(uid => {
+                    const profile_table = "CREATE TABLE IF NOT EXISTS Profile(uid INTEGER PRIMARY KEY, name TEXT, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000), pversion SMALLINT);";
+                    const pictures = "CREATE TABLE IF NOT EXISTS Pictures(uid INTEGER PRIMARY KEY, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000) NOT NULL, pversion SMALLINT NOT NULL);";
+                    const profile_trigger = "CREATE TRIGGER IF NOT EXISTS unique_profile BEFORE INSERT ON Profile FOR EACH ROW BEGIN SELECT RAISE(ABORT, \"User already exists\") FROM Profile WHERE uid <> " + uid + "; END;";
+                    const insert_profile = "INSERT INTO Profile(uid, name, picture, pversion) VALUES (" + uid + ", \"\", \"\", 0);";
 
-                this._database.transaction(t => {
-                    t.executeSql(pictures, [], () => {}, (tx, err) => {console.log("2 => " + err)});
-                    t.executeSql(profile_table, [], () => {}, (tx, err) => {console.log("3 => " + err)});
-                    t.executeSql(profile_trigger, [], () => {}, (tx, err) => {console.log("4 => " + err)});
-                    t.executeSql(insert_profile, [], () => {}, (tx, err) => {console.log("7 => " + err)});
-                });
-            })
-        }
+                    this._database.transaction(t => {
+                        t.executeSql(pictures, [], () => {}, (tx, err) => {console.log("1 => " + err)});
+                        t.executeSql(profile_table, [], () => {}, (tx, err) => {console.log("2 => " + err)});
+                        t.executeSql(profile_trigger, [], () => {}, (tx, err) => {console.log("3 => " + err)});
+                        t.executeSql(insert_profile, [], () => {}, (tx, err) => {console.log("4 => " + err)});
+                    });
+                })
+            } else {
+                console.log("Database gia creato")
+            }
+        })
     }
 
     static getInstance() {
         if (DBManager.instance == null) {
+            console.log("istanza null")
             DBManager.instance = new DBManager();
         }
-
         return this.instance;
     }
 

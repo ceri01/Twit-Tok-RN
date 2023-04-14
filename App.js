@@ -9,6 +9,7 @@ import UtilityStorageManager from "./model/UtilityStorageManager";
 import {initEnvironment} from "./viewmodel/initApp";
 import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
+import DBManager from "./model/DBManager";
 
 
 const Stack = createNativeStackNavigator();
@@ -31,12 +32,20 @@ function App() {
             if (res) {
                 initEnvironment().then(() => {
                     console.log("env initialized")
+                    DBManager.getInstance()
                 })
-                load.current = "Register";
+                setIsLoading(false)
             } else {
-                load.current = "Main";
-            }
-            setIsLoading(false)
+                DBManager.getInstance().getProfileFromDB((res) => {
+                    if (res === undefined || res.name === "") {
+                        load.current = "Register";
+                    } else {
+                        load.current = "Main";
+                    }
+                    setIsLoading(false)
+                }, (err) => {
+                    console.log("errore " + err)
+                })}
         })
         return (
             <Text style={style.loading}>Loading...</Text>
