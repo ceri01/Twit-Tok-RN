@@ -1,9 +1,6 @@
-import {SafeAreaView, StyleSheet, View} from "react-native";
+import {StyleSheet, View} from "react-native";
 import ProfileName from "./ProfileName";
 import ProfilePicture from "./ProfilePicture";
-import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
-import {addFollow, removeFollow} from "../../viewmodel/FollowHandler";
-import {useRef} from "react";
 import ProfileButtons from "./ProfileButtons";
 
 
@@ -21,9 +18,6 @@ const ProfileView = (props) => {
                 <ProfileName userName={props.profileName}/>
                 <ProfileButtons userName={props.profileName} pic={props.profilePicture} onPress={dataEdited}></ProfileButtons>
             </View>
-            {/*            <View style={style.button}>
-                <FollowUnfollowButton follow={follow} unfollow={unfollow} isFollow={followStatus.current} />
-            </View>*/}
         </View>
     );
 }

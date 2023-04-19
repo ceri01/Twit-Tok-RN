@@ -2,6 +2,7 @@ import {interpolateColor} from "react-native-reanimated";
 import UtilityStorageManager from "../model/UtilityStorageManager";
 import CommunicationController from "../model/CommunicationController";
 import {Alert} from "react-native";
+import {getUserPicture} from "./PictureHandler";
 
 const COLORS = [
     'red',
@@ -45,7 +46,6 @@ function between(val) {
     return val < 0 || val > 3
 }
 
-
 export function isValid(twok) {
     let regex = /([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/
     if (!(regex.test(twok.bgcol) && regex.test(twok.fontcol))) {
@@ -81,11 +81,15 @@ export async function getTwoks(uid) {
     } else {
         for (let i = 0; i < 8; i++) {
             let twok = await CommunicationController.getTwok(sid);
-            if (isValid(twok)) {
-                tmpArr.push(twok);
-            } else {
-                i--;
-            }
+            getUserPicture(sid, twok.uid, twok.pversion, (pic, pversion) => {
+                twok.picture = pic
+                twok.pversion = pversion
+                if (isValid(twok)) {
+                    tmpArr.push(twok);
+                } else {
+                    i--;
+                }
+            })
         }
     }
     return tmpArr;
@@ -96,4 +100,9 @@ async function getTwoksWithTid(tid) {
     const tmpArr = [];
     tmpArr.unshift(await CommunicationController.getTwok(sid, tid));
     return tmpArr;
+}
+
+
+export function getPics(uids) {
+
 }

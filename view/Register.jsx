@@ -16,13 +16,15 @@ function Register({ route, navigation }) {
                 if (result.length > 137000) {
                     Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
                 }
-                setImage(createPictureSource(result));
+                setImage(result);
             }
         }).catch((err) => {
             Alert.alert("Error", "Image not selected, default icon setted.");
             setImage(Image.resolveAssetSource(DefaultImage).uri);
         })
     }
+
+    console.log(image)
 
     return (
         <SafeAreaView style={style.mainContainer}>

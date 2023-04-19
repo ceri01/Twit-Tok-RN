@@ -37,10 +37,11 @@ export async function setNewProfilePic(pic) {
     }
 }
 
-export async function getProfile() {
-    let data = {name: null, picture: null};
-    let uid = await UtilityStorageManager.getProfileUid()
-    DBManager.getInstance().getProfileFromDB(uid);
-    return data;
+export function getProfile(onResult) {
+    DBManager.getInstance().getProfileFromDB((result) => {
+        onResult(result)
+    }, (error) => {
+        console.log("errore => " + error);
+    })
 }
 

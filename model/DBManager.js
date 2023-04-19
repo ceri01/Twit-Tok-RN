@@ -6,7 +6,7 @@ export default class DBManager {
     _database = null
 
     constructor() {
-        this._database = SQLite.openDatabase("oaoaoao");
+        this._database = SQLite.openDatabase("yahoooo");
         UtilityStorageManager.DBIsInit().then((res) => {
             console.log(res)
             if (!res) {
@@ -57,8 +57,6 @@ export default class DBManager {
                 console.log("2 " + error.message);
             });
         });
-        this._database.closeAsync()
-        this._database.deleteAsync()
     }
 
     getProfileFromDB(onResult, onError) {
@@ -66,6 +64,15 @@ export default class DBManager {
         this._database.transaction((transaction) => {
             transaction.executeSql(query, [], (transaction, resultSet) => {
                 onResult(resultSet.rows._array[0])
+            })
+        }, error => onError(error))
+    }
+
+    getPicsFromDB(onResult, onError) {
+        const query = "SELECT * FROM Pictures";
+        this._database.transaction((transaction) => {
+            transaction.executeSql(query, [], (transaction, resultSet) => {
+                onResult(resultSet.rows._array)
             })
         }, error => onError(error))
     }
@@ -107,22 +114,19 @@ export default class DBManager {
     }
 
 
-    updateUserPicture(picture, pversion) {
+    updateUserPicture(uid, picture, pversion) {
         const query = "UPDATE Pictures SET picture = ?, pversion = ? WHERE uid = ?;";
-        UtilityStorageManager.getProfileUid().then((uid) => {
-            if (typeof(picture) === "string" && typeof(pversion) === "number") {
-                this._database.transaction(tx => {
-                    tx.executeSql(query, [picture, pversion, uid], () => {
-                        console.log("Profile pic changed.");
-                    }, (tx, error) => {
-                        console.log(error.message);
-                    });
+        if (typeof(picture) === "string" && typeof(pversion) === "number" && typeof(uid) === "number") {
+            this._database.transaction(tx => {
+                tx.executeSql(query, [picture, pversion, uid], () => {
+                    console.log("Profile pic changed.");
+                }, (tx, error) => {
+                    console.log("1 " + error.message);
                 });
-            } else {
-                // TODO: Gestisci errore
-                throw new Error("picture must be a string");
-            }
-        });
+            });
+        } else {
+            console.log("updateUserPicture: picture must be a string, pic => " + typeof(picture) + "pvers => " + typeof(pversion)  )
+        }
     }
 
     addUserPicture(uid, picture, pversion) {
@@ -132,12 +136,11 @@ export default class DBManager {
                 tx.executeSql(query, [uid, picture, pversion], () => {
                     console.log("Inserimento riuscito");
                 }, (tx, error) => {
-                    // TODO: Verificare se opportuno gestire l'errore in modo differente
-                    console.log(error.message);
+                    console.log("2 " + error.message);
                 });
             });
         } else {
-            throw new Error("picture must be a string");
+            console.log("addUserPicture: picture must be a string")
         }
     }
 
@@ -146,14 +149,18 @@ export default class DBManager {
         if (typeof(uid) === "number") {
             this._database.transaction(tx => {
                 tx.executeSql(query, [uid], (transaction, resultSet) => {
-                    onResult(resultSet.rows._array)
+                    if (resultSet.rows._array.length > 0) {
+                        onResult(resultSet.rows._array[0])
+                    } else {
+                        onResult(null)
+                    }
                 }, (tx, error) => {
                     // TODO: Verificare se opportuno gestire l'errore in modo differente
                     console.log(error.message);
                 });
             });
         } else {
-            throw new Error("picture must be a string");
+            console.log("getUserPicture: picture must be a string")
         }
     }
 }

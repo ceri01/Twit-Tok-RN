@@ -58,6 +58,7 @@ function TwokRow(props) {
             <View style={style.user}>
                 <UserView dimensions={props.dimensions.WindowHeight / 50}
                           name={props.data.name}
+                          picture={props.data.picture}
                           pversion={props.data.pversion}
                           uid={props.data.uid}
                           followed={props.data.followed}

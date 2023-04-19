@@ -35,7 +35,7 @@ const UserView = (props) => {
     return (
         <View style={style.userViewContainer}>
             <View style={style.pic}>
-                <UserPicture source="aaa"/>
+                <UserPicture source={props.picture}/>
             </View>
             <View style={style.userName}>
                 <UserName userName={props.name}/>

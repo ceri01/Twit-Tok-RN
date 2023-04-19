@@ -4,6 +4,7 @@ import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import DBManager from "../model/DBManager";
 import {getFollowed, getFollowedLenght, initFollowed} from "../viewmodel/FollowHandler";
+import {getProfile} from "../viewmodel/ProfileUserHandler";
 
 function Profile({route}) {
     const [ready, setReady] = useState(false);
@@ -11,21 +12,22 @@ function Profile({route}) {
     let [followed, setFollowed] = useState(null)
 
     useEffect(() => {
-        setTimeout(() => {}, 2000); // used to allow followed list in model to update
-        DBManager.getInstance().getProfileFromDB((resultQuery) => {
-            if (!ready) {
-                initFollowed().then(() => {
-                    profile.current = resultQuery
-                    setReady(true);
+        getProfile((resultQuery) => {
+                setTimeout(() => {}, 2000); // used to allow followed list in model to update
+                if (!ready) {
+                    initFollowed().then(() => {
+                        profile.current = resultQuery
+                        setReady(true);
+                        setFollowed(getFollowed())
+                    })
+                } else if (followed != null && getFollowedLenght() !== followed.length) {
                     setFollowed(getFollowed())
-                })
-            } else if (followed != null && getFollowedLenght() !== followed.length) {
-                setFollowed(getFollowed())
+                }
             }
-        }, (error) => {
-            console.log("errore => " + error);
-        })
+        )
     })
+
+    // console.log(ready + " " + JSON.stringify(profile))
 
     function reload() {
         setReady(false)
@@ -37,10 +39,10 @@ function Profile({route}) {
                 <View style={style.followed}>
                     <FlatList data={followed}
                               renderItem={(element) => {
-                                  // TODO: Metti foto profilo
                                   return <UserView
                                       dimensions={route.params.WindowHeight / 50}
                                       name={element.item.name}
+                                      picture={element.item.picture}
                                       uid={element.item.uid}
                                       followed={true}
                                       edit={reload}

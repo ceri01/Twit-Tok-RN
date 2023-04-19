@@ -1,29 +1,30 @@
 import * as ImagePicker from 'expo-image-picker';
-import {Alert, Image} from "react-native";
+import {Image} from "react-native";
 import DefaultImage from "../assets/favicon.png";
 import CommunicationController from "../model/CommunicationController";
-import UtilityStorageManager from "../model/UtilityStorageManager";
 import DBManager from "../model/DBManager";
 
 export const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
         base64: true
     });
-    return 'data:image/png;base64,' + result.assets[0].base64
+    return result.assets[0].base64
 };
 
 export function createPictureSource(rawData) {
-    if (rawData !== undefined && typeof(rawData) === "string" && rawData.length < 137000) {
-        return rawData;
-    }
+    if (pictureIsValid(rawData)) return 'data:image/png;base64,' + rawData
     return Image.resolveAssetSource(DefaultImage).uri
+}
+
+export function pictureIsValid(rawData) {
+    return rawData !== undefined && typeof (rawData) === "string" && rawData.length < 137000 && rawData.length > 0;
 }
 
 /*export function getImage(setImage) {
     openImagePicker().then((result) => {
         if (!result.canceled) {
             if (result.length > 137000) {
-                Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
+                Alert.alert("Size error", "Image size must be less than 100KB, default icon setted.");
             }
             setImage(createPictureSource(result));
         }
@@ -33,34 +34,33 @@ export function createPictureSource(rawData) {
     })
 }*/
 
-export function getUserPicture(uid, pversion) { // to be refactored
-    let pic = null
-    DBManager.getInstance().getUserPicture(uid, (result) => {
-        if (result.length > 0) {
-            if(result[0].pversion === pversion) {
-                pic = result
-            } else if (result.pversion !== pversion) {
-                UtilityStorageManager.getSid().then((sid) => {
-                    CommunicationController.getPicture(sid, uid).then((res) => {
-                        DBManager.getInstance().updateUserPicture(uid, res.picture, res.pversion);
-                        pic = res.picture;
-                    });
-                })
-            }
-        } else {
-            UtilityStorageManager.getSid().then((sid) => {
-                CommunicationController.getPicture(sid, uid).then((res) => {
-                    if (res.picture === null) {
-                        DBManager.getInstance().addUserPicture(res.uid, Image.resolveAssetSource(DefaultImage).uri, 0);
-                        pic = Image.resolveAssetSource(DefaultImage).uri;
+export function getUserPicture(sid, uid, pversion, onResult) {
+    DBManager.getInstance().getUserPicture(uid, (DBResult) => {
+        if (DBResult !== null) {
+            if (DBResult.pversion === pversion) {
+                onResult(DBResult.picture, DBResult.pversion)
+            } else {
+                CommunicationController.getPicture(sid, uid).then((serverResult) => {
+                    if (serverResult.picture === null) {
+                        DBManager.getInstance().updateUserPicture(uid, "", serverResult.pversion);
+                        onResult("", pversion)
                     } else {
-                        DBManager.getInstance().addUserPicture(res.uid, res.picture, res.pversion);
-                        pic = res.picture;
+                        DBManager.getInstance().updateUserPicture(uid, serverResult.picture, serverResult.pversion);
+                        onResult(serverResult.picture, serverResult.pversion);
                     }
                 });
-            })
+            }
+        } else {
+            CommunicationController.getPicture(sid, uid).then((serverResult) => {
+                if (serverResult.picture === null) {
+                    DBManager.getInstance().addUserPicture(serverResult.uid, "", serverResult.pversion);
+                    onResult("", pversion)
+                } else {
+                    DBManager.getInstance().addUserPicture(serverResult.uid, serverResult.picture, serverResult.pversion);
+                    onResult(serverResult.picture, serverResult.pversion)
+                }
+            });
         }
-    })
-    return createPictureSource(pic)
+    });
 }
 

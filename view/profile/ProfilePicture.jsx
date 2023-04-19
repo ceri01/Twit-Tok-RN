@@ -1,7 +1,6 @@
 import {Dimensions, Image, SafeAreaView, StyleSheet, View} from "react-native";
 import {createPictureSource} from "../../viewmodel/PictureHandler"
 
-
 const ProfilePicture = (props) => {
     return (
         <View style={styles.imgContainer}>
@@ -20,8 +19,8 @@ const styles = StyleSheet.create({
     },
     img: {
         aspectRatio: 1,
-        height: "80%",
-        width: "80%"
+        height: "100%",
+        width: "100%"
     }
 });
 
