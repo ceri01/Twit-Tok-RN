@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, Text, View} from "react-native";
+import {Dimensions, Platform, SafeAreaView, StyleSheet, Text, View} from "react-native";
 import UserView from "../user/UserView";
 import React, {useState} from "react";
 import CustomMapModal from "../modal/CustomMapModal";

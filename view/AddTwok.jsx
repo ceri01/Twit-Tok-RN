@@ -214,7 +214,6 @@ function AddTwok({route, navigation}) {
                         </View>
                     </Animated.View>
                 </Pressable>
-                {showMap()}
                 <View style={style.buttonsView}>
                     <View style={style.element}>
                         <ResetButton onPress={resetPageState}></ResetButton>
@@ -256,6 +255,7 @@ function AddTwok({route, navigation}) {
                 </View>
             </View>
             {renderSlider()}
+            {showMap()}
         </SafeAreaView>
     );
 }

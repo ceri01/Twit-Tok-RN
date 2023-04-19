@@ -9,18 +9,20 @@ function CustomMapModal(props) {
     // This variable is necessary to rerender component and put marker on map. Is different from latitude and longitude in addTwock (not violating single source of truth)
     const [coords, setCoords] = useState({latitude: props.latitude, longitude: props.longitude});
 
-    if (coords.latitude === null && coords.longitude === null) {
-        getCurrentPosition().then((c) => {
-            if (c === false) {
-                Alert.alert("Missing permission!", "The application must have permissions to get locatoin.")
+    if (!props.isInWall) {
+        if (coords.latitude === null && coords.longitude === null) {
+            getCurrentPosition().then((pos) => {
+                if (pos === false) {
+                    Alert.alert("Missing permission!", "The application must have permissions to get locatoin.")
+                    props.onChangeVisibility(!props.visibility)
+                } else {
+                    setCoords({latitude: pos[0], longitude: pos[1]})
+                }
+            }).catch(() => {
+                Alert.alert("Error!", "Location not available, check if geolocalization is on.")
                 props.onChangeVisibility(!props.visibility)
-            } else {
-                setCoords({latitude: c[0], longitude: c[1]})
-            }
-        }).catch(() => {
-            Alert.alert("Error!", "Location not available, check if geolocalization is on.")
-            props.onChangeVisibility(!props.visibility)
-        })
+            })
+        }
     }
 
     if (props.isReset.current === true) {
@@ -40,7 +42,7 @@ function CustomMapModal(props) {
     function mapStyle() {
         return ({
             width: props.width - 80,
-            height: '100%',
+            height: "100%",
         })
     }
 
@@ -52,6 +54,12 @@ function CustomMapModal(props) {
                     <ConfirmButton onConfirm={handleConfirmPositionChange}/>
                 </View>
             );
+        } else {
+            return (
+                <View style={style.modalButtons}>
+                    <CancelButton onCancel={handleCloseModal}/>
+                </View>
+            )
         }
     }
 
@@ -73,13 +81,28 @@ function CustomMapModal(props) {
                     {showButtons()}
                 </View>
             );
+        } else if (props.isInWall) {
+            return (
+                <View style={style.modalView}>
+                    <View style={style.waitingContainer}>
+                        <Text style={{fontSize: 25, fontStyle: "italic"}}>Position not provided!</Text>
+                    </View>
+                    <View style={style.modalButtons}>
+                        <CancelButton onCancel={handleCloseModal}/>
+                    </View>
+                </View>
+            );
         } else {
             return (
                 <View style={style.modalView}>
                     <View style={style.waitingContainer}>
                         <Text style={{fontSize: 25, fontStyle: "italic"}}>Waiting for position...</Text>
                     </View>
-            </View>);
+                    <View style={style.modalButtons}>
+                        <CancelButton onCancel={handleCloseModal}/>
+                    </View>
+                </View>
+            );
         }
     }
 
@@ -129,7 +152,7 @@ const style = StyleSheet.create({
         flexDirection: "row"
     },
     mapContainer: {
-        flex: 0.9,
+        flex: 1,
     },
     waitingContainer: {
         flex: 1,
