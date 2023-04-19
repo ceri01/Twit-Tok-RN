@@ -4,6 +4,7 @@ import UserPicture from "./UserPicture";
 import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
 import {addFollow, removeFollow} from "../../viewmodel/FollowHandler";
 import {useState} from "react";
+import MapButton from "../buttons/MapButton";
 
 
 const UserView = (props) => {
@@ -21,6 +22,16 @@ const UserView = (props) => {
         props.edit();
     }
 
+    function renderOtherContent() {
+        if (props.isInTwokRaw) {
+            return <MapButton onPress={() => {
+                props.edit()
+            }}/>
+        } else {
+            return <FollowUnfollowButton textSize={props.dimensions} follow={follow} unfollow={unfollow} isFollow={followStatus} />
+        }
+    }
+
     return (
         <View style={style.userViewContainer}>
             <View style={style.pic}>
@@ -30,7 +41,7 @@ const UserView = (props) => {
                 <UserName userName={props.name}/>
             </View>
             <View style={style.button}>
-                <FollowUnfollowButton textSize={props.dimensions} follow={follow} unfollow={unfollow} isFollow={followStatus} />
+                {renderOtherContent()}
             </View>
         </View>
     );

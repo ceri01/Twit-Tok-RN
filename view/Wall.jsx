@@ -3,6 +3,7 @@ import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} f
 import TwokRow from "./twok/TwokRow";
 import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
+import CustomMapModal from "./modal/CustomMapModal";
 
 function Wall({route}) {
     const TabHeight = useBottomTabBarHeight()
@@ -29,7 +30,13 @@ function Wall({route}) {
                     extraData={listrefresher}
                     data={getData()}
                     renderItem={(twok) => {
-                        return <TwokRow data={twok.item} dimensions={{TabHeight: TabHeight, WindowHeight: route.params.WindowHeight, StatusBarHeight: route.params.StatusBarHeight}}/>
+                        return <TwokRow data={twok.item}
+                                        dimensions={{
+                                            TabHeight: TabHeight,
+                                            WindowHeight: route.params.WindowHeight,
+                                            StatusBarHeight: route.params.StatusBarHeight
+                                        }
+                        }/>
                     }}
                     keyExtractor={(item, index) => {
                         return index.toString()

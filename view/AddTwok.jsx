@@ -136,6 +136,7 @@ function AddTwok({route, navigation}) {
                                    longitude={longitudeData.current}
                                    onChangeLatitude={handleLatitude}
                                    onChangeLongitude={handleLongitude}
+                                   isInWall={false}
                                    isReset={reset}
                                    onReset={handleReset}>
             </CustomMapModal>
@@ -215,14 +216,26 @@ function AddTwok({route, navigation}) {
                 </Pressable>
                 {showMap()}
                 <View style={style.buttonsView}>
-                    <ResetButton onPress={resetPageState}></ResetButton>
-                    <EditXAlignButton reset={reset.current} onReset={handleReset}
-                                      onPress={onTextXChanged}></EditXAlignButton>
-                    <EditYAlignButton reset={reset.current} onReset={handleReset}
-                                      onPress={onTextYChanged}></EditYAlignButton>
-                    <FontSizeButton onPress={onFontSizeChanged}></FontSizeButton>
-                    <FontTypeButton onPress={onFontTypeChanged}></FontTypeButton>
-                    <MapButton onPress={handleMap}></MapButton>
+                    <View style={style.element}>
+                        <ResetButton onPress={resetPageState}></ResetButton>
+                    </View>
+                    <View style={style.element}>
+                        <EditXAlignButton reset={reset.current} onReset={handleReset}
+                                          onPress={onTextXChanged}/>
+                    </View>
+                    <View style={style.element}>
+                        <EditYAlignButton reset={reset.current} onReset={handleReset}
+                                          onPress={onTextYChanged}/>
+                    </View>
+                    <View style={style.element}>
+                        <FontSizeButton onPress={onFontSizeChanged}/>
+                    </View>
+                    <View style={style.element}>
+                        <FontTypeButton onPress={onFontTypeChanged}/>
+                    </View>
+                    <View style={style.element}>
+                        <MapButton onPress={handleMap}/>
+                    </View>
                     <View style={style.ConfirmButtonView}>
                         <ConfirmButton onConfirm={() => {
                             sendTwok(twokTextData,
@@ -250,6 +263,9 @@ function AddTwok({route, navigation}) {
 const style = StyleSheet.create({
     safeViewArea: {
         flex: 1
+    },
+    element: {
+        flex: 0.5
     },
     mainContainer: {
         flex: 5,

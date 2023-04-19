@@ -38,7 +38,13 @@ function Profile({route}) {
                     <FlatList data={followed}
                               renderItem={(element) => {
                                   // TODO: Metti foto profilo
-                                  return <UserView dimensions={route.params.WindowHeight / 50} name={element.item.name} uid={element.item.uid} followed={true} edit={reload}/>
+                                  return <UserView
+                                      dimensions={route.params.WindowHeight / 50}
+                                      name={element.item.name}
+                                      uid={element.item.uid}
+                                      followed={true}
+                                      edit={reload}
+                                      isInTwokRaw={false}/>
                               }}
                               keyExtractor={(element) => element.uid}>
                     </FlatList>

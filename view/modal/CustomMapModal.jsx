@@ -8,6 +8,7 @@ import {getCurrentPosition} from "../../viewmodel/position";
 function CustomMapModal(props) {
     // This variable is necessary to rerender component and put marker on map. Is different from latitude and longitude in addTwock (not violating single source of truth)
     const [coords, setCoords] = useState({latitude: props.latitude, longitude: props.longitude});
+
     if (coords.latitude === null && coords.longitude === null) {
         getCurrentPosition().then((c) => {
             if (c === false) {
@@ -43,25 +44,35 @@ function CustomMapModal(props) {
         })
     }
 
-    function showMap() {
-        if (coords.latitude !== null && coords.longitude !== null) {
-            return (<View style={style.modalView}>
-                <View style={style.mapContainer}>
-                    <MapView style={mapStyle()}
-                             initialRegion={{
-                                 latitude: coords.latitude,
-                                 longitude: coords.longitude,
-                                 latitudeDelta: 1,
-                                 longitudeDelta: 1
-                             }}>
-                        <MarkerAnimated coordinate={{latitude: coords.latitude, longitude: coords.longitude}}/>
-                    </MapView>
-                </View>
+    function showButtons() {
+        if (!props.isInWall) {
+            return (
                 <View style={style.modalButtons}>
                     <CancelButton onCancel={handleCloseModal}/>
                     <ConfirmButton onConfirm={handleConfirmPositionChange}/>
                 </View>
-            </View>);
+            );
+        }
+    }
+
+    function showMap() {
+        if (coords.latitude !== null && coords.longitude !== null) {
+            return (
+                <View style={style.modalView}>
+                    <View style={style.mapContainer}>
+                        <MapView style={mapStyle()}
+                                 initialRegion={{
+                                     latitude: coords.latitude,
+                                     longitude: coords.longitude,
+                                     latitudeDelta: 1,
+                                     longitudeDelta: 1
+                                 }}>
+                            <MarkerAnimated coordinate={{latitude: coords.latitude, longitude: coords.longitude}}/>
+                        </MapView>
+                    </View>
+                    {showButtons()}
+                </View>
+            );
         } else {
             return (
                 <View style={style.modalView}>
