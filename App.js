@@ -3,7 +3,6 @@ import Register from "./view/Register";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Main from "./view/Main";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {NavigationContainer} from "@react-navigation/native";
 import {StyleSheet, Text} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
 import {initEnvironment} from "./viewmodel/initApp";
@@ -51,17 +50,19 @@ function App() {
             <Text style={style.loading}>Loading...</Text>
         );
     } else {
-        return (
-            <SafeAreaProvider>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName={load.current}
-                                     screenOptions={{headerShown: false}}>
-                        <Stack.Screen name="Register" component={Register}/>
-                        <Stack.Screen name="Main" component={Main}/>
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </SafeAreaProvider>
-        );
+        if (load.current === "Register") {
+            return (
+                <SafeAreaProvider>
+                    <Register/>
+                </SafeAreaProvider>
+            )
+        } else {
+            return (
+                <SafeAreaProvider>
+                    <Main/>
+                </SafeAreaProvider>
+            )
+        }
     }
 }
 

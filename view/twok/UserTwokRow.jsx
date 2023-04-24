@@ -1,11 +1,12 @@
-import {Dimensions, Platform, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {Platform, StyleSheet, Text, View} from "react-native";
 import UserView from "../user/UserView";
 import React, {useState} from "react";
 import CustomMapModal from "../modal/CustomMapModal";
-const USERVIEWHEIGHT = 60;
 
-function TwokRow(props) {
-    const ALIGNAMENTS = ["flex-start", "center", "flex-end"];
+const USERVIEWHEIGHT = 60;
+const ALIGNAMENTS = ["flex-start", "center", "flex-end"];
+
+function UserTwokRow(props) {
     const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
     let FONTTYPE = null;
 
@@ -58,12 +59,14 @@ function TwokRow(props) {
             <View style={style.user}>
                 <UserView dimensions={props.dimensions.WindowHeight / 50}
                           name={props.data.name}
+                          navigate={props.navigate}
+                          pressable={false}
                           picture={props.data.picture}
                           pversion={props.data.pversion}
                           uid={props.data.uid}
                           followed={props.data.followed}
                           edit={handleMap}
-                          isInTwokRaw={true}/>
+                          isInGenericTwokRow={false}/>
             </View>
             {showMap()}
             <View style={twokStyle()}>
@@ -85,4 +88,4 @@ const style = StyleSheet.create({
     }
 });
 
-export default TwokRow;
+export default UserTwokRow;

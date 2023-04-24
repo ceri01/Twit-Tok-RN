@@ -5,6 +5,7 @@ import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
 import {addFollow, removeFollow} from "../../viewmodel/FollowHandler";
 import {useState} from "react";
 import MapButton from "../buttons/MapButton";
+import CancelButton from "../buttons/CancelButton";
 
 
 const UserView = (props) => {
@@ -28,9 +29,32 @@ const UserView = (props) => {
                 props.edit()
             }}/>
         } else {
-            return <FollowUnfollowButton textSize={props.dimensions} follow={follow} unfollow={unfollow} isFollow={followStatus} />
+            if (!props.pressable) {
+                return (
+                    <View style={style.button}>
+                        <CancelButton onCancel={() => {
+                            props.navigate()
+                        }
+                        }/>
+                        <FollowUnfollowButton textSize={props.dimensions}
+                                              follow={follow}
+                                              unfollow={unfollow}
+                                              isFollow={followStatus}/>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={style.button}>
+                        <FollowUnfollowButton textSize={props.dimensions}
+                                              follow={follow}
+                                              unfollow={unfollow}
+                                              isFollow={followStatus}/>
+                    </View>
+                )
+            }
         }
     }
+
 
     return (
         <View style={style.userViewContainer}>
@@ -38,11 +62,13 @@ const UserView = (props) => {
                 <UserPicture source={props.picture}/>
             </View>
             <View style={style.userName}>
-                <UserName userName={props.name}/>
+                <UserName userName={props.name}
+                          pressable={props.pressable}
+                          navigate={() => {
+                              props.navigate()
+                          }}/>
             </View>
-            <View style={style.button}>
-                {renderOtherContent()}
-            </View>
+            {renderOtherContent()}
         </View>
     );
 }
@@ -53,7 +79,7 @@ const style = StyleSheet.create({
         flexDirection: "row",
     },
     userName: {
-        flex: 3,
+        flex: 1.5,
         alignContent: "flex-start",
     },
     pic: {
@@ -64,6 +90,7 @@ const style = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        flexDirection: "row",
     }
 });
 

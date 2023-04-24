@@ -1,20 +1,26 @@
-import React, {useState} from "react";
-import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} from "react-native";
-import TwokRow from "./twok/TwokRow";
-import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
+import React, {useEffect, useState} from "react";
+import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter} from "react-native";
+import {resetGeneralBuffer} from "../viewmodel/GeneralWallHandler";
+import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
+import UserTwokRow from "./twok/UserTwokRow";
+import {getUserData, initUserWall, updateUserBuffer} from "../viewmodel/UserWallHandler";
 
-function UserWall() {
-/*    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
+function UserWall(props, {navigation}) {
+    const TabHeight = useBottomTabBarHeight()
+    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
+    const uid = props.route.params.params.uid
+    const WindowHeight = props.route.params.WindowHeight
+    const StatusBarHeight = props.route.params.StatusBarHeight
 
     if (listUpdater === 0) {
-        initWall().then(() => {
+        initUserWall(uid).then(() => {
             setListUpdater(listUpdater + 1)
         }).catch((err) => {
             console.log(err)
         });
     } else if (!listrefresher) {
-        resetBuffer().then(() => {
+        resetGeneralBuffer().then(() => {
             setListrefresher(true);
         });
     }
@@ -25,9 +31,18 @@ function UserWall() {
                 <FlatList
                     style={style.listStyle}
                     extraData={listrefresher}
-                    data={getData()}
+                    data={getUserData()}
                     renderItem={(twok) => {
-                        return <TwokRow data={twok.item}/>
+                        return <UserTwokRow data={twok.item}
+                                            navigate={() => {
+                                                DeviceEventEmitter.emit("event.goback", {key: "GenericWall"})
+                                            }}
+                                            dimensions={{
+                                                TabHeight: TabHeight,
+                                                WindowHeight: WindowHeight,
+                                                StatusBarHeight: StatusBarHeight
+                                            }}
+                        />
                     }}
                     keyExtractor={(item, index) => {
                         return index.toString()
@@ -35,16 +50,12 @@ function UserWall() {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     disableIntervalMomentum={true}
-                    snapToInterval={Dimensions.get('window').height - 90} // 90 is dimension of navigation bar
+                    snapToInterval={WindowHeight - StatusBarHeight - TabHeight} // 90 is dimension of navigation bar
                     snapToAlignment="start"
                     decelerationRate="fast"
                     onEndReached={(info) => {
-                        updateBuffer().then((res) => {
-                            if (res) {
-                                setListrefresher(false)
-                            } else {
-                                setListUpdater(listUpdater + 1);
-                            }
+                        updateUserBuffer(uid).then(() => {
+                            setListUpdater(listUpdater + 1);
                         });
                     }}
                     onEndReachedThreshold={2}
@@ -64,7 +75,7 @@ function UserWall() {
             {displayContent()}
             <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
         </SafeAreaView>
-    );*/
+    );
 
 }
 
@@ -85,3 +96,6 @@ const style = StyleSheet.create({
 });
 
 export default UserWall;
+
+
+

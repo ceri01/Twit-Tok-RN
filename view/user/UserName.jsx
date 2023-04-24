@@ -1,12 +1,25 @@
 import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
 
 const UserName = (props) => {
+    function renderName() {
+        if (props.pressable) {
+            return (
+                <TouchableHighlight onPress={() => {
+                    props.navigate()
+                }}>
+                    <Text style={style.text}>{props.userName}</Text>
+                </TouchableHighlight>
+            )
+        } else {
+            return (
+                <Text style={style.text}>{props.userName}</Text>
+            )
+        }
+    }
+
     return (
         <View style={style.layout}>
-            <TouchableHighlight onPress={() => {
-            }}>
-                <Text style={style.text}>{props.userName}</Text>
-            </TouchableHighlight>
+            {renderName()}
         </View>
     );
 }

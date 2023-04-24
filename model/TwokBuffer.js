@@ -19,6 +19,10 @@ class TwokBuffer {
             this.#buffer.push(element);
         }
     }
+
+    empty() {
+        this.#buffer = []
+    }
 }
 
 export default TwokBuffer;

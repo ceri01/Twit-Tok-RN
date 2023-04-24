@@ -65,44 +65,33 @@ export function isValid(twok) {
     return true;
 }
 
-export async function getTwoks(uid) {
+export async function getGeneralTwoks(tid) {
     const sid = await UtilityStorageManager.getSid();
     const tmpArr = []
 
-    if (uid !== undefined) {
-        for (let i = 0; i < 8; i++) {
-            let twok = await CommunicationController.getTwok(sid, uid);
-            if (isValid(twok)) {
-                tmpArr.push(twok);
-            } else {
-                i--;
-            }
-        }
-    } else {
-        for (let i = 0; i < 8; i++) {
-            let twok = await CommunicationController.getTwok(sid);
-            getUserPicture(sid, twok.uid, twok.pversion, (pic, pversion) => {
-                twok.picture = pic
-                twok.pversion = pversion
-                if (isValid(twok)) {
-                    tmpArr.push(twok);
-                } else {
-                    i--;
-                }
-            })
+    for (let i = 0; i < 8; i++) {
+        let twok = await CommunicationController.getTwok(sid);
+        if (isValid(twok)) {
+            tmpArr.push(twok);
+        } else {
+            i--;
         }
     }
+
     return tmpArr;
 }
 
-async function getTwoksWithTid(tid) {
+export async function getUserTwoks(uid) {
     const sid = await UtilityStorageManager.getSid();
-    const tmpArr = [];
-    tmpArr.unshift(await CommunicationController.getTwok(sid, tid));
-    return tmpArr;
-}
+    const tmpArr = new Map()
 
-
-export function getPics(uids) {
-
+    for (let i = 0; i < 8; i++) {
+        let twok = await CommunicationController.getTwok(sid, uid);
+        getUserPicture(sid, twok.uid, twok.pversion, (pic, pversion) => {
+            twok.picture = pic
+            twok.pversion = pversion
+            tmpArr.set(twok.tid, twok)
+        })
+    }
+    return tmpArr
 }

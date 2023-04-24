@@ -46,6 +46,7 @@ function Profile({route}) {
                                       uid={element.item.uid}
                                       followed={true}
                                       edit={reload}
+                                      pressable={true}
                                       isInTwokRaw={false}/>
                               }}
                               keyExtractor={(element) => element.uid}>

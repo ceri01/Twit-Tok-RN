@@ -1,23 +1,24 @@
 import React, {useState} from "react";
-import {StyleSheet, SafeAreaView, FlatList, Dimensions, StatusBar, View, Text} from "react-native";
-import TwokRow from "./twok/TwokRow";
-import {getData, initWall, resetBuffer, updateBuffer} from "../viewmodel/WallHandler";
+import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter} from "react-native";
+import GenericTwokRow from "./twok/GenericTwokRow";
+import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
-import CustomMapModal from "./modal/CustomMapModal";
 
-function Wall({route}) {
+function GenericWall({route, navigation}) {
     const TabHeight = useBottomTabBarHeight()
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
 
+    DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)})
+
     if (listUpdater === 0) {
-        initWall().then(() => {
+        initGeneralWall().then(() => {
             setListUpdater(listUpdater + 1)
         }).catch((err) => {
             console.log(err)
         });
     } else if (!listrefresher) {
-        resetBuffer().then(() => {
+        resetGeneralBuffer().then(() => {
             setListrefresher(true);
         });
     }
@@ -28,15 +29,21 @@ function Wall({route}) {
                 <FlatList
                     style={style.listStyle}
                     extraData={listrefresher}
-                    data={getData()}
+                    data={getGeneralData()}
                     renderItem={(twok) => {
-                        return <TwokRow data={twok.item}
-                                        dimensions={{
-                                            TabHeight: TabHeight,
-                                            WindowHeight: route.params.WindowHeight,
-                                            StatusBarHeight: route.params.StatusBarHeight
-                                        }
-                        }/>
+                        return <GenericTwokRow data={twok.item}
+                                               navigate={() => {
+                                                   navigation.navigate("UserWall", {
+                                                       params: {
+                                                           uid: twok.item.uid,
+                                                       }
+                                                   })
+                                               }}
+                                               dimensions={{
+                                                   TabHeight: TabHeight,
+                                                   WindowHeight: route.params.WindowHeight,
+                                                   StatusBarHeight: route.params.StatusBarHeight
+                        }}/>
                     }}
                     keyExtractor={(item, index) => {
                         return index.toString()
@@ -47,8 +54,8 @@ function Wall({route}) {
                     snapToInterval={route.params.WindowHeight - route.params.StatusBarHeight - TabHeight} // 90 is dimension of navigation bar
                     snapToAlignment="start"
                     decelerationRate="fast"
-                    onEndReached={(info) => {
-                        updateBuffer().then((res) => {
+                    onEndReached={() => {
+                        updateGeneralBuffer().then((res) => {
                             if (res) {
                                 setListrefresher(false)
                             } else {
@@ -93,4 +100,4 @@ const style = StyleSheet.create({
     }
 });
 
-export default Wall;
+export default GenericWall;

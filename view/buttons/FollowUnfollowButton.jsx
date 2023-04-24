@@ -33,10 +33,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: "center",
         justifyContent: "center",
-        paddingHorizontal: 10,
         paddingVertical: 10,
-        height: "100%",
-        width: "120%"
     },
     button: {
         backgroundColor: "#6200ee",

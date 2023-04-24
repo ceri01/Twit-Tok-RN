@@ -1,9 +1,9 @@
 import TwokBuffer from "../model/TwokBuffer";
-import {getTwoks} from "./TwokHandler";
+import {getGeneralTwoks} from "./TwokHandler";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
 
-const twoks = new TwokBuffer();
+const generalTwoks = new TwokBuffer();
 
 function isInFollowed(uid, followed) {
     for (const elementOfData of followed) {
@@ -14,34 +14,39 @@ function isInFollowed(uid, followed) {
     return false
 }
 
-export function getData() {
-    return twoks.getImmutableData();
+export function getGeneralData() {
+    return generalTwoks.getImmutableData();
 }
 
-export async function initWall() {
-    const elements = await getTwoks();
+export async function initGeneralWall() {
+    const elements = await getGeneralTwoks();
     let sid = await UtilityStorageManager.getSid();
     let followed = await CommunicationController.getFollowed(sid)
+    await emptyGeneralBuffer()
     elements.map((element) => {
         element.followed = isInFollowed(element.uid, followed);
     });
     for (let element of elements) {
-        twoks.add(element);
+        generalTwoks.add(element);
     }
 }
 
-export async function updateBuffer() {
-    if (twoks.getLength() > 32) {
+export async function updateGeneralBuffer() {
+    if (generalTwoks.getLength() > 32) {
         return true;
     }
-    const elements = await getTwoks()
+    const elements = await getGeneralTwoks()
     for (let element of elements) {
-        twoks.add(element);
+        generalTwoks.add(element);
     }
     return false
 }
 
-export async function resetBuffer() {
-    let newTwoks = await getTwoks()
-    twoks.reset(newTwoks);
+export async function resetGeneralBuffer() {
+    let newTwoks = await getGeneralTwoks()
+    generalTwoks.reset(newTwoks);
+}
+
+export async function emptyGeneralBuffer() {
+    generalTwoks.empty()
 }
