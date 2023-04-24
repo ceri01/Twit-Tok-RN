@@ -71,11 +71,15 @@ export async function getGeneralTwoks(tid) {
 
     for (let i = 0; i < 8; i++) {
         let twok = await CommunicationController.getTwok(sid);
-        if (isValid(twok)) {
-            tmpArr.push(twok);
-        } else {
-            i--;
-        }
+        getUserPicture(sid, twok.uid, twok.pversion, (pic, pversion) => {
+            twok.picture = pic
+            twok.pversion = pversion
+            if (isValid(twok)) {
+                tmpArr.push(twok);
+            } else {
+                i--;
+            }
+        })
     }
 
     return tmpArr;

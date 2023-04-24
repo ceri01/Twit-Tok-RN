@@ -9,7 +9,7 @@ function GenericWall({route, navigation}) {
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
 
-    DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)})
+    DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)}) // this is used to create event to go back to GenericWall
 
     if (listUpdater === 0) {
         initGeneralWall().then(() => {
