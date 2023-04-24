@@ -24,7 +24,7 @@ const UserView = (props) => {
     }
 
     function renderOtherContent() {
-        if (props.isInTwokRaw) {
+        if (props.isInGenericTwokRow) {
             return <MapButton onPress={() => {
                 props.edit()
             }}/>
