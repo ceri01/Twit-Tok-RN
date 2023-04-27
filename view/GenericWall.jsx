@@ -34,7 +34,6 @@ function GenericWall({route, navigation}) {
         resetGeneralBuffer().then(() => {
             setListrefresher(true);
         }).catch((err) => {
-            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
             setOffline(true)
         });
     }
