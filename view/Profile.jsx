@@ -3,7 +3,7 @@ import {
     Alert,
     Button,
     DeviceEventEmitter,
-    FlatList,
+    FlatList, NativeModules,
     SafeAreaView,
     StatusBar,
     StyleSheet,
@@ -14,6 +14,7 @@ import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import {getFollowed, getFollowedLenght, initFollowed} from "../viewmodel/FollowHandler";
 import {getProfile} from "../viewmodel/ProfileUserHandler";
+import {reloadApp} from "../viewmodel/initApp";
 
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
@@ -102,9 +103,11 @@ function Profile({route, navigation}) {
     if (offline) {
         return (
             <View style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry</Text>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
                 <Button title="Reload" onPress={() => {
-                    setOffline(false)
+                    reloadApp().then(() => {
+                        NativeModules.DevSettings.reload();
+                    })
                 }}/>
             </View>
         );

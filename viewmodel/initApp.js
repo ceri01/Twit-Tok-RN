@@ -28,7 +28,7 @@ export async function initProfile(name, pic) {
 }
 
 export async function initEnvironment() {
-    let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"}; // await CommunicationController.register()
+    let register = await CommunicationController.register()
     if (register !== undefined) {
         let profileData = await CommunicationController.getProfile(register.sid);
         await UtilityStorageManager.setSid(register.sid)
@@ -38,5 +38,12 @@ export async function initEnvironment() {
         await UtilityStorageManager.setSid("");
         await UtilityStorageManager.setProfileUid("")
         DBManager.getInstance()
+    }
+}
+
+export async function reloadApp() {
+    let sid = await UtilityStorageManager.getSid()
+    if (sid === "" || sid === undefined) {
+        await UtilityStorageManager.clear()
     }
 }

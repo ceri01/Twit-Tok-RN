@@ -8,11 +8,12 @@ import {
     Text,
     DeviceEventEmitter,
     Alert,
-    Button
+    Button, NativeModules
 } from "react-native";
 import GenericTwokRow from "./twok/GenericTwokRow";
 import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
+import {reloadApp} from "../viewmodel/initApp";
 
 function GenericWall({route, navigation}) {
     const TabHeight = useBottomTabBarHeight()
@@ -96,9 +97,11 @@ function GenericWall({route, navigation}) {
     if (offline) {
         return (
             <View style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry</Text>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
                 <Button title="Reload" onPress={() => {
-                    setOffline(false)
+                    reloadApp().then(() => {
+                        NativeModules.DevSettings.reload();
+                    })
                 }}/>
             </View>
         );
