@@ -1,5 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Alert, DeviceEventEmitter, FlatList, SafeAreaView, StatusBar, StyleSheet, View} from "react-native";
+import {
+    Alert,
+    Button,
+    DeviceEventEmitter,
+    FlatList,
+    SafeAreaView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View
+} from "react-native";
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
 import {getFollowed, getFollowedLenght, initFollowed} from "../viewmodel/FollowHandler";
@@ -7,6 +17,7 @@ import {getProfile} from "../viewmodel/ProfileUserHandler";
 
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
+    let [offline, setOffline] = useState(false)
     let profile = useRef(null);
     let [followed, setFollowed] = useState(null)
 
@@ -19,9 +30,10 @@ function Profile({route, navigation}) {
                         profile.current = resultQuery
                         setFollowed(getFollowed())
                         setReady(true);
+                        setOffline(false)
                     }).catch((err) => {
                         Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-                        console.log(err)
+                        setOffline(true)
                     })
                 } else if (followed != null && getFollowedLenght() !== followed.length) {
                     setFollowed(getFollowed())
@@ -62,6 +74,12 @@ function Profile({route, navigation}) {
                     </FlatList>
                 </View>
             )
+        } else {
+            return (
+                <View style={style.waiting}>
+                    <Text style={{fontSize: 30, fontStyle: "italic"}}>Waiting...</Text>
+                </View>
+            );
         }
     }
 
@@ -73,15 +91,26 @@ function Profile({route, navigation}) {
         }
     }
 
-    return (
-        <SafeAreaView style={style.profileLayout}>
-            <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
-            <View style={style.profile}>
-                {renderProfile()}
+    if (offline) {
+        return (
+            <View style={style.waiting}>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry</Text>
+                <Button title="Reload" onPress={() => {
+                    setOffline(false)
+                }}/>
             </View>
-            {renderFollowed()}
-        </SafeAreaView>
-    );
+        );
+    } else {
+        return (
+            <SafeAreaView style={style.profileLayout}>
+                <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
+                <View style={style.profile}>
+                    {renderProfile()}
+                </View>
+                {renderFollowed()}
+            </SafeAreaView>
+        );
+    }
 }
 
 const style = StyleSheet.create({

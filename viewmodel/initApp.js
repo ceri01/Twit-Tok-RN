@@ -28,7 +28,7 @@ export async function initProfile(name, pic) {
 }
 
 export async function initEnvironment() {
-    let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"}; // CommunicationController.register()
+    let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"}; // await CommunicationController.register()
     if (register !== undefined) {
         let profileData = await CommunicationController.getProfile(register.sid);
         await UtilityStorageManager.setSid(register.sid)

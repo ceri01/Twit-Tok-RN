@@ -40,6 +40,8 @@ function App() {
                 load.current = "Main";
             }
             setIsLoading(false)
+        }).catch((err) => {
+            console.log("isFirstStart " + err)
         })
 
         return (

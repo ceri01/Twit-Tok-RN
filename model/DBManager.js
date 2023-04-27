@@ -6,11 +6,13 @@ export default class DBManager {
     _database = null
 
     constructor() {
-        this._database = SQLite.openDatabase("prova");
+        this._database = SQLite.openDatabase("prova1");
         UtilityStorageManager.DBIsInit().then((res) => {
             if (!res) {
                 UtilityStorageManager.DBInit().then(() => {
                     console.log("Database creato")
+                }).catch(() => {
+                    console.log("errpre nel costrurrore del db")
                 })
                 UtilityStorageManager.getProfileUid().then(uid => {
                     const profile_table = "CREATE TABLE IF NOT EXISTS Profile(uid INTEGER PRIMARY KEY, name TEXT, picture BLOB(100000) CHECK(LENGTH(picture) <= 100000), pversion SMALLINT);";
@@ -24,10 +26,14 @@ export default class DBManager {
                         t.executeSql(profile_trigger, [], () => {}, (tx, err) => {console.log("3 => " + err)});
                         t.executeSql(insert_profile, [], () => {}, (tx, err) => {console.log("4 => " + err)});
                     });
+                }).catch(() => {
+                    console.log("errore nel costruttore durante query")
                 })
             } else {
                 console.log("Database gia creato")
             }
+        }).catch((err) => {
+            console.log("errore nel db" + err)
         })
     }
 

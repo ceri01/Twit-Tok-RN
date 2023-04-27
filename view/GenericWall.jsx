@@ -1,5 +1,15 @@
-import React, {useState} from "react";
-import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter, Alert} from "react-native";
+import React, {useRef, useState} from "react";
+import {
+    StyleSheet,
+    SafeAreaView,
+    FlatList,
+    StatusBar,
+    View,
+    Text,
+    DeviceEventEmitter,
+    Alert,
+    Button
+} from "react-native";
 import GenericTwokRow from "./twok/GenericTwokRow";
 import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
@@ -8,6 +18,7 @@ function GenericWall({route, navigation}) {
     const TabHeight = useBottomTabBarHeight()
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
+    let [offline, setOffline] = useState(false)
 
     DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)}) // this is used to create event to go back to GenericWall
 
@@ -16,14 +27,14 @@ function GenericWall({route, navigation}) {
             setListUpdater(listUpdater + 1)
         }).catch((err) => {
             Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-            console.log(err)
+            setOffline(true)
         });
     } else if (!listrefresher) {
         resetGeneralBuffer().then(() => {
             setListrefresher(true);
         }).catch((err) => {
             Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-            console.log(err)
+            setOffline(true)
         });
     }
 
@@ -82,13 +93,23 @@ function GenericWall({route, navigation}) {
         }
     }
 
-    return (
-        <SafeAreaView style={style.safeViewArea}>
-            {displayContent()}
-            <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
-        </SafeAreaView>
-    );
-
+    if (offline) {
+        return (
+            <View style={style.waiting}>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry</Text>
+                <Button title="Reload" onPress={() => {
+                    setOffline(false)
+                }}/>
+            </View>
+        );
+    } else {
+        return (
+            <SafeAreaView style={style.safeViewArea}>
+                {displayContent()}
+                <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
+            </SafeAreaView>
+        );
+    }
 }
 
 const style = StyleSheet.create({
