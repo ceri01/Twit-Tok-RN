@@ -48,32 +48,40 @@ function Profile({route, navigation}) {
 
     function renderFollowed() {
         if (ready) {
-            return (
-                <View style={style.followed}>
-                    <FlatList data={followed}
-                              renderItem={(element) => {
-                                  return <UserView
-                                      dimensions={route.params.WindowHeight / 50}
-                                      navigate={() => {
-                                          navigation.navigate("UserWall", {
-                                              params: {
-                                                  key: "ProfileScreen", // use ProfileScreen because Profile already exists in Main.jsx
-                                                  uid: element.item.uid,
-                                              }
-                                          })
-                                      }}
-                                      name={element.item.name}
-                                      picture={element.item.picture}
-                                      uid={element.item.uid}
-                                      followed={true}
-                                      edit={reload}
-                                      pressable={true}
-                                      isInGenericTwokRow={false}/>
-                              }}
-                              keyExtractor={(element) => element.uid}>
-                    </FlatList>
-                </View>
-            )
+            if (followed === []) {
+                return (
+                    <View style={style.followed}>
+                        <FlatList data={followed}
+                                  renderItem={(element) => {
+                                      return <UserView
+                                          dimensions={route.params.WindowHeight / 50}
+                                          navigate={() => {
+                                              navigation.navigate("UserWall", {
+                                                  params: {
+                                                      key: "ProfileScreen", // use ProfileScreen because Profile already exists in Main.jsx
+                                                      uid: element.item.uid,
+                                                  }
+                                              })
+                                          }}
+                                          name={element.item.name}
+                                          picture={element.item.picture}
+                                          uid={element.item.uid}
+                                          followed={true}
+                                          edit={reload}
+                                          pressable={true}
+                                          isInGenericTwokRow={false}/>
+                                  }}
+                                  keyExtractor={(element) => element.uid}>
+                        </FlatList>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={style.empty}>
+                        <Text style={{fontSize: 30, fontStyle: "italic"}}>Followed list is empty, find some friends in wall page!</Text>
+                    </View>
+                )
+            }
         } else {
             return (
                 <View style={style.waiting}>
@@ -127,9 +135,15 @@ const style = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-    }, profileLayout: {
+    },
+    profileLayout: {
         flex: 1,
         flexDirection: "column",
+    },
+    empty: {
+        flex: 6,
+        alignItems: "center",
+        justifyContent: "center",
     }
 });
 
