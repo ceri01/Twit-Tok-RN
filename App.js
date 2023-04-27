@@ -3,13 +3,13 @@ import Register from "./view/Register";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Main from "./view/Main";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {StyleSheet, Text} from "react-native";
+import {Alert, StyleSheet, Text} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
 import {initEnvironment} from "./viewmodel/initApp";
 import * as Sentry from "@sentry/react-native";
 import Constants from "expo-constants";
 import DBManager from "./model/DBManager";
-
+import {NavigationContainer} from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,39 +30,33 @@ function App() {
         UtilityStorageManager.isFirstStart().then((res) => {
             if (res) {
                 initEnvironment().then(() => {
-                    console.log("env initialized")
-                    DBManager.getInstance()
+                    console.log("done")
+                }).catch((err) => {
+                    Alert.alert("Connection Error", "Network request failed, is not possible to login with account. \nYou can use app in guest mode");
+                    console.log(err)
                 })
-                setIsLoading(false)
+                load.current = "Register";
             } else {
-                DBManager.getInstance().getProfileFromDB((res) => {
-                    if (res === undefined || res.name === "") {
-                        load.current = "Register";
-                    } else {
-                        load.current = "Main";
-                    }
-                    setIsLoading(false)
-                }, (err) => {
-                    console.log("errore " + err)
-                })}
+                load.current = "Main";
+            }
+            setIsLoading(false)
         })
+
         return (
             <Text style={style.loading}>Loading...</Text>
         );
     } else {
-        if (load.current === "Register") {
-            return (
-                <SafeAreaProvider>
-                    <Register/>
-                </SafeAreaProvider>
-            )
-        } else {
-            return (
-                <SafeAreaProvider>
-                    <Main/>
-                </SafeAreaProvider>
-            )
-        }
+        return (
+            <SafeAreaProvider>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName={load.current}
+                                     screenOptions={{headerShown: false}}>
+                        <Stack.Screen name="Register" component={Register}/>
+                        <Stack.Screen name="Main" component={Main}/>
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </SafeAreaProvider>
+        )
     }
 }
 

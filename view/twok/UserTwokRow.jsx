@@ -8,6 +8,7 @@ const ALIGNAMENTS = ["flex-start", "center", "flex-end"];
 
 function UserTwokRow(props) {
     const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
+    const [tmpReload, setTmpReload] = useState(0)
     let FONTTYPE = null;
 
     if (Platform.OS === 'ios') {
@@ -65,7 +66,9 @@ function UserTwokRow(props) {
                           pversion={props.data.pversion}
                           uid={props.data.uid}
                           followed={props.data.followed}
-                          edit={handleMap}
+                          edit={() => {
+                              setTmpReload(tmpReload + 1)
+                          }}
                           isInGenericTwokRow={false}/>
             </View>
             {showMap()}

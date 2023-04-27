@@ -6,7 +6,7 @@ import DefaultImage from "../assets/favicon.png";
 import ChooseImageButton from "./buttons/ChooseImageButton";
 import {initProfile} from "../viewmodel/initApp";
 
-function Register({ route, navigation }) {
+function Register({ navigation }) {
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
 
@@ -23,8 +23,6 @@ function Register({ route, navigation }) {
             setImage(Image.resolveAssetSource(DefaultImage).uri);
         })
     }
-
-    console.log(image)
 
     return (
         <SafeAreaView style={style.mainContainer}>
@@ -44,10 +42,10 @@ function Register({ route, navigation }) {
                 <RegisterButton onPress={() => {
                     if (typeof(name) === "string" && name.length > 0) {
                         initProfile(name, image).then(() => {
-                            navigation.navigate("Main", {screen: "Wall"})
                         }).catch((err) => {
-                            Alert.alert("Error", "An error has occurred\n" + err);
+                            Alert.alert("Connection error.", "Profile could not be initialized, check your connection")
                         })
+                        navigation.navigate("Main", {screen: "Wall"})
                     } else {
                         Alert.alert("Missing name", "Insert a name.");
                     }

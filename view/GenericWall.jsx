@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter} from "react-native";
+import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter, Alert} from "react-native";
 import GenericTwokRow from "./twok/GenericTwokRow";
 import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
@@ -15,11 +15,15 @@ function GenericWall({route, navigation}) {
         initGeneralWall().then(() => {
             setListUpdater(listUpdater + 1)
         }).catch((err) => {
+            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
             console.log(err)
         });
     } else if (!listrefresher) {
         resetGeneralBuffer().then(() => {
             setListrefresher(true);
+        }).catch((err) => {
+            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
+            console.log(err)
         });
     }
 
@@ -35,6 +39,7 @@ function GenericWall({route, navigation}) {
                                                navigate={() => {
                                                    navigation.navigate("UserWall", {
                                                        params: {
+                                                           key: "GenericWall",
                                                            uid: twok.item.uid,
                                                        }
                                                    })
@@ -61,6 +66,8 @@ function GenericWall({route, navigation}) {
                             } else {
                                 setListUpdater(listUpdater + 1);
                             }
+                        }).catch(() => {
+                            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
                         });
                     }}
                     onEndReachedThreshold={2}

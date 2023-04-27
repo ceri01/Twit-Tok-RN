@@ -11,10 +11,7 @@ export default class CommunicationController {
         });
         const status = response.status;
         if (status === 200) {
-            // console.log("HTTP reaquest successful")
             return await response.json();
-        } else {
-            return new Error("HTTP request failed, HTTP status: " + status);
         }
     }
 
@@ -77,7 +74,6 @@ export default class CommunicationController {
         if((lat === undefined) !== (lon === undefined)) {
             return new Error("Error: lat and lon must be set both or neither")
         }
-        // controlla se funziona, lat e lon devono essere entrambi settati o no
         const parameters = {
             sid: sid,
             text: text,

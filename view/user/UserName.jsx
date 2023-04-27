@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {DeviceEventEmitter, StyleSheet, Text, TouchableHighlight, View} from "react-native";
 
 const UserName = (props) => {
     function renderName() {

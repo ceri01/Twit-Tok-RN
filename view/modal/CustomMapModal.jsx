@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import MapView, {MarkerAnimated} from "react-native-maps";
 import CancelButton from "../buttons/CancelButton";
 import ConfirmButton from "../buttons/ConfirmButton";
-import {getCurrentPosition} from "../../viewmodel/position";
+import {getCurrentPosition} from "../../viewmodel/Position";
 
 function CustomMapModal(props) {
     // This variable is necessary to rerender component and put marker on map. Is different from latitude and longitude in addTwock (not violating single source of truth)

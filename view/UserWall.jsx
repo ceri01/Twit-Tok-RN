@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter} from "react-native";
+import {StyleSheet, SafeAreaView, FlatList, StatusBar, View, Text, DeviceEventEmitter, Alert} from "react-native";
 import {resetGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 import UserTwokRow from "./twok/UserTwokRow";
@@ -17,11 +17,15 @@ function UserWall(props, {navigation}) {
         initUserWall(uid).then(() => {
             setListUpdater(listUpdater + 1)
         }).catch((err) => {
+            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
             console.log(err)
         });
     } else if (!listrefresher) {
         resetGeneralBuffer().then(() => {
             setListrefresher(true);
+        }).catch((err) => {
+            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
+            console.log(err)
         });
     }
 
@@ -35,7 +39,7 @@ function UserWall(props, {navigation}) {
                     renderItem={(twok) => {
                         return <UserTwokRow data={twok.item}
                                             navigate={() => {
-                                                DeviceEventEmitter.emit("event.goback", {key: "GenericWall"})
+                                                DeviceEventEmitter.emit("event.goback", {key: props.route.params.params.key})
                                             }}
                                             dimensions={{
                                                 TabHeight: TabHeight,
@@ -56,6 +60,8 @@ function UserWall(props, {navigation}) {
                     onEndReached={(info) => {
                         updateUserBuffer(uid).then(() => {
                             setListUpdater(listUpdater + 1);
+                        }).catch(() => {
+                            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
                         });
                     }}
                     onEndReachedThreshold={2}

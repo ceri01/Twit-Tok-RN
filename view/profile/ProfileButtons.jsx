@@ -1,4 +1,4 @@
-import {Pressable, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {Alert, Pressable, StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import CustomTextModal from "../modal/CustomTextModal";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {setNewProfileName, setNewProfilePic} from "../../viewmodel/ProfileUserHandler";
@@ -12,12 +12,16 @@ const ProfileButtons = (props) => {
     function changeText(name) {
         setNewProfileName(name).then(() => {
             props.onPress()
+        }).catch(() => {
+            Alert.alert("Connection Error", "Is not possible to change profile name, check your connection");
         })
     }
 
     function changePic(pic) {
         setNewProfilePic(pic).then(() => {
             props.onPress()
+        }).catch(() => {
+            Alert.alert("Connection Error", "Is not possible to change profile picture, check your connection");
         })
     }
 

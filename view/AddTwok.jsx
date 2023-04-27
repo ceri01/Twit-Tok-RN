@@ -248,7 +248,7 @@ function AddTwok({route, navigation}) {
                                 longitudeData.current).then(() => {
                                     resetPageState()
                             }).catch(() => {
-                                Alert.alert("Network Error", "Check your connection")
+                                Alert.alert("Connection error.", "Is not possible to send twok, check your connection")
                             })
                         }}></ConfirmButton>
                     </View>

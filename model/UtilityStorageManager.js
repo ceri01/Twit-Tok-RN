@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 class UtilityStorageManager {
 
     static async firstStart() {
-        await AsyncStorage.setItem("@First_start", "true");
+        await AsyncStorage.setItem("@First_start", "true")
     }
 
     static async isFirstStart() {

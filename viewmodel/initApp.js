@@ -24,13 +24,19 @@ export async function initProfile(name, pic) {
     }, () => {
         Alert.alert("Input Error", "Name format not valid")
     });
+    await UtilityStorageManager.firstStart()
 }
 
 export async function initEnvironment() {
-    // TODO: fixare questa parte nel caso in cui manchi la connessioe
-    await UtilityStorageManager.firstStart();
-    let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"} // await CommunicationController.register();
-    await UtilityStorageManager.setSid(register.sid.toString());
-    let profile = await CommunicationController.getProfile(register.sid.toString());
-    await UtilityStorageManager.setProfileUid(profile.uid.toString());
+    let register = {sid: "Rxvl9SVDA3ADaoKIVV3X"}; // CommunicationController.register()
+    if (register !== undefined) {
+        let profileData = await CommunicationController.getProfile(register.sid);
+        await UtilityStorageManager.setSid(register.sid)
+        await UtilityStorageManager.setProfileUid(profileData.uid.toString());
+        DBManager.getInstance()
+    } else {
+        await UtilityStorageManager.setSid("");
+        await UtilityStorageManager.setProfileUid("")
+        DBManager.getInstance()
+    }
 }

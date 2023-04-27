@@ -6,9 +6,8 @@ export default class DBManager {
     _database = null
 
     constructor() {
-        this._database = SQLite.openDatabase("yahoooo");
+        this._database = SQLite.openDatabase("prova");
         UtilityStorageManager.DBIsInit().then((res) => {
-            console.log(res)
             if (!res) {
                 UtilityStorageManager.DBInit().then(() => {
                     console.log("Database creato")
@@ -34,7 +33,6 @@ export default class DBManager {
 
     static getInstance() {
         if (DBManager.instance == null) {
-            console.log("istanza null")
             DBManager.instance = new DBManager();
         }
         return this.instance;
@@ -134,7 +132,6 @@ export default class DBManager {
         if (typeof(picture) === "string" && typeof(uid) === "number" && typeof(pversion) === "number") {
             this._database.transaction(tx => {
                 tx.executeSql(query, [uid, picture, pversion], () => {
-                    console.log("Inserimento riuscito");
                 }, (tx, error) => {
                     console.log("2 " + error.message);
                 });

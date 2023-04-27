@@ -2,6 +2,7 @@ import TwokBuffer from "../model/TwokBuffer";
 import {getGeneralTwoks} from "./TwokHandler";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
+import {Alert} from "react-native";
 
 const generalTwoks = new TwokBuffer();
 
@@ -19,10 +20,10 @@ export function getGeneralData() {
 }
 
 export async function initGeneralWall() {
+    await emptyGeneralBuffer()
     const elements = await getGeneralTwoks();
     let sid = await UtilityStorageManager.getSid();
     let followed = await CommunicationController.getFollowed(sid)
-    await emptyGeneralBuffer()
     elements.map((element) => {
         element.followed = isInFollowed(element.uid, followed);
     });

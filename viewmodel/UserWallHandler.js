@@ -2,6 +2,7 @@ import TwokBuffer from "../model/TwokBuffer";
 import {getUserTwoks} from "./TwokHandler";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
+import {Alert} from "react-native";
 
 const userTwoks = new TwokBuffer();
 
@@ -36,7 +37,6 @@ export async function updateUserBuffer(uid) {
     const newTwoks = [...((await getUserTwoks(uid)).values())]
     for (const newTwok of newTwoks) {
         if (userTwoks.getImmutableData().findIndex(obj => obj.tid === newTwok.tid) === -1) {
-            console.log("add " + JSON.stringify(newTwok).substring(0, 100))
             userTwoks.add(newTwok);
         }
     }
