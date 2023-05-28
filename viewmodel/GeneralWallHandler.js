@@ -6,45 +6,53 @@ import {Alert} from "react-native";
 
 const generalTwoks = new TwokBuffer();
 
-function isInFollowed(uid, followed) {
-    for (const elementOfData of followed) {
-        if (elementOfData.uid === uid) {
-            return true
-        }
-    }
-    return false
-}
-
 export function getGeneralData() {
     return generalTwoks.getImmutableData();
 }
 
-export async function initGeneralWall() {
-    await emptyGeneralBuffer()
-    const elements = await getGeneralTwoks();
+export async function initGeneralWall(tidSequence) {
     let sid = await UtilityStorageManager.getSid();
-    let followed = await CommunicationController.getFollowed(sid)
-    elements.map((element) => {
-        element.followed = isInFollowed(element.uid, followed);
+    await emptyGeneralBuffer()
+    let elements
+    if (tidSequence !== -1) {
+        elements = await getGeneralTwoks(tidSequence);
+    } else {
+        elements = await getGeneralTwoks();
+    }
+
+    elements.map(async (element) => {
+        element.followed = (await CommunicationController.isFollowed(sid, element.uid)).followed;
     });
     for (let element of elements) {
         generalTwoks.add(element);
     }
 }
 
-export async function updateGeneralBuffer() {
+export async function updateGeneralBuffer(tidSequence) {
+    let elements
     if (generalTwoks.getLength() > 32) {
         return true;
     }
-    const elements = await getGeneralTwoks()
+
+    if (tidSequence !== -1) {
+        elements = await getGeneralTwoks(tidSequence)
+    } else {
+        elements = await getGeneralTwoks()
+    }
+
     for (let element of elements) {
         generalTwoks.add(element);
     }
     return false
 }
 
-export async function resetGeneralBuffer() {
-    let newTwoks = await getGeneralTwoks()
+export async function resetGeneralBuffer(tidSequence) {
+    let newTwoks
+    if (tidSequence !== -1) {
+        newTwoks = await getGeneralTwoks(tidSequence)
+    } else {
+        newTwoks = await getGeneralTwoks()
+    }
     generalTwoks.reset(newTwoks);
 }
 

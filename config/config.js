@@ -8,6 +8,7 @@ const API = {
     FOLLOW: "follow",
     UNFOLLOW: "unfollow",
     GETPICTURE: "getPicture",
-    GETFOLLOWED: "getFollowed"
+    GETFOLLOWED: "getFollowed",
+    ISFOLLOWED: "isFollowed"
 }
 export default API;

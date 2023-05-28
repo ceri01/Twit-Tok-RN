@@ -2,18 +2,8 @@ import TwokBuffer from "../model/TwokBuffer";
 import {getUserTwoks} from "./TwokHandler";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
-import {Alert} from "react-native";
 
 const userTwoks = new TwokBuffer();
-
-function isInFollowed(uid, followed) {
-    for (const elementOfData of followed) {
-        if (elementOfData.uid === uid) {
-            return true
-        }
-    }
-    return false
-}
 
 export function getUserData() {
     return userTwoks.getImmutableData();
@@ -23,8 +13,7 @@ export async function initUserWall(uid) {
     await emptyUserBuffer();
     const elements = [...((await getUserTwoks(uid)).values())];
     const sid = await UtilityStorageManager.getSid();
-    const followed = await CommunicationController.getFollowed(sid);
-    const isFollowed = isInFollowed(elements[0].uid, followed);
+    const isFollowed = (await CommunicationController.isFollowed(sid, uid)).followed// isInFollowed(elements[0].uid, followed);
     elements.map((element) => {
         element.followed = isFollowed;
     });

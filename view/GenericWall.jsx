@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {
     StyleSheet,
     SafeAreaView,
@@ -15,6 +15,8 @@ import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 import {reloadApp} from "../viewmodel/initApp";
 
+let tidSequence = -1
+
 function GenericWall({route, navigation}) {
     const TabHeight = useBottomTabBarHeight()
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
@@ -24,16 +26,23 @@ function GenericWall({route, navigation}) {
     DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)}) // this is used to create event to go back to GenericWall
 
     if (listUpdater === 0) {
-        initGeneralWall().then(() => {
+        initGeneralWall(tidSequence).then(() => {
+            if (tidSequence !== -1) {
+                tidSequence = tidSequence + 8 // add 8 because getGeneralTwoks (called in initGeneralWall) performs 8 getTwok requests
+            }
             setListUpdater(listUpdater + 1)
         }).catch((err) => {
             Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
             setOffline(true)
         });
     } else if (!listrefresher) {
-        resetGeneralBuffer().then(() => {
+        resetGeneralBuffer(tidSequence).then(() => {
+            if (tidSequence !== -1) {
+                tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
+            }
             setListrefresher(true);
         }).catch((err) => {
+            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
             setOffline(true)
         });
     }
@@ -71,13 +80,17 @@ function GenericWall({route, navigation}) {
                     snapToAlignment="start"
                     decelerationRate="fast"
                     onEndReached={() => {
-                        updateGeneralBuffer().then((res) => {
+                        updateGeneralBuffer(tidSequence).then((res) => {
+                            if (tidSequence !== -1) {
+                                tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
+                            }
                             if (res) {
                                 setListrefresher(false)
                             } else {
                                 setListUpdater(listUpdater + 1);
                             }
                         }).catch(() => {
+                            setOffline(true)
                             Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
                         });
                     }}

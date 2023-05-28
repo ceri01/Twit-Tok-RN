@@ -70,7 +70,7 @@ export async function getGeneralTwoks(tid) {
     const tmpArr = []
 
     for (let i = 0; i < 8; i++) {
-        let twok = await CommunicationController.getTwok(sid);
+        let twok = await CommunicationController.getTwok(sid, null, tid);
         await getUserPicture(sid, twok.uid, twok.pversion, (pic, pversion) => {
             twok.picture = pic
             twok.pversion = pversion
@@ -80,6 +80,9 @@ export async function getGeneralTwoks(tid) {
                 i--;
             }
         })
+        if (tid !== undefined) {
+            tid++
+        }
     }
 
     return tmpArr;

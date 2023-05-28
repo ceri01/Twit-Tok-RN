@@ -121,4 +121,13 @@ export default class CommunicationController {
         const parameters = {sid:sid};
         return await this._call(endpoint, parameters);
     }
+
+    static isFollowed = async (sid, uid) => {
+        const endpoint = API.ISFOLLOWED;
+        const parameters = {
+            sid:sid,
+            uid:uid
+        };
+        return await this._call(endpoint, parameters);
+    }
 }
