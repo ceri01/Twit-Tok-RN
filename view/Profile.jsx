@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
 import {
-    Alert,
     Button,
     DeviceEventEmitter,
     FlatList, NativeModules,
@@ -12,76 +11,83 @@ import {
 } from "react-native";
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
-import {getFollowed, getFollowedLenght, initFollowed} from "../viewmodel/FollowHandler";
+import {getFollowed, isOnline} from "../viewmodel/FollowHandler";
 import {getProfile} from "../viewmodel/ProfileUserHandler";
 import {reloadApp} from "../viewmodel/initApp";
 
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
-    let [offline, setOffline] = useState(false)
-    let profile = useRef(null);
-    let [followed, setFollowed] = useState(null)
+    const [offline, setOffline] = useState(false);
+    const [followed, setFollowed] = useState(getFollowed());
+    const profile = useRef(null);
 
-    DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)}) // this is used to create event to go back to GenericWall
+    // this is used to create event to go back to GenericWall
+    DeviceEventEmitter.addListener("event.goback", (page) => {
+        navigation.navigate(page.key);
+    });
 
     useEffect(() => {
+        console.log(isOnline())
+        if (!isOnline()) {
+            setOffline(true)
+        }
         getProfile((resultQuery) => {
-                if (!ready) {
-                    initFollowed().then(() => {
-                        profile.current = resultQuery
-                        setFollowed(getFollowed())
-                        setReady(true);
-                        setOffline(false)
-                    }).catch((err) => {
-                        Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-                        setOffline(true)
-                    })
-                } else if (followed != null && getFollowedLenght() !== followed.length) {
-                    setFollowed(getFollowed())
-                }
+            profile.current = resultQuery
+            setReady(true);
+        });
+    }, [ready])
+
+    useEffect(() => {
+        DeviceEventEmitter.addListener("followed.updated", () => {
+            if (!offline) {
+                setFollowed(getFollowed())
             }
-        )
+        });
     })
 
     function reload() {
-        setReady(false)
+        setReady(false);
     }
 
     function renderFollowed() {
         if (ready) {
-            if (followed === []) {
+            if (followed.length > 0) {
                 return (
                     <View style={style.followed}>
                         <FlatList data={followed}
-                                  renderItem={(element) => {
-                                      return <UserView
+                                  renderItem={({item}) => (
+                                      <UserView
                                           dimensions={route.params.WindowHeight / 50}
                                           navigate={() => {
                                               navigation.navigate("UserWall", {
                                                   params: {
-                                                      key: "ProfileScreen", // use ProfileScreen because Profile already exists in Main.jsx
-                                                      uid: element.item.uid,
-                                                  }
-                                              })
+                                                      // use ProfileScreen because Profile already exists in Main.jsx
+                                                      key: "ProfileScreen",
+                                                      uid: item.uid,
+                                                  },
+                                              });
                                           }}
-                                          name={element.item.name}
-                                          picture={element.item.picture}
-                                          uid={element.item.uid}
+                                          name={item.name}
+                                          picture={item.picture}
+                                          uid={item.uid}
                                           followed={true}
                                           edit={reload}
                                           pressable={true}
-                                          isInGenericTwokRow={false}/>
-                                  }}
+                                          isInGenericTwokRow={false}
+                                      />
+                                  )}
                                   keyExtractor={(element) => element.uid}>
                         </FlatList>
                     </View>
-                )
+                );
             } else {
                 return (
                     <View style={style.empty}>
-                        <Text style={{fontSize: 30, fontStyle: "italic"}}>Followed list is empty, find some friends in wall page!</Text>
+                        <Text style={{fontSize: 30, fontStyle: "italic"}}>
+                            Followed list is empty, find some friends in wall page!
+                        </Text>
                     </View>
-                )
+                );
             }
         } else {
             return (
@@ -95,20 +101,27 @@ function Profile({route, navigation}) {
     function renderProfile() {
         if (ready) {
             return (
-                <ProfileView profileName={profile.current.name} profilePicture={profile.current.picture} edit={reload}></ProfileView>
-            )
+                <ProfileView profileName={profile.current.name}
+                             profilePicture={profile.current.picture}
+                             edit={reload}
+                />
+            );
         }
     }
 
     if (offline) {
         return (
             <View style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
-                <Button title="Reload" onPress={() => {
-                    reloadApp().then(() => {
-                        NativeModules.DevSettings.reload();
-                    })
-                }}/>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>
+                    Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app
+                </Text>
+                <Button title="Reload"
+                    onPress={() => {
+                        reloadApp().then(() => {
+                            NativeModules.DevSettings.reload();
+                        });
+                    }}
+                />
             </View>
         );
     } else {

@@ -1,4 +1,4 @@
-import {StyleSheet, View} from "react-native";
+import {Alert, StyleSheet, View} from "react-native";
 import UserName from "./UserName";
 import UserPicture from "./UserPicture";
 import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
@@ -12,15 +12,24 @@ const UserView = (props) => {
     const [followStatus, setFollowStatus] = useState(props.followed);
 
     function follow(followed) {
-        setFollowStatus(followed)
-        addFollow(props.uid, props.name, props.pversion);
-        props.edit();
+        addFollow(props.uid, props.name, props.pversion, () => {
+            Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
+            props.edit()
+        }).then(() => {
+            setFollowStatus(followed)
+        }).catch(() => {
+            Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
+            props.edit()
+        })
     }
 
     function unfollow(followed) {
-        setFollowStatus(followed);
-        removeFollow(props.uid);
-        props.edit();
+        removeFollow(props.uid,  () => {
+            Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
+            props.edit()
+        }).then(() => {
+            setFollowStatus(followed);
+        })
     }
 
     function renderOtherContent() {
