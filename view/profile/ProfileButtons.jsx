@@ -4,7 +4,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {setNewProfileName, setNewProfilePic} from "../../viewmodel/ProfileUserHandler";
 import {useState} from "react";
 import CustomImageModal from "../modal/CustomImageModal";
-import {setOffline} from "../../viewmodel/FollowHandler";
 
 const ProfileButtons = (props) => {
     const [modalNameVisible, setModalNameVisible] = useState(false);

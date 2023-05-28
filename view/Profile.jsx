@@ -11,15 +11,17 @@ import {
 } from "react-native";
 import UserView from "./user/UserView";
 import ProfileView from "./profile/ProfileView";
-import {getFollowed, isOnline} from "../viewmodel/FollowHandler";
 import {getProfile} from "../viewmodel/ProfileUserHandler";
 import {reloadApp} from "../viewmodel/initApp";
+import FollowHandler from "../viewmodel/FollowHandler";
 
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
-    const [offline, setOffline] = useState(false);
-    const [followed, setFollowed] = useState(getFollowed());
+    //const [offline, setOffline] = useState(false);
+    const [followed, setFollowed] = useState(FollowHandler.getFollowedInstance());
     const profile = useRef(null);
+
+    console.log("sium" + JSON.stringify(followed))
 
     // this is used to create event to go back to GenericWall
     DeviceEventEmitter.addListener("event.goback", (page) => {
@@ -27,21 +29,23 @@ function Profile({route, navigation}) {
     });
 
     useEffect(() => {
-        console.log(isOnline())
-        if (!isOnline()) {
+/*        console.log(FollowHandler.getFollowedInstance().isOnline())
+        if (!FollowHandler.getFollowedInstance().isOnline()) {
             setOffline(true)
-        }
+        }*/
         getProfile((resultQuery) => {
+            console.log(resultQuery)
             profile.current = resultQuery
             setReady(true);
         });
     }, [ready])
 
     useEffect(() => {
-        DeviceEventEmitter.addListener("followed.updated", () => {
-            if (!offline) {
-                setFollowed(getFollowed())
-            }
+        DeviceEventEmitter.addListener("#followed.updated", () => {
+            setFollowed(FollowHandler.getFollowedInstance().getFollowed())
+/*            if (!offline) {
+
+            }*/
         });
     })
 
@@ -109,7 +113,7 @@ function Profile({route, navigation}) {
         }
     }
 
-    if (offline) {
+    if (false) {
         return (
             <View style={style.waiting}>
                 <Text style={{fontSize: 25, fontStyle: "italic"}}>

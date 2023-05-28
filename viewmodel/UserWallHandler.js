@@ -13,7 +13,7 @@ export async function initUserWall(uid) {
     await emptyUserBuffer();
     const elements = [...((await getUserTwoks(uid)).values())];
     const sid = await UtilityStorageManager.getSid();
-    const isFollowed = (await CommunicationController.isFollowed(sid, uid)).followed// isInFollowed(elements[0].uid, followed);
+    const isFollowed = (await CommunicationController.isFollowed(sid, uid)).followed// isInFollowed(elements[0].uid, #followed);
     elements.map((element) => {
         element.followed = isFollowed;
     });

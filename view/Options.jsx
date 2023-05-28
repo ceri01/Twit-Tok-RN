@@ -24,7 +24,7 @@ export default function Options() {
                         }
                     }, (err) => console.log(err))
                 }}></Button>
-                <Button title="followed" onPress={() => {
+                <Button title="#followed" onPress={() => {
                     CommunicationController.getFollowed("Rxvl9SVDA3ADaoKIVV3X").then((res) => {
                         console.log(res)
                     })

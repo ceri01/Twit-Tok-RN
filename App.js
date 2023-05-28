@@ -5,7 +5,7 @@ import Main from "./view/Main";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {Alert, Button, NativeModules, SafeAreaView, StyleSheet, Text, View} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
-import {initEnvironment, reloadApp} from "./viewmodel/initApp";
+import {initApplication, initEnvironment, reloadApp} from "./viewmodel/initApp";
 import {NavigationContainer} from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
@@ -30,16 +30,19 @@ function App() {
         if (isLoading) {
             UtilityStorageManager.isFirstStart().then((res) => {
                 if (res) {
-                    initEnvironment().then(() => {
+                    initApplication().then(() => {
                         load.current = "Register";
+                        setIsLoading(false)
                     }).catch((err) => {
                         Alert.alert("Connection Error", "Network request failed, check your connection.");
                         setOffline(true)
                     })
                 } else {
-                    load.current = "Main";
+                    initEnvironment().then(() => {
+                        load.current = "Main";
+                        setIsLoading(false)
+                    })
                 }
-                setIsLoading(false)
             }).catch((err) => {
                 console.log("isFirstStart " + err)
             })

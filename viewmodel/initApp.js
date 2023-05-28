@@ -3,6 +3,7 @@ import CommunicationController from "../model/CommunicationController";
 import {Alert, Image} from "react-native";
 import DefaultImage from "../assets/favicon.png";
 import DBManager from "../model/DBManager";
+import FollowHandler from "./FollowHandler";
 
 export async function initProfile(name, pic) {
     let sid = await UtilityStorageManager.getSid();
@@ -24,17 +25,22 @@ export async function initProfile(name, pic) {
     }, () => {
         Alert.alert("Input Error", "Name format not valid")
     });
-    await UtilityStorageManager.firstStart()
 }
 
-export async function initEnvironment() {
-    let register = await CommunicationController.register()
+export async function initApplication() {
+    let register = {sid: "URAUx5gdTxnDwBB1iQtt"} // await CommunicationController.register()
     if (register !== undefined) {
         let profileData = await CommunicationController.getProfile(register.sid);
         await UtilityStorageManager.setSid(register.sid)
         await UtilityStorageManager.setProfileUid(profileData.uid.toString());
-        DBManager.getInstance()
+        await UtilityStorageManager.firstStart()
+        await initEnvironment()
     }
+}
+
+export async function initEnvironment() {
+    FollowHandler.getFollowedInstance()
+    DBManager.getInstance()
 }
 
 export async function reloadApp() {
