@@ -34,10 +34,6 @@ export async function initEnvironment() {
         await UtilityStorageManager.setSid(register.sid)
         await UtilityStorageManager.setProfileUid(profileData.uid.toString());
         DBManager.getInstance()
-    } else {
-        await UtilityStorageManager.setSid("");
-        await UtilityStorageManager.setProfileUid("")
-        DBManager.getInstance()
     }
 }
 

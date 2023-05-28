@@ -2,6 +2,7 @@ import {Button, SafeAreaView, StatusBar, View} from "react-native";
 import React from "react";
 import utilityStorageManager from "../model/UtilityStorageManager";
 import DBManager from "../model/DBManager";
+import CommunicationController from "../model/CommunicationController";
 
 
 export default function Options() {
@@ -22,6 +23,11 @@ export default function Options() {
                             console.log("\nuid =>" + re.uid + "\n " + "pic => " + re.picture.substring(0,10) + "\n " + "pversion => " + re.pversion)
                         }
                     }, (err) => console.log(err))
+                }}></Button>
+                <Button title="followed" onPress={() => {
+                    CommunicationController.getFollowed("Rxvl9SVDA3ADaoKIVV3X").then((res) => {
+                        console.log(res)
+                    })
                 }}></Button>
             </View>
         </SafeAreaView>

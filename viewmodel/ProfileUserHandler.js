@@ -2,6 +2,7 @@ import CommunicationController from "../model/CommunicationController"
 import UtilityStorageManager from "../model/UtilityStorageManager"
 import {Alert} from "react-native";
 import DBManager from "../model/DBManager";
+import {setOffline} from "./FollowHandler";
 
 export async function setNewProfileName(name) {
     if (typeof (name) === "string" && name.length <= 99) {
@@ -13,6 +14,8 @@ export async function setNewProfileName(name) {
         await UtilityStorageManager.getSid().then((sid) => {
             CommunicationController.setProfileName(sid, name).then(() => {
                 console.log("name modified server")
+            }).catch(() => {
+                setOffline()
             })
         })
     } else {
@@ -30,6 +33,8 @@ export async function setNewProfilePic(pic) {
         await UtilityStorageManager.getSid().then((sid) => {
             CommunicationController.setProfilePicture(sid, pic).then(() => {
                 console.log("pic modified server")
+            }).catch(() => {
+                setOffline()
             })
         })
     } else {

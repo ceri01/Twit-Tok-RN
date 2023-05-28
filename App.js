@@ -3,12 +3,9 @@ import Register from "./view/Register";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Main from "./view/Main";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {Alert, StyleSheet, Text} from "react-native";
+import {Alert, Button, NativeModules, SafeAreaView, StyleSheet, Text, View} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
-import {initEnvironment} from "./viewmodel/initApp";
-import * as Sentry from "@sentry/react-native";
-import Constants from "expo-constants";
-import DBManager from "./model/DBManager";
+import {initEnvironment, reloadApp} from "./viewmodel/initApp";
 import {NavigationContainer} from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
@@ -16,49 +13,53 @@ const Stack = createNativeStackNavigator();
 function App() {
     const load = useRef("")
     const [isLoading, setIsLoading] = useState(true);
+    const [offline, setOffline] = useState(false)
 
-    if (Constants.expoConfig.extra.sentry_dsn !== undefined && Constants.expoConfig.extra.sentry_dsn !== null) {
-        Sentry.init({
-            dsn: Constants.expoConfig.extra.sentry_dsn,
-            enableInExpoDevelopment: true,
-            debug: true,
-            enableNative: true,
-        })
-    }
-
-    if (isLoading) {
-        UtilityStorageManager.isFirstStart().then((res) => {
-            if (res) {
-                initEnvironment().then(() => {
-                    console.log("done")
-                }).catch((err) => {
-                    Alert.alert("Connection Error", "Network request failed, is not possible to login with account. \nYou can use app in guest mode");
-                    console.log(err)
-                })
-                load.current = "Register";
-            } else {
-                load.current = "Main";
-            }
-            setIsLoading(false)
-        }).catch((err) => {
-            console.log("isFirstStart " + err)
-        })
-
+    if (offline) {
         return (
-            <Text style={style.loading}>Loading...</Text>
+            <SafeAreaView style={style.waiting}>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
+                <Button title="Reload" onPress={() => {
+                    reloadApp().then(() => {
+                        NativeModules.DevSettings.reload();
+                    })
+                }}/>
+            </SafeAreaView>
         );
     } else {
-        return (
-            <SafeAreaProvider>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName={load.current}
-                                     screenOptions={{headerShown: false}}>
-                        <Stack.Screen name="Register" component={Register}/>
-                        <Stack.Screen name="Main" component={Main}/>
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </SafeAreaProvider>
-        )
+        if (isLoading) {
+            UtilityStorageManager.isFirstStart().then((res) => {
+                if (res) {
+                    initEnvironment().then(() => {
+                        load.current = "Register";
+                    }).catch((err) => {
+                        Alert.alert("Connection Error", "Network request failed, check your connection.");
+                        setOffline(true)
+                    })
+                } else {
+                    load.current = "Main";
+                }
+                setIsLoading(false)
+            }).catch((err) => {
+                console.log("isFirstStart " + err)
+            })
+
+            return (
+                <Text style={style.loading}>Loading...</Text>
+            );
+        } else {
+            return (
+                <SafeAreaProvider>
+                    <NavigationContainer>
+                        <Stack.Navigator initialRouteName={load.current}
+                                         screenOptions={{headerShown: false}}>
+                            <Stack.Screen name="Register" component={Register}/>
+                            <Stack.Screen name="Main" component={Main}/>
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </SafeAreaProvider>
+            )
+        }
     }
 }
 
@@ -67,6 +68,11 @@ const style = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
+    waiting: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    }
 })
 
 export default App;
