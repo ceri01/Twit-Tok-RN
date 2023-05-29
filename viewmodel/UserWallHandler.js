@@ -10,7 +10,7 @@ export default class UserWallHandler {
         this.#userTwoks = new TwokBuffer();
     }
 
-    static getFollowedInstance() {
+    static getUserWallInstance() {
         if (this.instance === null) {
             UserWallHandler.instance = new UserWallHandler()
         }
