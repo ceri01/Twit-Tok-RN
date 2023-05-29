@@ -1,21 +1,10 @@
 import React, {useEffect, useState} from "react"
-import {
-    Alert,
-    Button,
-    DeviceEventEmitter,
-    FlatList,
-    NativeModules,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View
-} from "react-native"
+import {Alert, DeviceEventEmitter, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native"
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs"
 import UserTwokRow from "./twok/UserTwokRow"
 import UserWallHandler from "../viewmodel/UserWallHandler"
-import {reloadApp} from "../viewmodel/initApp"
 import {checkConnection} from "../viewmodel/ConnectionHandler"
+import OfflineView from "./offline/OfflineView"
 
 function UserWall(props) {
     const TabHeight = useBottomTabBarHeight()
@@ -53,16 +42,7 @@ function UserWall(props) {
     function displayContent() {
         if (!online) {
             return (
-                <View style={style.waiting}>
-                    <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data
-                        of followed users, please check your connection and retry. Try to click button below or restart
-                        app</Text>
-                    <Button title="Reload" onPress={() => {
-                        reloadApp().then(() => {
-                            NativeModules.DevSettings.reload()
-                        })
-                    }}/>
-                </View>
+                <OfflineView/>
             )
         } else {
             if (listrefresher) {

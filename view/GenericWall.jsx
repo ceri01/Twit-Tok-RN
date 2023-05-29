@@ -16,6 +16,7 @@ import GeneralWallHandler from "../viewmodel/GeneralWallHandler"
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs"
 import {reloadApp} from "../viewmodel/initApp"
 import {checkConnection} from "../viewmodel/ConnectionHandler"
+import OfflineView from "./offline/OfflineView"
 
 let tidSequence = -1
 
@@ -54,8 +55,7 @@ function GenericWall({route, navigation}) {
                 }
                 setListrefresher(true)
             }).catch((err) => {
-                Alert.alert("Error", "Is not possible to retrieve twoks.")
-                setOnline(true)
+                Alert.alert(err)
             })
         }
     }, [listrefresher])
@@ -103,7 +103,6 @@ function GenericWall({route, navigation}) {
                                 setListUpdater(listUpdater + 1)
                             }
                         }).catch(() => {
-                            setOnline(true)
                             Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection")
                         })
                     }}
@@ -121,17 +120,7 @@ function GenericWall({route, navigation}) {
 
     if (!online) {
         return (
-            <View style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data of
-                    followed users, please check your connection and retry. Try to click button below or
-                    restart app
-                </Text>
-                <Button title="Reload" onPress={() => {
-                    reloadApp().then(() => {
-                        NativeModules.DevSettings.reload()
-                    })
-                }}/>
-            </View>
+            <OfflineView/>
         )
     } else {
         return (

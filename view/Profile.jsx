@@ -16,6 +16,7 @@ import {getProfile} from "../viewmodel/ProfileUserHandler"
 import {reloadApp} from "../viewmodel/initApp"
 import FollowHandler from "../viewmodel/FollowHandler"
 import {checkConnection} from "../viewmodel/ConnectionHandler"
+import OfflineView from "./offline/OfflineView"
 
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false)
@@ -106,19 +107,7 @@ function Profile({route, navigation}) {
 
     if (!online) {
         return (
-            <View style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>
-                    Connection error. Is not possible to retrieve data of followed users, please check your connection
-                    and retry. Try to click button below or restart app
-                </Text>
-                <Button title="Reload"
-                        onPress={() => {
-                            reloadApp().then(() => {
-                                NativeModules.DevSettings.reload()
-                            })
-                        }}
-                />
-            </View>
+            <OfflineView/>
         )
     } else {
         return (

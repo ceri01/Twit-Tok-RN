@@ -6,6 +6,7 @@ import DefaultImage from "../assets/favicon.png"
 import ChooseImageButton from "./buttons/ChooseImageButton"
 import {initApplication, initProfile, reloadApp} from "../viewmodel/initApp"
 import {checkConnection} from "../viewmodel/ConnectionHandler"
+import OfflineView from "./offline/OfflineView"
 
 function Register({navigation}) {
     const [image, setImage] = useState(null)
@@ -51,17 +52,7 @@ function Register({navigation}) {
 
     if (!online) {
         return (
-            <View style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data of
-                    followed users, please check your connection and retry. Try to click button below or
-                    restart app
-                </Text>
-                <Button title="Reload" onPress={() => {
-                    reloadApp().then(() => {
-                        NativeModules.DevSettings.reload()
-                    })
-                }}/>
-            </View>
+            <OfflineView/>
         )
     } else {
         return (
