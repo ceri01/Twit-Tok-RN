@@ -44,8 +44,6 @@ export default class FollowHandler {
     }
 
     getFollowed() {
-        if (this.#followed.ready) {
-            return this.#followed.getImmutableData()
-        }
+        return this.#followed.getImmutableData()
     }
 }

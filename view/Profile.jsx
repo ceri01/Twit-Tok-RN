@@ -18,10 +18,8 @@ import FollowHandler from "../viewmodel/FollowHandler";
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
     //const [offline, setOffline] = useState(false);
-    const [followed, setFollowed] = useState(FollowHandler.getFollowedInstance());
+    const [followed, setFollowed] = useState(FollowHandler.getFollowedInstance().getFollowed());
     const profile = useRef(null);
-
-    console.log("sium" + JSON.stringify(followed))
 
     // this is used to create event to go back to GenericWall
     DeviceEventEmitter.addListener("event.goback", (page) => {
@@ -34,7 +32,6 @@ function Profile({route, navigation}) {
             setOffline(true)
         }*/
         getProfile((resultQuery) => {
-            console.log(resultQuery)
             profile.current = resultQuery
             setReady(true);
         });
