@@ -1,19 +1,19 @@
-import {Alert, Pressable, StyleSheet, Text, TouchableHighlight, View} from "react-native";
-import CustomTextModal from "../modal/CustomTextModal";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {setNewProfileName, setNewProfilePic} from "../../viewmodel/ProfileUserHandler";
-import {useState} from "react";
-import CustomImageModal from "../modal/CustomImageModal";
+import {Alert, Pressable, StyleSheet, View} from "react-native"
+import CustomTextModal from "../modal/CustomTextModal"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import {setNewProfileName, setNewProfilePic} from "../../viewmodel/ProfileUserHandler"
+import {useState} from "react"
+import CustomImageModal from "../modal/CustomImageModal"
 
 const ProfileButtons = (props) => {
-    const [modalNameVisible, setModalNameVisible] = useState(false);
-    const [modalPicVisible, setModalPicVisible] = useState(false);
+    const [modalNameVisible, setModalNameVisible] = useState(false)
+    const [modalPicVisible, setModalPicVisible] = useState(false)
 
     function changeText(name) {
         setNewProfileName(name).then(() => {
             props.onPress()
         }).catch(() => {
-            Alert.alert("Connection Error", "Is not possible to change profile name, check your connection");
+            Alert.alert("Connection Error", "Is not possible to change profile name, check your connection")
             props.onPress()
         })
 
@@ -23,7 +23,7 @@ const ProfileButtons = (props) => {
         setNewProfilePic(pic).then(() => {
             props.onPress()
         }).catch(() => {
-            Alert.alert("Connection Error", "Is not possible to change profile picture, check your connection");
+            Alert.alert("Connection Error", "Is not possible to change profile picture, check your connection")
             props.onPress()
         })
     }
@@ -63,7 +63,7 @@ const ProfileButtons = (props) => {
                 </View>
             </Pressable>
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -90,9 +90,9 @@ const style = StyleSheet.create({
     },
 
 
-});
+})
 
-export default ProfileButtons;
+export default ProfileButtons
 
 
 

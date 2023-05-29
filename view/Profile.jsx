@@ -1,46 +1,47 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react"
 import {
     Button,
     DeviceEventEmitter,
-    FlatList, NativeModules,
+    FlatList,
+    NativeModules,
     SafeAreaView,
     StatusBar,
     StyleSheet,
     Text,
     View
-} from "react-native";
-import UserView from "./user/UserView";
-import ProfileView from "./profile/ProfileView";
-import {getProfile} from "../viewmodel/ProfileUserHandler";
-import {reloadApp} from "../viewmodel/initApp";
-import FollowHandler from "../viewmodel/FollowHandler";
-import {checkConnection} from "../viewmodel/ConnectionHandler";
+} from "react-native"
+import UserView from "./user/UserView"
+import ProfileView from "./profile/ProfileView"
+import {getProfile} from "../viewmodel/ProfileUserHandler"
+import {reloadApp} from "../viewmodel/initApp"
+import FollowHandler from "../viewmodel/FollowHandler"
+import {checkConnection} from "../viewmodel/ConnectionHandler"
 
 function Profile({route, navigation}) {
-    const [ready, setReady] = useState(false);
-    const [online, setOnline] = useState(true);
-    const followed = useRef(null);
-    const profile = useRef(null);
+    const [ready, setReady] = useState(false)
+    const [online, setOnline] = useState(true)
+    const followed = useRef(null)
+    const profile = useRef(null)
 
     // this is used to create event to go back to GenericWall
     DeviceEventEmitter.addListener("event.goback", (page) => {
-        navigation.navigate(page.key);
-    });
+        navigation.navigate(page.key)
+    })
 
     useEffect(() => {
         checkConnection(setOnline)
-    });
+    })
 
     useEffect(() => {
         followed.current = FollowHandler.getFollowedInstance().getFollowed()
         getProfile((resultQuery) => {
             profile.current = resultQuery
-            setReady(true);
-        });
+            setReady(true)
+        })
     }, [ready])
 
     function reload() {
-        setReady(false);
+        setReady(false)
     }
 
     function renderFollowed() {
@@ -59,7 +60,7 @@ function Profile({route, navigation}) {
                                                       key: "ProfileScreen",
                                                       uid: item.uid,
                                                   },
-                                              });
+                                              })
                                           }}
                                           name={item.name}
                                           picture={item.picture}
@@ -73,7 +74,7 @@ function Profile({route, navigation}) {
                                   keyExtractor={(element) => element.uid}>
                         </FlatList>
                     </View>
-                );
+                )
             } else {
                 return (
                     <View style={style.empty}>
@@ -81,14 +82,14 @@ function Profile({route, navigation}) {
                             Followed list is empty, find some friends in wall page!
                         </Text>
                     </View>
-                );
+                )
             }
         } else {
             return (
                 <View style={style.waiting}>
                     <Text style={{fontSize: 30, fontStyle: "italic"}}>Waiting...</Text>
                 </View>
-            );
+            )
         }
     }
 
@@ -99,7 +100,7 @@ function Profile({route, navigation}) {
                              profilePicture={profile.current.picture}
                              edit={reload}
                 />
-            );
+            )
         }
     }
 
@@ -107,17 +108,18 @@ function Profile({route, navigation}) {
         return (
             <View style={style.waiting}>
                 <Text style={{fontSize: 25, fontStyle: "italic"}}>
-                    Connection error. Is not possible to retrieve data of followed users, please check your connection and retry. Try to click button below or restart app
+                    Connection error. Is not possible to retrieve data of followed users, please check your connection
+                    and retry. Try to click button below or restart app
                 </Text>
                 <Button title="Reload"
-                    onPress={() => {
-                        reloadApp().then(() => {
-                            NativeModules.DevSettings.reload();
-                        });
-                    }}
+                        onPress={() => {
+                            reloadApp().then(() => {
+                                NativeModules.DevSettings.reload()
+                            })
+                        }}
                 />
             </View>
-        );
+        )
     } else {
         return (
             <SafeAreaView style={style.profileLayout}>
@@ -127,7 +129,7 @@ function Profile({route, navigation}) {
                 </View>
                 {renderFollowed()}
             </SafeAreaView>
-        );
+        )
     }
 }
 
@@ -155,6 +157,6 @@ const style = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     }
-});
+})
 
-export default Profile;
+export default Profile

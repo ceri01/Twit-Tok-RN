@@ -15,12 +15,14 @@ export default function Options() {
                     DBManager.getInstance().clearDB()
                 }}></Button>
                 <Button title="test" onPress={() => {
-                    DBManager.getInstance().getProfileFromDB((res) => {console.log("\nnome => " + res.name + "\npic => " + res.picture + "\npversion => " + res.pversion + "\nuid => " + res.uid)}, (err) => console.log(err))
+                    DBManager.getInstance().getProfileFromDB((res) => {
+                        console.log("\nnome => " + res.name + "\npic => " + res.picture + "\npversion => " + res.pversion + "\nuid => " + res.uid)
+                    }, (err) => console.log(err))
                 }}></Button>
                 <Button title="pics" onPress={() => {
                     DBManager.getInstance().getPicsFromDB((res) => {
                         for (const re of res) {
-                            console.log("\nuid =>" + re.uid + "\n " + "pic => " + re.picture.substring(0,10) + "\n " + "pversion => " + re.pversion)
+                            console.log("\nuid =>" + re.uid + "\n " + "pic => " + re.picture.substring(0, 10) + "\n " + "pversion => " + re.pversion)
                         }
                     }, (err) => console.log(err))
                 }}></Button>

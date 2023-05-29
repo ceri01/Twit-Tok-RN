@@ -1,48 +1,39 @@
-import React, {useCallback, useRef, useState} from "react";
-import {
-    Dimensions,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
-    Pressable, Platform, Modal, Alert
-} from "react-native";
-import EditColorSlider from "./slider/EditColorSlider";
-import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
-import EditXAlignButton from "./buttons/EditXAlignButton";
-import EditYAlignButton from "./buttons/EditYAlignButton";
-import ConfirmButton from "./buttons/ConfirmButton";
-import FontSizeButton from "./buttons/FontSizeButton";
-import FontTypeButton from "./buttons/FontTypeButton";
-import MapButton from "./buttons/MapButton";
-import ResetButton from "./buttons/ResetButton";
-import CustomTextModal from "./modal/CustomTextModal";
-import CustomMapModal from "./modal/CustomMapModal";
-import {getColorHex} from "../viewmodel/TwokHandler";
-import {sendTwok} from "../viewmodel/TwokHandler";
+import React, {useCallback, useRef, useState} from "react"
+import {Alert, Dimensions, Platform, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, View} from "react-native"
+import EditColorSlider from "./slider/EditColorSlider"
+import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated"
+import EditXAlignButton from "./buttons/EditXAlignButton"
+import EditYAlignButton from "./buttons/EditYAlignButton"
+import ConfirmButton from "./buttons/ConfirmButton"
+import FontSizeButton from "./buttons/FontSizeButton"
+import FontTypeButton from "./buttons/FontTypeButton"
+import MapButton from "./buttons/MapButton"
+import ResetButton from "./buttons/ResetButton"
+import CustomTextModal from "./modal/CustomTextModal"
+import CustomMapModal from "./modal/CustomMapModal"
+import {getColorHex, sendTwok} from "../viewmodel/TwokHandler"
 
-const ALIGNAMENTS = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]]);
-const PAGE_WIDTH = Dimensions.get('window').width * 0.9;
+const ALIGNAMENTS = new Map([[0, "flex-start"], [1, "center"], [2, "flex-end"]])
+const PAGE_WIDTH = Dimensions.get('window').width * 0.9
 
-function AddTwok({route, navigation}) {
+function AddTwok({route}) {
     // Data to be provided to the server (through model)
-    const alignXData = useRef(1);
-    const alignYData = useRef(1);
-    const fontTypeData = useSharedValue(0);
-    const fontSizeData = useSharedValue(1);
-    const [twokTextData, setTwokTextData] = useState("");
-    const latitudeData = useRef(null);
-    const longitudeData = useRef(null);
+    const alignXData = useRef(1)
+    const alignYData = useRef(1)
+    const fontTypeData = useSharedValue(0)
+    const fontSizeData = useSharedValue(1)
+    const [twokTextData, setTwokTextData] = useState("")
+    const latitudeData = useRef(null)
+    const longitudeData = useRef(null)
 
     // these two data must be adapted to be sended
-    const positionOfBgColorPicker = useSharedValue(0); // used to generate hex code of backfround color
-    const positionOfTextColorPicker = useSharedValue(0); // used to generate hex code of text color
+    const positionOfBgColorPicker = useSharedValue(0) // used to generate hex code of backfround color
+    const positionOfTextColorPicker = useSharedValue(0) // used to generate hex code of text color
 
     // data used to manage view
-    const backgroundColorData = useSharedValue(-1); // value to set color of view (value unsuitable to be passed to the server)
-    const twokTextColorData = useSharedValue(270); // value to set color of Text (value unsuitable to be passed to the server)
-    const reset = useRef(false); // flag to reset page
+    const backgroundColorData = useSharedValue(-1) // value to set color of view (value unsuitable to be passed to the server)
+    const twokTextColorData = useSharedValue(270) // value to set color of Text (value unsuitable to be passed to the server)
+    const reset = useRef(false) // flag to reset page
     const [textModalVisible, setTextModalVisible] = useState(false) // flag to display text modal
     const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
     const [textViewStyle, setTextViewStyle] = useState({
@@ -76,55 +67,55 @@ function AddTwok({route, navigation}) {
     }
 
     const onFontTypeChanged = useCallback((type) => {
-        'worklet';
+        'worklet'
         fontTypeData.value = type
-    }, []);
+    }, [])
 
     const onFontSizeChanged = useCallback((size) => {
-        'worklet';
+        'worklet'
         fontSizeData.value = size
-    }, []);
+    }, [])
 
     const onBackgroundColorChanged = useCallback((color, val) => {
-        'worklet';
+        'worklet'
         positionOfBgColorPicker.value = val
-        backgroundColorData.value = color;
-    }, []);
+        backgroundColorData.value = color
+    }, [])
 
     const backgroundColorAnimatedStyle = useAnimatedStyle(() => {
         return {
             backgroundColor: backgroundColorData.value
         }
-    });
+    })
 
     const onTwokTextColorChanged = useCallback((color, val) => {
-        'worklet';
+        'worklet'
         positionOfTextColorPicker.value = val
-        twokTextColorData.value = color;
-    }, []);
+        twokTextColorData.value = color
+    }, [])
 
     const twokTextAnimatedStyle = useAnimatedStyle(() => {
-        let textFontType = new Map([[0, "System"], [1, "monospace"], [2, "serif"]]);
+        let textFontType = new Map([[0, "System"], [1, "monospace"], [2, "serif"]])
         if (Platform.OS === 'ios') {
-            textFontType = new Map([[0, "System"], [1, "Menlo"], [2, "Palatino"]]);
+            textFontType = new Map([[0, "System"], [1, "Menlo"], [2, "Palatino"]])
         }
         return {
             color: twokTextColorData.value,
             fontSize: (fontSizeData.value + 1) * 20,
             fontFamily: textFontType.get(fontTypeData.value)
         }
-    });
+    })
 
     const handleLatitude = (latitude) => {
-        latitudeData.current = latitude;
+        latitudeData.current = latitude
     }
 
     const handleLongitude = (longitude) => {
-        longitudeData.current = longitude;
+        longitudeData.current = longitude
     }
 
     const handleMap = () => {
-        setMapModalVisible(true);
+        setMapModalVisible(true)
     }
 
     const showMap = () => {
@@ -145,29 +136,29 @@ function AddTwok({route, navigation}) {
 
     const resetPageState = () => {
         reset.current = true
-        alignYData.current = 1;
-        alignXData.current = 1;
-        backgroundColorData.value = -1;
-        twokTextColorData.value = 270;
-        fontTypeData.value = 0;
-        fontSizeData.value = 1;
+        alignYData.current = 1
+        alignXData.current = 1
+        backgroundColorData.value = -1
+        twokTextColorData.value = 270
+        fontTypeData.value = 0
+        fontSizeData.value = 1
         setTextViewStyle({
             flex: 1,
             paddingVertical: 20,
             paddingHorizontal: 20,
             alignItems: ALIGNAMENTS.get(alignXData.current),
             justifyContent: ALIGNAMENTS.get(alignYData.current)
-        });
-        latitudeData.current = null;
-        longitudeData.current = null;
-        handleMap(false);
-        setTextModalVisible(false);
-        setMapModalVisible(false);
-        setTwokTextData("");
+        })
+        latitudeData.current = null
+        longitudeData.current = null
+        handleMap(false)
+        setTextModalVisible(false)
+        setMapModalVisible(false)
+        setTwokTextData("")
     }
 
     const handleReset = () => {
-        reset.current = false;
+        reset.current = false
     }
 
     const renderSlider = () => {
@@ -181,7 +172,7 @@ function AddTwok({route, navigation}) {
                     <EditColorSlider onColorChange={onTwokTextColorChanged} reset={reset.current}
                                      onReset={handleReset}/>
                 </View>
-            );
+            )
         }
         return (
             <View style={style.backgroundSliderView}>
@@ -189,7 +180,7 @@ function AddTwok({route, navigation}) {
                 <EditColorSlider onColorChange={onBackgroundColorChanged} start={200} reset={reset.current}
                                  onReset={handleReset}/>
             </View>
-        );
+        )
     }
 
     return (
@@ -246,7 +237,7 @@ function AddTwok({route, navigation}) {
                                 alignYData.current,
                                 latitudeData.current,
                                 longitudeData.current).then(() => {
-                                    resetPageState()
+                                resetPageState()
                             }).catch(() => {
                                 Alert.alert("Connection error.", "Is not possible to send twok, check your connection")
                             })
@@ -257,7 +248,7 @@ function AddTwok({route, navigation}) {
             {renderSlider()}
             {showMap()}
         </SafeAreaView>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -306,5 +297,5 @@ const style = StyleSheet.create({
         justifyContent: "flex-end",
         alignItems: "flex-end",
     },
-});
-export default AddTwok;
+})
+export default AddTwok

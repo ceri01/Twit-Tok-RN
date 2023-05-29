@@ -1,24 +1,20 @@
-import {Platform, StyleSheet, Text, View} from "react-native";
-import UserView from "../user/UserView";
-import React, {useState} from "react";
-import CustomMapModal from "../modal/CustomMapModal";
+import {Platform, StyleSheet, Text, View} from "react-native"
+import UserView from "../user/UserView"
+import React, {useState} from "react"
+import CustomMapModal from "../modal/CustomMapModal"
 
-const USERVIEWHEIGHT = 60;
-const ALIGNAMENTS = ["flex-start", "center", "flex-end"];
+const USERVIEWHEIGHT = 60
+const ALIGNAMENTS = ["flex-start", "center", "flex-end"]
 
 function UserTwokRow(props) {
     const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
     const [tmpReload, setTmpReload] = useState(0)
-    let FONTTYPE = null;
+    let FONTTYPE = null
 
     if (Platform.OS === 'ios') {
-        FONTTYPE = ["System", "Menlo", "Palatino"];
+        FONTTYPE = ["System", "Menlo", "Palatino"]
     } else {
-        FONTTYPE = ["System", "monospace", "serif"];
-    }
-
-    const handleMap = () => {
-        setMapModalVisible(true);
+        FONTTYPE = ["System", "monospace", "serif"]
     }
 
     const showMap = () => {
@@ -28,11 +24,14 @@ function UserTwokRow(props) {
                                    onChangeVisibility={setMapModalVisible}
                                    latitude={props.data.lat}
                                    longitude={props.data.lon}
-                                   onChangeLatitude={() => {}}
-                                   onChangeLongitude={() => {}}
+                                   onChangeLatitude={() => {
+                                   }}
+                                   onChangeLongitude={() => {
+                                   }}
                                    isReset={false}
                                    isInWall={true}
-                                   onReset={() => {}}>
+                                   onReset={() => {
+                                   }}>
             </CustomMapModal>
         }
     }
@@ -76,7 +75,7 @@ function UserTwokRow(props) {
                 <Text style={twokTextStyle()}>{props.data.text}</Text>
             </View>
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -89,6 +88,6 @@ const style = StyleSheet.create({
         fontSize: 40,
         fontWeight: "700",
     }
-});
+})
 
-export default UserTwokRow;
+export default UserTwokRow

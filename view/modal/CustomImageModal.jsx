@@ -1,29 +1,29 @@
-import {Alert, Image, Modal, StyleSheet, View} from "react-native";
-import CancelButton from "../buttons/CancelButton";
-import ConfirmButton from "../buttons/ConfirmButton";
-import React, {useState} from "react";
-import {createPictureSource, openImagePicker} from "../../viewmodel/PictureHandler";
-import ChooseImageButton from "../buttons/ChooseImageButton";
-import DefaultImage from "../../assets/favicon.png";
-import ProfilePicture from "../profile/ProfilePicture";
+import {Alert, Image, Modal, StyleSheet, View} from "react-native"
+import CancelButton from "../buttons/CancelButton"
+import ConfirmButton from "../buttons/ConfirmButton"
+import React, {useState} from "react"
+import {openImagePicker} from "../../viewmodel/PictureHandler"
+import ChooseImageButton from "../buttons/ChooseImageButton"
+import DefaultImage from "../../assets/favicon.png"
+import ProfilePicture from "../profile/ProfilePicture"
 
 function CustomImageModal(props) {
     /* this image is for support editing of twok image
        isn't duplicate data, but is necessary to better graphic effect
      */
-    const [currentImage, setCurrentImage] = useState(props.image);
+    const [currentImage, setCurrentImage] = useState(props.image)
 
-    function getImage() { //TODO: Da farci una funzione sola, perchè è uguale a quella in register
+    function getImage() {
         openImagePicker().then((result) => {
             if (!result.canceled) {
                 if (result.length > 137000) {
-                    Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
+                    Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.")
                 }
-                setCurrentImage(result);
+                setCurrentImage(result)
             }
         }).catch((err) => {
-            Alert.alert("Error", "Image not selected, default icon setted.");
-            setCurrentImage(Image.resolveAssetSource(DefaultImage).uri);
+            Alert.alert("Error", "Image not selected, default icon setted.")
+            setCurrentImage(Image.resolveAssetSource(DefaultImage).uri)
         })
     }
 
@@ -62,7 +62,7 @@ function CustomImageModal(props) {
                 </View>
             </View>
         </Modal>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -96,4 +96,4 @@ const style = StyleSheet.create({
     },
 })
 
-export default CustomImageModal;
+export default CustomImageModal

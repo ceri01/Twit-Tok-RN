@@ -1,7 +1,7 @@
-import {StyleSheet, View} from "react-native";
-import ProfileName from "./ProfileName";
-import ProfilePicture from "./ProfilePicture";
-import ProfileButtons from "./ProfileButtons";
+import {StyleSheet, View} from "react-native"
+import ProfileName from "./ProfileName"
+import ProfilePicture from "./ProfilePicture"
+import ProfileButtons from "./ProfileButtons"
 
 
 const ProfileView = (props) => {
@@ -16,10 +16,11 @@ const ProfileView = (props) => {
             </View>
             <View style={style.profile}>
                 <ProfileName userName={props.profileName}/>
-                <ProfileButtons userName={props.profileName} pic={props.profilePicture} onPress={dataEdited}></ProfileButtons>
+                <ProfileButtons userName={props.profileName} pic={props.profilePicture}
+                                onPress={dataEdited}></ProfileButtons>
             </View>
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -36,6 +37,6 @@ const style = StyleSheet.create({
         flex: 3,
         flexDirection: "column"
     },
-});
+})
 
-export default ProfileView;
+export default ProfileView

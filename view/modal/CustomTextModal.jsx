@@ -1,13 +1,13 @@
-import {Alert, Modal, StyleSheet, TextInput, View} from "react-native";
-import CancelButton from "../buttons/CancelButton";
-import ConfirmButton from "../buttons/ConfirmButton";
-import React, {useState} from "react";
+import {Alert, Modal, StyleSheet, TextInput, View} from "react-native"
+import CancelButton from "../buttons/CancelButton"
+import ConfirmButton from "../buttons/ConfirmButton"
+import React, {useState} from "react"
 
 function CustomTextModal(props) {
     /* this text is for support editing of twok text
        isn't duplicate data, but is necessary to better graphic effect
      */
-    const [currentText, setCurrentText] = useState(props.text);
+    const [currentText, setCurrentText] = useState(props.text)
 
     if (props.isReset.current === true) {
         setCurrentText("")
@@ -19,7 +19,7 @@ function CustomTextModal(props) {
             props.onChangeText(currentText)
             props.onChangeVisibility(!props.visibility)
         } else {
-            Alert.alert("Error!", "your name must have atleast one character");
+            Alert.alert("Error!", "your name must have atleast one character")
         }
     }
 
@@ -30,11 +30,11 @@ function CustomTextModal(props) {
 
     return (
         <Modal animationType={"fade"}
-                     transparent={true}
-                     visible={props.visibility}
-                     onRequestClose={() => {
-                         props.onChangeVisibility(!props.visibility)
-                     }}
+               transparent={true}
+               visible={props.visibility}
+               onRequestClose={() => {
+                   props.onChangeVisibility(!props.visibility)
+               }}
         >
             <View style={style.modalCenteredView}>
                 <View style={style.modalView}>
@@ -52,7 +52,7 @@ function CustomTextModal(props) {
                 </View>
             </View>
         </Modal>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -92,4 +92,4 @@ const style = StyleSheet.create({
     }
 })
 
-export default CustomTextModal;
+export default CustomTextModal

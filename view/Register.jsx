@@ -1,38 +1,37 @@
-import {Alert, Button, Image, NativeModules, SafeAreaView, StyleSheet, Text, TextInput, View} from "react-native";
+import {Alert, Button, Image, NativeModules, SafeAreaView, StyleSheet, Text, TextInput, View} from "react-native"
 import RegisterButton from "./buttons/RegisterButton"
-import React, {useEffect, useState} from "react";
-import {openImagePicker, createPictureSource} from "../viewmodel/PictureHandler";
-import DefaultImage from "../assets/favicon.png";
-import ChooseImageButton from "./buttons/ChooseImageButton";
-import {initApplication, initProfile, reloadApp} from "../viewmodel/initApp";
-import {checkConnection} from "../viewmodel/ConnectionHandler";
+import React, {useEffect, useState} from "react"
+import {createPictureSource, openImagePicker} from "../viewmodel/PictureHandler"
+import DefaultImage from "../assets/favicon.png"
+import ChooseImageButton from "./buttons/ChooseImageButton"
+import {initApplication, initProfile, reloadApp} from "../viewmodel/initApp"
+import {checkConnection} from "../viewmodel/ConnectionHandler"
 
-function Register({ navigation }) {
-    const [image, setImage] = useState(null);
-    const [name, setName] = useState("");
-    const [online, setOnline] = useState(true);
+function Register({navigation}) {
+    const [image, setImage] = useState(null)
+    const [name, setName] = useState("")
+    const [online, setOnline] = useState(true)
 
     useEffect(() => {
         checkConnection(setOnline)
-    });
+    })
 
     function confirmRegistration() {
-        console.log("entro")
         if (online) {
-            if (typeof(name) === "string" && name.length > 0) {
+            if (typeof (name) === "string" && name.length > 0) {
                 initApplication().then(() => {
-                    initProfile(name, image).then().catch(() => {
-                        console.log("init profile failed")
+                    initProfile(name, image).then().catch((err) => {
+                        console.log(err)
                     })
                     navigation.navigate("Main", {screen: "Wall"})
-                }).catch(() => {
-                    console.log("Application not initialized")
+                }).catch((err) => {
+                    console.log(err)
                 })
             } else {
-                Alert.alert("Missing name", "Insert a name.");
+                Alert.alert("Missing name", "Insert a name.")
             }
         } else {
-            Alert.alert("Connection error", "Is not possible to sing up due to a network error");
+            Alert.alert("Connection error", "Is not possible to sing up due to a network error")
         }
     }
 
@@ -40,13 +39,13 @@ function Register({ navigation }) {
         openImagePicker().then((result) => {
             if (!result.canceled) {
                 if (result.length > 137000) {
-                    Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.");
+                    Alert.alert("Size error", "Image size must be less then 100KB, default icon setted.")
                 }
-                setImage(result);
+                setImage(result)
             }
         }).catch((err) => {
-            Alert.alert("Error", "Image not selected, default icon setted.");
-            setImage(Image.resolveAssetSource(DefaultImage).uri);
+            Alert.alert("Error", "Image not selected, default icon setted.")
+            setImage(Image.resolveAssetSource(DefaultImage).uri)
         })
     }
 
@@ -59,11 +58,11 @@ function Register({ navigation }) {
                 </Text>
                 <Button title="Reload" onPress={() => {
                     reloadApp().then(() => {
-                        NativeModules.DevSettings.reload();
+                        NativeModules.DevSettings.reload()
                     })
                 }}/>
             </View>
-        );
+        )
     } else {
         return (
             <SafeAreaView style={style.mainContainer}>
@@ -76,14 +75,14 @@ function Register({ navigation }) {
                         setName(value)
                     }}/>
                     <Text style={style.text}>Insert your profile pic (optional)</Text>
-                    {image && <Image source={{ uri: createPictureSource(image) }} style={{ width: 100, height: 100 }} />}
+                    {image && <Image source={{uri: createPictureSource(image)}} style={{width: 100, height: 100}}/>}
                     <ChooseImageButton onPress={getImage}/>
                 </View>
                 <View style={style.button}>
                     <RegisterButton onPress={confirmRegistration}/>
                 </View>
             </SafeAreaView>
-        );
+        )
     }
 }
 
@@ -123,6 +122,6 @@ const style = StyleSheet.create({
         borderRadius: 50,
         borderColor: "black"
     }
-});
+})
 
-export default Register;
+export default Register

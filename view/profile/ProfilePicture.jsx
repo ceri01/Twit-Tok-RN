@@ -1,4 +1,4 @@
-import {Dimensions, Image, SafeAreaView, StyleSheet, View} from "react-native";
+import {Image, StyleSheet, View} from "react-native"
 import {createPictureSource} from "../../viewmodel/PictureHandler"
 
 const ProfilePicture = (props) => {
@@ -8,7 +8,7 @@ const ProfilePicture = (props) => {
                 style={styles.img}
                 source={{uri: createPictureSource(props.pic)}}/>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%"
     }
-});
+})
 
-export default ProfilePicture;
+export default ProfilePicture

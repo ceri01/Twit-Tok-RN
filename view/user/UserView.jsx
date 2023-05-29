@@ -1,26 +1,26 @@
-import {Alert, StyleSheet, View} from "react-native";
-import UserName from "./UserName";
-import UserPicture from "./UserPicture";
-import FollowUnfollowButton from "../buttons/FollowUnfollowButton";
-import {useState} from "react";
-import MapButton from "../buttons/MapButton";
-import CancelButton from "../buttons/CancelButton";
-import FollowHandler from "../../viewmodel/FollowHandler";
+import {Alert, StyleSheet, View} from "react-native"
+import UserName from "./UserName"
+import UserPicture from "./UserPicture"
+import FollowUnfollowButton from "../buttons/FollowUnfollowButton"
+import {useState} from "react"
+import MapButton from "../buttons/MapButton"
+import CancelButton from "../buttons/CancelButton"
+import FollowHandler from "../../viewmodel/FollowHandler"
 
 
 const UserView = (props) => {
-    const [followStatus, setFollowStatus] = useState(props.followed);
+    const [followStatus, setFollowStatus] = useState(props.followed)
 
     async function follow(followed) {
         await FollowHandler.getFollowedInstance().addFollow(props.uid, props.name, props.pversion, () => {
             Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
-        });
+        })
         props.edit()
         setFollowStatus(followed)
     }
 
     async function unfollow(followed) {
-        FollowHandler.getFollowedInstance().removeFollow(props.uid,  () => {
+        FollowHandler.getFollowedInstance().removeFollow(props.uid, () => {
             Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
         }).then(() => {
             /*
@@ -31,8 +31,8 @@ const UserView = (props) => {
                 props.edit()
                 setFollowStatus(followed)
             }, 80)
-        }).catch(() => {
-            console.log("followed not removed")
+        }).catch((err) => {
+            console.log(err)
         })
     }
 
@@ -83,7 +83,7 @@ const UserView = (props) => {
             </View>
             {renderOtherContent()}
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -105,6 +105,6 @@ const style = StyleSheet.create({
         justifyContent: "center",
         flexDirection: "row",
     }
-});
+})
 
-export default UserView;
+export default UserView

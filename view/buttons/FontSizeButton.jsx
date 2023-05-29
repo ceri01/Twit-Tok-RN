@@ -1,31 +1,31 @@
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
-import {StyleSheet, TouchableHighlight, View} from "react-native";
-import {useRef, useState} from "react";
+import {StyleSheet, TouchableHighlight, View} from "react-native"
+import {useRef, useState} from "react"
 
 const FontSizeButton = (props) => {
-    const size = useRef(1);
-    const [icon, _] = useState(<Icon name="format-size" size={20} color="white"/>);
+    const size = useRef(1)
+    const [icon, _] = useState(<Icon name="format-size" size={20} color="white"/>)
 
     function handleTextSize() {
         if (size.current < 2) {
-            size.current++;
+            size.current++
         } else {
-            size.current = 0;
+            size.current = 0
         }
     }
 
     return (
         <View style={styles.container}>
             <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                handleTextSize();
-                props.onPress(size.current);
+                handleTextSize()
+                props.onPress(size.current)
             }}>
                 <View style={styles.button}>
                     {icon}
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
     touchableHighlight: {
         borderRadius: 100
     }
-});
+})
 
-export default FontSizeButton;
+export default FontSizeButton

@@ -1,34 +1,37 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react"
 import {
-    StyleSheet,
-    SafeAreaView,
-    FlatList,
-    StatusBar,
-    View,
-    Text,
-    DeviceEventEmitter,
     Alert,
-    Button, NativeModules
-} from "react-native";
-import GenericTwokRow from "./twok/GenericTwokRow";
-import GeneralWallHandler from "../viewmodel/GeneralWallHandler";
-import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
-import {reloadApp} from "../viewmodel/initApp";
-import {checkConnection} from "../viewmodel/ConnectionHandler";
+    Button,
+    DeviceEventEmitter,
+    FlatList,
+    NativeModules,
+    SafeAreaView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View
+} from "react-native"
+import GenericTwokRow from "./twok/GenericTwokRow"
+import GeneralWallHandler from "../viewmodel/GeneralWallHandler"
+import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs"
+import {reloadApp} from "../viewmodel/initApp"
+import {checkConnection} from "../viewmodel/ConnectionHandler"
 
 let tidSequence = -1
 
 function GenericWall({route, navigation}) {
     const TabHeight = useBottomTabBarHeight()
-    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
+    const [listUpdater, setListUpdater] = useState(0) // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
     let [online, setOnline] = useState(true)
 
-    DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)}) // this is used to create event to go back to GenericWall
+    DeviceEventEmitter.addListener("event.goback", (page) => {
+        navigation.navigate(page.key)
+    }) // this is used to create event to go back to GenericWall
 
     useEffect(() => {
         checkConnection(setOnline)
-    });
+    })
 
     useEffect(() => {
         if (listUpdater === 0) {
@@ -38,10 +41,10 @@ function GenericWall({route, navigation}) {
                 }
                 setListUpdater(listUpdater + 1)
             }).catch((err) => {
-                Alert.alert("Error", "Is not possible to initialize user wall");
-            });
+                Alert.alert("Error", "Is not possible to initialize user wall")
+            })
         }
-    }, [listUpdater]);
+    }, [listUpdater])
 
     useEffect(() => {
         if (!listrefresher) {
@@ -49,13 +52,13 @@ function GenericWall({route, navigation}) {
                 if (tidSequence !== -1) {
                     tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
                 }
-                setListrefresher(true);
+                setListrefresher(true)
             }).catch((err) => {
-                Alert.alert("Error", "Is not possible to retrieve twoks.");
+                Alert.alert("Error", "Is not possible to retrieve twoks.")
                 setOnline(true)
-            });
+            })
         }
-    }, [listrefresher]);
+    }, [listrefresher])
 
     function displayContent() {
         if (listrefresher) {
@@ -78,7 +81,7 @@ function GenericWall({route, navigation}) {
                                                    TabHeight: TabHeight,
                                                    WindowHeight: route.params.WindowHeight,
                                                    StatusBarHeight: route.params.StatusBarHeight
-                        }}/>
+                                               }}/>
                     }}
                     keyExtractor={(item, index) => {
                         return index.toString()
@@ -97,22 +100,22 @@ function GenericWall({route, navigation}) {
                             if (res) {
                                 setListrefresher(false)
                             } else {
-                                setListUpdater(listUpdater + 1);
+                                setListUpdater(listUpdater + 1)
                             }
                         }).catch(() => {
                             setOnline(true)
-                            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-                        });
+                            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection")
+                        })
                     }}
                     onEndReachedThreshold={2}
                 />
-            );
+            )
         } else {
             return (
                 <View style={style.waiting}>
                     <Text style={{fontSize: 30, fontStyle: "italic"}}>Waiting...</Text>
                 </View>
-            );
+            )
         }
     }
 
@@ -125,18 +128,18 @@ function GenericWall({route, navigation}) {
                 </Text>
                 <Button title="Reload" onPress={() => {
                     reloadApp().then(() => {
-                        NativeModules.DevSettings.reload();
+                        NativeModules.DevSettings.reload()
                     })
                 }}/>
             </View>
-        );
+        )
     } else {
         return (
             <SafeAreaView style={style.safeViewArea}>
                 {displayContent()}
                 <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
             </SafeAreaView>
-        );
+        )
     }
 }
 
@@ -154,6 +157,6 @@ const style = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     }
-});
+})
 
-export default GenericWall;
+export default GenericWall

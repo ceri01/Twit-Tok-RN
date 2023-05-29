@@ -1,25 +1,26 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react"
 import {
-    StyleSheet,
-    SafeAreaView,
-    FlatList,
-    StatusBar,
-    View,
-    Text,
-    DeviceEventEmitter,
     Alert,
-    Button, NativeModules
-} from "react-native";
-import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
-import UserTwokRow from "./twok/UserTwokRow";
-import UserWallHandler from "../viewmodel/UserWallHandler";
-import {reloadApp} from "../viewmodel/initApp";
-import {checkConnection} from "../viewmodel/ConnectionHandler";
+    Button,
+    DeviceEventEmitter,
+    FlatList,
+    NativeModules,
+    SafeAreaView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View
+} from "react-native"
+import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs"
+import UserTwokRow from "./twok/UserTwokRow"
+import UserWallHandler from "../viewmodel/UserWallHandler"
+import {reloadApp} from "../viewmodel/initApp"
+import {checkConnection} from "../viewmodel/ConnectionHandler"
 
 function UserWall(props) {
     const TabHeight = useBottomTabBarHeight()
-    const [online, setOnline] = useState(true);
-    const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
+    const [online, setOnline] = useState(true)
+    const [listUpdater, setListUpdater] = useState(0) // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
     const uid = props.route.params.params.uid
     const WindowHeight = props.route.params.WindowHeight
@@ -27,40 +28,42 @@ function UserWall(props) {
 
     useEffect(() => {
         checkConnection(setOnline)
-    });
+    })
 
     useEffect(() => {
         if (listUpdater === 0) {
             UserWallHandler.getUserWallInstance().initUserWall(uid).then(() => {
                 setListUpdater(listUpdater + 1)
             }).catch(() => {
-                Alert.alert("Error", "Is not possible to initialize user wall");
-            });
+                Alert.alert("Error", "Is not possible to initialize user wall")
+            })
         }
-    }, [listUpdater]);
+    }, [listUpdater])
 
     useEffect(() => {
         if (!listrefresher) {
             UserWallHandler.getUserWallInstance().resetUserBuffer().then(() => {
-                setListrefresher(true);
+                setListrefresher(true)
             }).catch(() => {
-                Alert.alert("Error", "Is not possible to retrieve twoks.");
-            });
+                Alert.alert("Error", "Is not possible to retrieve twoks.")
+            })
         }
-    }, [listrefresher]);
+    }, [listrefresher])
 
     function displayContent() {
         if (!online) {
             return (
                 <View style={style.waiting}>
-                    <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
+                    <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data
+                        of followed users, please check your connection and retry. Try to click button below or restart
+                        app</Text>
                     <Button title="Reload" onPress={() => {
                         reloadApp().then(() => {
-                            NativeModules.DevSettings.reload();
+                            NativeModules.DevSettings.reload()
                         })
                     }}/>
                 </View>
-            );
+            )
         } else {
             if (listrefresher) {
                 return (
@@ -91,20 +94,20 @@ function UserWall(props) {
                         decelerationRate="fast"
                         onEndReached={(info) => {
                             UserWallHandler.getUserWallInstance().updateUserBuffer(uid).then(() => {
-                                setListUpdater(listUpdater + 1);
+                                setListUpdater(listUpdater + 1)
                             }).catch(() => {
-                                Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-                            });
+                                Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection")
+                            })
                         }}
                         onEndReachedThreshold={2}
                     />
-                );
+                )
             } else {
                 return (
                     <View style={style.waiting}>
                         <Text style={{fontSize: 30, fontStyle: "italic"}}>Waiting...</Text>
                     </View>
-                );
+                )
             }
         }
     }
@@ -114,7 +117,7 @@ function UserWall(props) {
             {displayContent()}
             <StatusBar barStyle="light-content" backgroundColor="#6200ee"/>
         </SafeAreaView>
-    );
+    )
 
 }
 
@@ -132,9 +135,9 @@ const style = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     }
-});
+})
 
-export default UserWall;
+export default UserWall
 
 
 

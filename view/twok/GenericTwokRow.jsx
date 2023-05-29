@@ -1,23 +1,23 @@
-import {Platform, StyleSheet, Text, View} from "react-native";
-import UserView from "../user/UserView";
-import React, {useState} from "react";
-import CustomMapModal from "../modal/CustomMapModal";
+import {Platform, StyleSheet, Text, View} from "react-native"
+import UserView from "../user/UserView"
+import React, {useState} from "react"
+import CustomMapModal from "../modal/CustomMapModal"
 
-const USERVIEWHEIGHT = 60;
-const ALIGNAMENTS = ["flex-start", "center", "flex-end"];
+const USERVIEWHEIGHT = 60
+const ALIGNAMENTS = ["flex-start", "center", "flex-end"]
 
 function GenericTwokRow(props) {
     const [mapModalVisible, setMapModalVisible] = useState(false) // flag to display text modal
-    let FONTTYPE = null;
+    let FONTTYPE = null
 
     if (Platform.OS === 'ios') {
-        FONTTYPE = ["System", "Menlo", "Palatino"];
+        FONTTYPE = ["System", "Menlo", "Palatino"]
     } else {
-        FONTTYPE = ["System", "monospace", "serif"];
+        FONTTYPE = ["System", "monospace", "serif"]
     }
 
     const handleMap = () => {
-        setMapModalVisible(true);
+        setMapModalVisible(true)
     }
 
     const showMap = () => {
@@ -27,11 +27,14 @@ function GenericTwokRow(props) {
                                    onChangeVisibility={setMapModalVisible}
                                    latitude={props.data.lat}
                                    longitude={props.data.lon}
-                                   onChangeLatitude={() => {}}
-                                   onChangeLongitude={() => {}}
+                                   onChangeLatitude={() => {
+                                   }}
+                                   onChangeLongitude={() => {
+                                   }}
                                    isReset={false}
                                    isInWall={true}
-                                   onReset={() => {}}>
+                                   onReset={() => {
+                                   }}>
             </CustomMapModal>
         }
     }
@@ -73,7 +76,7 @@ function GenericTwokRow(props) {
                 <Text style={twokTextStyle()}>{props.data.text}</Text>
             </View>
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -86,6 +89,6 @@ const style = StyleSheet.create({
         fontSize: 40,
         fontWeight: "700",
     }
-});
+})
 
-export default GenericTwokRow;
+export default GenericTwokRow

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {StyleSheet, Text, TouchableHighlight, View} from "react-native"
 
 const ChooseImageButton = (props) => {
     return (
@@ -11,7 +11,7 @@ const ChooseImageButton = (props) => {
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "white"
     }
-});
+})
 
-export default ChooseImageButton;
+export default ChooseImageButton

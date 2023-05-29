@@ -1,4 +1,4 @@
-import {StyleSheet, TouchableHighlight, View} from "react-native";
+import {StyleSheet, TouchableHighlight, View} from "react-native"
 import Icon from "react-native-vector-icons/AntDesign"
 
 const CancelButton = (props) => {
@@ -12,7 +12,7 @@ const CancelButton = (props) => {
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     touchableHighlight: {
         borderRadius: 100
     }
-});
+})
 
 
-export default CancelButton;
+export default CancelButton

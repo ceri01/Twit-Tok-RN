@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {StyleSheet, Text, TouchableHighlight, View} from "react-native"
 
 const RegisterButton = (props) => {
     return (
@@ -11,7 +11,7 @@ const RegisterButton = (props) => {
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
         fontSize: 50,
         color: "white"
     }
-});
+})
 
-export default RegisterButton;
+export default RegisterButton

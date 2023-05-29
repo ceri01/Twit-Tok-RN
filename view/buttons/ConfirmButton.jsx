@@ -1,4 +1,4 @@
-import {StyleSheet, TouchableHighlight, View} from "react-native";
+import {StyleSheet, TouchableHighlight, View} from "react-native"
 import Icon from "react-native-vector-icons/AntDesign"
 
 const ConfirmButton = (props) => {
@@ -12,7 +12,7 @@ const ConfirmButton = (props) => {
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     touchableHighlight: {
         borderRadius: 100
     }
-});
+})
 
-export default ConfirmButton;
+export default ConfirmButton

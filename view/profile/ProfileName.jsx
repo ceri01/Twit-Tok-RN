@@ -1,4 +1,4 @@
-import {Button, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native"
 
 const ProfileName = (props) => {
     return (
@@ -7,7 +7,7 @@ const ProfileName = (props) => {
                 <Text style={style.text}>{props.userName}</Text>
             </View>
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -24,6 +24,6 @@ const style = StyleSheet.create({
         paddingHorizontal: 10,
     },
 
-});
+})
 
-export default ProfileName;
+export default ProfileName

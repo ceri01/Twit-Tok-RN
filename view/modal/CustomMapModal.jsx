@@ -1,13 +1,13 @@
-import {Alert, Modal, StyleSheet, Text, View} from "react-native";
-import React, {useState} from "react";
-import MapView, {MarkerAnimated} from "react-native-maps";
-import CancelButton from "../buttons/CancelButton";
-import ConfirmButton from "../buttons/ConfirmButton";
-import {getCurrentPosition} from "../../viewmodel/Position";
+import {Alert, Modal, StyleSheet, Text, View} from "react-native"
+import React, {useState} from "react"
+import MapView, {MarkerAnimated} from "react-native-maps"
+import CancelButton from "../buttons/CancelButton"
+import ConfirmButton from "../buttons/ConfirmButton"
+import {getCurrentPosition} from "../../viewmodel/Position"
 
 function CustomMapModal(props) {
     // This variable is necessary to rerender component and put marker on map. Is different from latitude and longitude in addTwock (not violating single source of truth)
-    const [coords, setCoords] = useState({latitude: props.latitude, longitude: props.longitude});
+    const [coords, setCoords] = useState({latitude: props.latitude, longitude: props.longitude})
 
     if (!props.isInWall) {
         if (coords.latitude === null && coords.longitude === null) {
@@ -53,7 +53,7 @@ function CustomMapModal(props) {
                     <CancelButton onCancel={handleCloseModal}/>
                     <ConfirmButton onConfirm={handleConfirmPositionChange}/>
                 </View>
-            );
+            )
         } else {
             return (
                 <View style={style.modalButtons}>
@@ -80,7 +80,7 @@ function CustomMapModal(props) {
                     </View>
                     {showButtons()}
                 </View>
-            );
+            )
         } else if (props.isInWall) {
             return (
                 <View style={style.modalView}>
@@ -91,7 +91,7 @@ function CustomMapModal(props) {
                         <CancelButton onCancel={handleCloseModal}/>
                     </View>
                 </View>
-            );
+            )
         } else {
             return (
                 <View style={style.modalView}>
@@ -102,7 +102,7 @@ function CustomMapModal(props) {
                         <CancelButton onCancel={handleCloseModal}/>
                     </View>
                 </View>
-            );
+            )
         }
     }
 
@@ -118,7 +118,7 @@ function CustomMapModal(props) {
                 {showMap()}
             </View>
         </Modal>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -162,4 +162,4 @@ const style = StyleSheet.create({
     }
 })
 
-export default CustomMapModal;
+export default CustomMapModal

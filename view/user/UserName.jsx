@@ -1,4 +1,4 @@
-import {DeviceEventEmitter, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {StyleSheet, Text, TouchableHighlight, View} from "react-native"
 
 const UserName = (props) => {
     function renderName() {
@@ -21,7 +21,7 @@ const UserName = (props) => {
         <View style={style.layout}>
             {renderName()}
         </View>
-    );
+    )
 }
 
 const style = StyleSheet.create({
@@ -35,6 +35,6 @@ const style = StyleSheet.create({
         paddingHorizontal: 10,
     }
 
-});
+})
 
-export default UserName;
+export default UserName

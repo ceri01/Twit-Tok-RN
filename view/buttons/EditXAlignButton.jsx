@@ -1,39 +1,39 @@
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
-import {StyleSheet, TouchableHighlight, View} from "react-native";
-import {useRef, useState} from "react";
+import {StyleSheet, TouchableHighlight, View} from "react-native"
+import {useRef, useState} from "react"
 
 const EditXAlignButton = (props) => {
 
-    const alignX = useRef(1);
+    const alignX = useRef(1)
     const reset = useRef(false)
-    const [icon, setIcon] = useState(<Icon name="format-align-center" size={20} color="white"/>);
+    const [icon, setIcon] = useState(<Icon name="format-align-center" size={20} color="white"/>)
 
     if (reset.current !== props.reset) {
         reset.current = props.reset
-        props.onReset();
-        alignX.current = 1;
-        setIcon(<Icon name="format-align-center" size={20} color="white"/>);
+        props.onReset()
+        alignX.current = 1
+        setIcon(<Icon name="format-align-center" size={20} color="white"/>)
     } else {
-        reset.current = false;
+        reset.current = false
     }
 
     function handleIcon() {
         switch (alignX.current) {
             case 1:
-                setIcon(<Icon name="format-align-center" size={20} color="white"/>);
-                break;
+                setIcon(<Icon name="format-align-center" size={20} color="white"/>)
+                break
             case 2:
-                setIcon(<Icon name="format-align-right" size={20} color="white"/>);
-                break;
+                setIcon(<Icon name="format-align-right" size={20} color="white"/>)
+                break
             default:
-                setIcon(<Icon name="format-align-left" size={20} color="white"/>);
-                break;
+                setIcon(<Icon name="format-align-left" size={20} color="white"/>)
+                break
         }
     }
 
     function handleAlignment() {
         if (alignX.current < 2) {
-            alignX.current += 1;
+            alignX.current += 1
         } else {
             alignX.current = 0
         }
@@ -42,16 +42,16 @@ const EditXAlignButton = (props) => {
     return (
         <View style={styles.container}>
             <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                handleAlignment();
-                handleIcon();
-                props.onPress(alignX.current);
+                handleAlignment()
+                handleIcon()
+                props.onPress(alignX.current)
             }}>
                 <View style={styles.button}>
                     {icon}
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
     touchableHighlight: {
         borderRadius: 100
     }
-});
+})
 
-export default EditXAlignButton;
+export default EditXAlignButton

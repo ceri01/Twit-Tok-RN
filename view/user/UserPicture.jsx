@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from "react-native";
+import {Image, StyleSheet, View} from "react-native"
 import {createPictureSource} from "../../viewmodel/PictureHandler"
 
 const UserPicture = (props) => {
@@ -8,7 +8,7 @@ const UserPicture = (props) => {
                 style={styles.img}
                 source={{uri: createPictureSource(props.source)}}/>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
     }
-});
+})
 
-export default UserPicture;
+export default UserPicture

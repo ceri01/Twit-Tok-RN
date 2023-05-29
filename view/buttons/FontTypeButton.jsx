@@ -1,37 +1,37 @@
 import Icon from "react-native-vector-icons/FontAwesome"
-import {StyleSheet, TouchableHighlight, View} from "react-native";
-import {useRef, useState} from "react";
+import {StyleSheet, TouchableHighlight, View} from "react-native"
+import {useRef, useState} from "react"
 
 const FontTypeButton = (props) => {
 
-    const type = useRef(0);
-    const [icon, _] = useState(<Icon name="font" size={20} color="white"/>);
+    const type = useRef(0)
+    const [icon, _] = useState(<Icon name="font" size={20} color="white"/>)
 
     function handleTextType() {
         switch (type.current) {
             case 0:
-                type.current++;
-                break;
+                type.current++
+                break
             case 1:
-                type.current++;
-                break;
+                type.current++
+                break
             default:
-                type.current = 0;
+                type.current = 0
         }
     }
 
     return (
         <View style={styles.container}>
             <TouchableHighlight style={styles.touchableHighlight} onPress={() => {
-                handleTextType();
-                props.onPress(type.current);
+                handleTextType()
+                props.onPress(type.current)
             }}>
                 <View style={styles.button}>
                     {icon}
                 </View>
             </TouchableHighlight>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     touchableHighlight: {
         borderRadius: 100
     }
-});
+})
 
 
-export default FontTypeButton;
+export default FontTypeButton
