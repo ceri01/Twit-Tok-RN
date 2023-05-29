@@ -1,7 +1,7 @@
-import UtilityStorageManager from "./UtilityStorageManager";
-import CommunicationController from "./CommunicationController";
-import {getUserPicture} from "../viewmodel/PictureHandler";
-import {Alert} from "react-native";
+import UtilityStorageManager from "./UtilityStorageManager"
+import CommunicationController from "./CommunicationController"
+import {getUserPicture} from "../viewmodel/PictureHandler"
+import {Alert} from "react-native"
 
 class Followed {
     #followed = new Map()
@@ -11,32 +11,29 @@ class Followed {
             CommunicationController.getFollowed(sid).then((followedList) => {
                 followedList.map((element) => {
                     getUserPicture(sid, element.uid, element.pversion, (pic, pversion) => {
-                        element.pversion = pversion;
-                        element.picture = pic;
+                        element.pversion = pversion
+                        element.picture = pic
                         this.add(element.uid, element)
                     })
                 })
             }).catch(() => {
-                Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
+                Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection")
             })
         })
     }
 
     getImmutableData() {
         // ... is usefull to create a copy of this.#buffer to prevent direct changest to the data structure
-        for (const argument of [...this.#followed.values()]) {
-            console.log(argument.name)
-        }
-        return [...this.#followed.values()];
+        return [...this.#followed.values()]
     }
 
     getLength() {
-        return this.#followed.size;
+        return this.#followed.size
     }
 
     add(uid, element) {
         if (element.hasOwnProperty("name") && element.hasOwnProperty("pversion") && element.hasOwnProperty("uid")) {
-            this.#followed.set(uid, element);
+            this.#followed.set(uid, element)
         }
     }
 
