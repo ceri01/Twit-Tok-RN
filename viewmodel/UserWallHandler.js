@@ -3,34 +3,54 @@ import {getUserTwoks} from "./TwokHandler";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
 
-const userTwoks = new TwokBuffer();
-
-export function getUserData() {
-    return userTwoks.getImmutableData();
-}
-
-export async function initUserWall(uid) {
-    await emptyUserBuffer();
-    const elements = [...((await getUserTwoks(uid)).values())];
-    const sid = await UtilityStorageManager.getSid();
-    const isFollowed = (await CommunicationController.isFollowed(sid, uid)).followed// isInFollowed(elements[0].uid, #followed);
-    elements.map((element) => {
-        element.followed = isFollowed;
-    });
-    for (let element of elements) {
-        userTwoks.add(element);
+export default class UserWallHandler {
+    static instance = null
+    #userTwoks = null
+    constructor() {
+        this.#userTwoks = new TwokBuffer();
     }
-}
 
-export async function updateUserBuffer(uid) {
-    const newTwoks = [...((await getUserTwoks(uid)).values())]
-    for (const newTwok of newTwoks) {
-        if (userTwoks.getImmutableData().findIndex(obj => obj.tid === newTwok.tid) === -1) {
-            userTwoks.add(newTwok);
+    static getFollowedInstance() {
+        if (this.instance === null) {
+            UserWallHandler.instance = new UserWallHandler()
+        }
+        return this.instance
+    }
+
+    getUserData() {
+        return this.#userTwoks.getImmutableData();
+    }
+
+    async initUserWall(uid) {
+        await this.emptyUserBuffer();
+        const elements = [...((await getUserTwoks(uid)).values())];
+        const sid = await UtilityStorageManager.getSid();
+        const isFollowed = (await CommunicationController.isFollowed(sid, uid)).followed // isInFollowed(elements[0].uid, #followed);
+        elements.map((element) => {
+            element.followed = isFollowed;
+        });
+        for (let element of elements) {
+            this.#userTwoks.add(element);
         }
     }
+
+    async updateUserBuffer(uid) {
+        const newTwoks = [...((await getUserTwoks(uid)).values())]
+        for (const newTwok of newTwoks) {
+            if (this.#userTwoks.getImmutableData().findIndex(obj => obj.tid === newTwok.tid) === -1) {
+                this.#userTwoks.add(newTwok);
+            }
+        }
+    }
+
+    async resetUserBuffer() {
+        let newTwoks
+        newTwoks = await getUserTwoks()
+        this.#userTwoks.reset(newTwoks)
+    }
+
+    async emptyUserBuffer() {
+        this.#userTwoks.empty()
+    }
 }
 
-export async function emptyUserBuffer() {
-    userTwoks.empty()
-}

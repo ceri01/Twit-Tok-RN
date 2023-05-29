@@ -10,10 +10,9 @@ import {
     Alert,
     Button, NativeModules
 } from "react-native";
-import {resetGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 import UserTwokRow from "./twok/UserTwokRow";
-import {getUserData, initUserWall, updateUserBuffer} from "../viewmodel/UserWallHandler";
+import UserWallHandler from "../viewmodel/UserWallHandler";
 import {reloadApp} from "../viewmodel/initApp";
 import {checkConnection} from "../viewmodel/ConnectionHandler";
 
@@ -32,7 +31,7 @@ function UserWall(props) {
 
     useEffect(() => {
         if (listUpdater === 0) {
-            initUserWall(uid).then(() => {
+            UserWallHandler.getFollowedInstance().initUserWall(uid).then(() => {
                 setListUpdater(listUpdater + 1)
             }).catch(() => {
                 Alert.alert("Error", "Is not possible to initialize user wall");
@@ -42,7 +41,7 @@ function UserWall(props) {
 
     useEffect(() => {
         if (!listrefresher) {
-            resetGeneralBuffer().then(() => {
+            UserWallHandler.getFollowedInstance().resetUserBuffer().then(() => {
                 setListrefresher(true);
             }).catch(() => {
                 Alert.alert("Error", "Is not possible to retrieve twoks.");
@@ -68,7 +67,7 @@ function UserWall(props) {
                     <FlatList
                         style={style.listStyle}
                         extraData={listrefresher}
-                        data={getUserData()}
+                        data={UserWallHandler.getFollowedInstance().getUserData()}
                         renderItem={(twok) => {
                             return <UserTwokRow data={twok.item}
                                                 navigate={() => {
@@ -91,7 +90,7 @@ function UserWall(props) {
                         snapToAlignment="start"
                         decelerationRate="fast"
                         onEndReached={(info) => {
-                            updateUserBuffer(uid).then(() => {
+                            UserWallHandler.getFollowedInstance().updateUserBuffer(uid).then(() => {
                                 setListUpdater(listUpdater + 1);
                             }).catch(() => {
                                 Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
