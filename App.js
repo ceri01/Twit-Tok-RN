@@ -1,24 +1,29 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Register from "./view/Register";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Main from "./view/Main";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {Alert, Button, NativeModules, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {Button, NativeModules, SafeAreaView, StyleSheet, Text, View} from "react-native";
 import UtilityStorageManager from "./model/UtilityStorageManager";
 import {initApplication, initEnvironment, reloadApp} from "./viewmodel/initApp";
 import {NavigationContainer} from "@react-navigation/native";
+import {checkConnection} from "./viewmodel/ConnectionHandler";
 
 const Stack = createNativeStackNavigator();
 
 function App() {
     const load = useRef("")
     const [isLoading, setIsLoading] = useState(true);
-    const [offline, setOffline] = useState(false)
+    const [online, setOnline] = useState(true)
 
-    if (offline) {
+    useEffect(() => {
+        checkConnection(setOnline)
+    });
+
+    if (!online) {
         return (
             <SafeAreaView style={style.waiting}>
-                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
                 <Button title="Reload" onPress={() => {
                     reloadApp().then(() => {
                         NativeModules.DevSettings.reload();
@@ -30,15 +35,10 @@ function App() {
         if (isLoading) {
             UtilityStorageManager.isFirstStart().then((res) => {
                 if (res) {
-                    initApplication().then(() => {
-                        load.current = "Register";
-                        setIsLoading(false)
-                    }).catch((err) => {
-                        Alert.alert("Connection Error", "Network request failed, check your connection.");
-                        setOffline(true)
-                    })
+                    load.current = "Register";
+                    setIsLoading(false)
                 } else {
-                    initEnvironment().then(() => {
+                    initEnvironment().then(() => { // if isn't first start this line is not executed
                         load.current = "Main";
                         setIsLoading(false)
                     })

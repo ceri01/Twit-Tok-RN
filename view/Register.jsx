@@ -1,14 +1,36 @@
-import {Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, View} from "react-native";
+import {Alert, Button, Image, NativeModules, SafeAreaView, StyleSheet, Text, TextInput, View} from "react-native";
 import RegisterButton from "./buttons/RegisterButton"
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {openImagePicker, createPictureSource} from "../viewmodel/PictureHandler";
 import DefaultImage from "../assets/favicon.png";
 import ChooseImageButton from "./buttons/ChooseImageButton";
-import {initProfile} from "../viewmodel/initApp";
+import {initApplication, initProfile, reloadApp} from "../viewmodel/initApp";
+import {checkConnection} from "../viewmodel/ConnectionHandler";
 
 function Register({ navigation }) {
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
+    const [online, setOnline] = useState(true);
+
+    useEffect(() => {
+        checkConnection(setOnline)
+    });
+
+    function confirmRegistration() {
+        console.log("entro")
+        if (online) {
+            if (typeof(name) === "string" && name.length > 0) {
+                initApplication().then(() => {
+                    initProfile(name, image).then()
+                    navigation.navigate("Main", {screen: "Wall"})
+                })
+            } else {
+                Alert.alert("Missing name", "Insert a name.");
+            }
+        } else {
+            Alert.alert("Connection error", "Is not possible to sing up due to a network error");
+        }
+    }
 
     function getImage() {
         openImagePicker().then((result) => {
@@ -24,35 +46,41 @@ function Register({ navigation }) {
         })
     }
 
-    return (
-        <SafeAreaView style={style.mainContainer}>
-            <View style={style.welcomeContainer}>
-                <Text style={style.welcomeText}>Wellcome on Twit Tok!</Text>
-            </View>
-            <View style={style.form}>
-                <Text style={style.text}>Insert your name</Text>
-                <TextInput style={style.inputField} maxLength={19} textAlign="center" onChangeText={(value) => {
-                    setName(value)
-                }}/>
-                <Text style={style.text}>Insert your profile pic (optional)</Text>
-                {image && <Image source={{ uri: createPictureSource(image) }} style={{ width: 100, height: 100 }} />}
-                <ChooseImageButton onPress={getImage}/>
-            </View>
-            <View style={style.button}>
-                <RegisterButton onPress={() => {
-                    if (typeof(name) === "string" && name.length > 0) {
-                        initProfile(name, image).then(() => {
-                        }).catch((err) => {
-                            Alert.alert("Connection error.", "Profile could not be initialized, check your connection")
-                        })
-                        navigation.navigate("Main", {screen: "Wall"})
-                    } else {
-                        Alert.alert("Missing name", "Insert a name.");
-                    }
+    if (!online) {
+        return (
+            <View style={style.waiting}>
+                <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data of
+                    followed users, please check your connection and retry. Try to click button below or
+                    restart app
+                </Text>
+                <Button title="Reload" onPress={() => {
+                    reloadApp().then(() => {
+                        NativeModules.DevSettings.reload();
+                    })
                 }}/>
             </View>
-        </SafeAreaView>
-    );
+        );
+    } else {
+        return (
+            <SafeAreaView style={style.mainContainer}>
+                <View style={style.welcomeContainer}>
+                    <Text style={style.welcomeText}>Wellcome on Twit Tok!</Text>
+                </View>
+                <View style={style.form}>
+                    <Text style={style.text}>Insert your name</Text>
+                    <TextInput style={style.inputField} maxLength={19} textAlign="center" onChangeText={(value) => {
+                        setName(value)
+                    }}/>
+                    <Text style={style.text}>Insert your profile pic (optional)</Text>
+                    {image && <Image source={{ uri: createPictureSource(image) }} style={{ width: 100, height: 100 }} />}
+                    <ChooseImageButton onPress={getImage}/>
+                </View>
+                <View style={style.button}>
+                    <RegisterButton onPress={confirmRegistration}/>
+                </View>
+            </SafeAreaView>
+        );
+    }
 }
 
 const style = StyleSheet.create({

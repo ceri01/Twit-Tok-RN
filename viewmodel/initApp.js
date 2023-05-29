@@ -33,7 +33,6 @@ export async function initApplication() {
         let profileData = await CommunicationController.getProfile(register.sid);
         await UtilityStorageManager.setSid(register.sid)
         await UtilityStorageManager.setProfileUid(profileData.uid.toString());
-        await UtilityStorageManager.firstStart()
         await initEnvironment()
     }
 }

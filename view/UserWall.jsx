@@ -54,7 +54,7 @@ function UserWall(props) {
         if (!online) {
             return (
                 <View style={style.waiting}>
-                    <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
+                    <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrieve data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
                     <Button title="Reload" onPress={() => {
                         reloadApp().then(() => {
                             NativeModules.DevSettings.reload();
