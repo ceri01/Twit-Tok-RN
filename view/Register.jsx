@@ -21,8 +21,12 @@ function Register({ navigation }) {
         if (online) {
             if (typeof(name) === "string" && name.length > 0) {
                 initApplication().then(() => {
-                    initProfile(name, image).then()
+                    initProfile(name, image).then().catch(() => {
+                        console.log("init profile failed")
+                    })
                     navigation.navigate("Main", {screen: "Wall"})
+                }).catch(() => {
+                    console.log("Application not initialized")
                 })
             } else {
                 Alert.alert("Missing name", "Insert a name.");

@@ -11,12 +11,11 @@ export async function setNewProfileName(name) {
         }, (err) => {
             console.log("errore " + err)
         });
-        await UtilityStorageManager.getSid().then((sid) => {
-            CommunicationController.setProfileName(sid, name).then(() => {
-                console.log("name modified server")
-            }).catch(() => {
-                FollowHandler.getFollowedInstance().setOffline()
-            })
+        const sid = await UtilityStorageManager.getSid()
+        CommunicationController.setProfileName(sid, name).then(() => {
+            console.log("name modified server")
+        }).catch(() => {
+            console.log("error")
         })
     } else {
         Alert.alert("Input error", "Bad format of name");
@@ -30,12 +29,11 @@ export async function setNewProfilePic(pic) {
         }, (err) => {
             console.log("errore " + err)
         });
-        await UtilityStorageManager.getSid().then((sid) => {
-            CommunicationController.setProfilePicture(sid, pic).then(() => {
-                console.log("pic modified server")
-            }).catch(() => {
-                FollowHandler.getFollowedInstance().setOffline()
-            })
+        const sid = await UtilityStorageManager.getSid()
+        CommunicationController.setProfilePicture(sid, pic).then(() => {
+            console.log("pic modified server")
+        }).catch((err) => {
+            console.log(err)
         })
     } else {
         Alert.alert("Input error", "Bad format of name");

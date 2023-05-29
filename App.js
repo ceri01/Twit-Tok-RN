@@ -41,6 +41,8 @@ function App() {
                     initEnvironment().then(() => { // if isn't first start this line is not executed
                         load.current = "Main";
                         setIsLoading(false)
+                    }).catch(() => {
+                        console.log("skip init environment")
                     })
                 }
             }).catch((err) => {

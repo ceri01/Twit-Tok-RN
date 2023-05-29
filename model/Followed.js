@@ -17,7 +17,6 @@ class Followed {
                     })
                 })
             }).catch(() => {
-
                 Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
             })
         })
@@ -25,6 +24,9 @@ class Followed {
 
     getImmutableData() {
         // ... is usefull to create a copy of this.#buffer to prevent direct changest to the data structure
+        for (const argument of [...this.#followed.values()]) {
+            console.log(argument.name)
+        }
         return [...this.#followed.values()];
     }
 

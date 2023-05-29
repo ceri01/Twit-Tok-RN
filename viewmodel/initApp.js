@@ -28,11 +28,13 @@ export async function initProfile(name, pic) {
 }
 
 export async function initApplication() {
-    let register = {sid: "URAUx5gdTxnDwBB1iQtt"} // await CommunicationController.register()
+    console.log("provaa")
+    let register = await CommunicationController.register()
     if (register !== undefined) {
         let profileData = await CommunicationController.getProfile(register.sid);
         await UtilityStorageManager.setSid(register.sid)
         await UtilityStorageManager.setProfileUid(profileData.uid.toString());
+        await UtilityStorageManager.firstStart()
         await initEnvironment()
     }
 }

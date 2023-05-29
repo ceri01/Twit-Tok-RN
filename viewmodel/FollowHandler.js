@@ -14,7 +14,6 @@ export default class FollowHandler {
         if (this.instance === null) {
             FollowHandler.instance = new FollowHandler()
         }
-        console.log(this.instance)
         return this.instance
     }
 
@@ -34,6 +33,7 @@ export default class FollowHandler {
         UtilityStorageManager.getSid().then(sid => {
             CommunicationController.unfollow(sid, uid).then(() => {
                 this.#followed.remove(uid)
+                console.log("fine")
             }).catch(() => {
                 onError()
             })

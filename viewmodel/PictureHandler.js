@@ -37,7 +37,9 @@ export function getUserPicture(sid, uid, pversion, onResult) {
                         DBManager.getInstance().updateUserPicture(uid, serverResult.picture, serverResult.pversion);
                         onResult(serverResult.picture, serverResult.pversion);
                     }
-                });
+                }).catch(err => {
+                    console.log(err)
+                }) ;
             }
         } else {
             CommunicationController.getPicture(sid, uid).then((serverResult) => {
@@ -48,6 +50,8 @@ export function getUserPicture(sid, uid, pversion, onResult) {
                     DBManager.getInstance().addUserPicture(serverResult.uid, serverResult.picture, serverResult.pversion);
                     onResult(serverResult.picture, serverResult.pversion)
                 }
+            }).catch(err => {
+                console.log(err)
             });
         }
     });

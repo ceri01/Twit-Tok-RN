@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {
     Button,
     DeviceEventEmitter,
@@ -19,7 +19,7 @@ import {checkConnection} from "../viewmodel/ConnectionHandler";
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
     const [online, setOnline] = useState(true);
-    const [followed, setFollowed] = useState(FollowHandler.getFollowedInstance().getFollowed());
+    const followed = useRef(null);
     const profile = useRef(null);
 
     // this is used to create event to go back to GenericWall
@@ -32,6 +32,7 @@ function Profile({route, navigation}) {
     });
 
     useEffect(() => {
+        followed.current = FollowHandler.getFollowedInstance().getFollowed()
         getProfile((resultQuery) => {
             profile.current = resultQuery
             setReady(true);
@@ -44,10 +45,10 @@ function Profile({route, navigation}) {
 
     function renderFollowed() {
         if (ready) {
-            if (followed.length > 0) {
+            if (followed.current.length > 0) {
                 return (
                     <View style={style.followed}>
-                        <FlatList data={followed}
+                        <FlatList data={followed.current}
                                   renderItem={({item}) => (
                                       <UserView
                                           dimensions={route.params.WindowHeight / 50}

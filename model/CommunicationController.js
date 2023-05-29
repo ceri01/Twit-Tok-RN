@@ -20,7 +20,6 @@ export default class CommunicationController {
     static checkConnectionStatus(callback) {
         return NetInfo.addEventListener(state => {
             if (!state.isConnected) {
-                console.log(state.isConnected)
                 callback(state.isConnected)
             }
         })

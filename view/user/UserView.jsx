@@ -11,24 +11,28 @@ import FollowHandler from "../../viewmodel/FollowHandler";
 const UserView = (props) => {
     const [followStatus, setFollowStatus] = useState(props.followed);
 
-    function follow(followed) {
-        FollowHandler.getFollowedInstance().addFollow(props.uid, props.name, props.pversion, () => {
+    async function follow(followed) {
+        await FollowHandler.getFollowedInstance().addFollow(props.uid, props.name, props.pversion, () => {
             Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
-            props.edit()
-        }).then(() => {
-            setFollowStatus(followed)
-        }).catch(() => {
-            Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
-            props.edit()
-        })
+        });
+        props.edit()
+        setFollowStatus(followed)
     }
 
-    function unfollow(followed) {
+    async function unfollow(followed) {
         FollowHandler.getFollowedInstance().removeFollow(props.uid,  () => {
             Alert.alert("Connection error.", "Is not possible to unfollow, check your connection")
-            props.edit()
         }).then(() => {
-            setFollowStatus(followed);
+            /*
+                This timeout need to wait the end of removeFollow operations, for some reasons props.edit() is called
+                before removeFollow ends
+             */
+            setTimeout(() => {
+                props.edit()
+                setFollowStatus(followed)
+            }, 80)
+        }).catch(() => {
+            console.log("followed not removed")
         })
     }
 

@@ -6,7 +6,7 @@ export default class DBManager {
     _database = null
 
     constructor() {
-        this._database = SQLite.openDatabase("prova6");
+        this._database = SQLite.openDatabase("prova8");
         UtilityStorageManager.DBIsInit().then((res) => {
             if (!res) {
                 UtilityStorageManager.DBInit().then(() => {
