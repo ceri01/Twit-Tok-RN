@@ -1,4 +1,6 @@
 import API from "../config/config.js"
+import NetInfo from '@react-native-community/netinfo';
+
 export default class CommunicationController {
     static async _call(endpoint, parameters) {
         let response = await fetch(API.BASE_URL + endpoint, {
@@ -13,6 +15,14 @@ export default class CommunicationController {
         if (status === 200) {
             return await response.json();
         }
+    }
+
+    static checkConnectionStatus(callback) {
+        return NetInfo.addEventListener(state => {
+            if (!state.isConnected) {
+                callback(state.isConnected)
+            }
+        })
     }
 
     static register = async () => {

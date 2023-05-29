@@ -14,10 +14,11 @@ import ProfileView from "./profile/ProfileView";
 import {getProfile} from "../viewmodel/ProfileUserHandler";
 import {reloadApp} from "../viewmodel/initApp";
 import FollowHandler from "../viewmodel/FollowHandler";
+import {checkConnection} from "../viewmodel/ConnectionHandler";
 
 function Profile({route, navigation}) {
     const [ready, setReady] = useState(false);
-    //const [offline, setOffline] = useState(false);
+    const [online, setOnline] = useState(true);
     const [followed, setFollowed] = useState(FollowHandler.getFollowedInstance().getFollowed());
     const profile = useRef(null);
 
@@ -27,24 +28,15 @@ function Profile({route, navigation}) {
     });
 
     useEffect(() => {
-/*        console.log(FollowHandler.getFollowedInstance().isOnline())
-        if (!FollowHandler.getFollowedInstance().isOnline()) {
-            setOffline(true)
-        }*/
+        checkConnection(setOnline)
+    });
+
+    useEffect(() => {
         getProfile((resultQuery) => {
             profile.current = resultQuery
             setReady(true);
         });
     }, [ready])
-
-    useEffect(() => {
-        DeviceEventEmitter.addListener("#followed.updated", () => {
-            setFollowed(FollowHandler.getFollowedInstance().getFollowed())
-/*            if (!offline) {
-
-            }*/
-        });
-    })
 
     function reload() {
         setReady(false);
@@ -110,7 +102,7 @@ function Profile({route, navigation}) {
         }
     }
 
-    if (false) {
+    if (!online) {
         return (
             <View style={style.waiting}>
                 <Text style={{fontSize: 25, fontStyle: "italic"}}>

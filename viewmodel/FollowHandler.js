@@ -1,7 +1,6 @@
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
 import Followed from "../model/Followed";
-import {DeviceEventEmitter} from "react-native";
 import {getUserPicture} from "./PictureHandler";
 
 export default class FollowHandler {
@@ -24,7 +23,6 @@ export default class FollowHandler {
             CommunicationController.follow(sid, uid).then(() => {
                 getUserPicture(sid, uid, pversion, (picture, pversion) => {
                     this.#followed.add(uid, {uid: uid, name: name, pversion: pversion, picture: picture})
-                    DeviceEventEmitter.emit("#followed.updated");
                 })
             }).catch(() => {
                 onError()
@@ -36,7 +34,6 @@ export default class FollowHandler {
         UtilityStorageManager.getSid().then(sid => {
             CommunicationController.unfollow(sid, uid).then(() => {
                 this.#followed.remove(uid)
-                DeviceEventEmitter.emit("#followed.updated");
             }).catch(() => {
                 onError()
             })
