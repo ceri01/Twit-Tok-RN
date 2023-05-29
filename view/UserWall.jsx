@@ -15,34 +15,43 @@ import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 import UserTwokRow from "./twok/UserTwokRow";
 import {getUserData, initUserWall, updateUserBuffer} from "../viewmodel/UserWallHandler";
 import {reloadApp} from "../viewmodel/initApp";
+import {checkConnection} from "../viewmodel/ConnectionHandler";
 
 function UserWall(props) {
     const TabHeight = useBottomTabBarHeight()
-    const [offline, setOffline] = useState(false);
+    const [online, setOnline] = useState(true);
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
     const uid = props.route.params.params.uid
     const WindowHeight = props.route.params.WindowHeight
     const StatusBarHeight = props.route.params.StatusBarHeight
 
-    if (listUpdater === 0) {
-        initUserWall(uid).then(() => {
-            setListUpdater(listUpdater + 1)
-        }).catch((err) => {
-            setOffline(true)
-            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-        });
-    } else if (!listrefresher) {
-        resetGeneralBuffer().then(() => {
-            setListrefresher(true);
-        }).catch((err) => {
-            setOffline(true)
-            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-        });
-    }
+    useEffect(() => {
+        checkConnection(setOnline)
+    });
+
+    useEffect(() => {
+        if (listUpdater === 0) {
+            initUserWall(uid).then(() => {
+                setListUpdater(listUpdater + 1)
+            }).catch(() => {
+                Alert.alert("Error", "Is not possible to initialize user wall");
+            });
+        }
+    }, [listUpdater]);
+
+    useEffect(() => {
+        if (!listrefresher) {
+            resetGeneralBuffer().then(() => {
+                setListrefresher(true);
+            }).catch(() => {
+                Alert.alert("Error", "Is not possible to retrieve twoks.");
+            });
+        }
+    }, [listrefresher]);
 
     function displayContent() {
-        if (offline) {
+        if (!online) {
             return (
                 <View style={style.waiting}>
                     <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     StyleSheet,
     SafeAreaView,
@@ -14,6 +14,7 @@ import GenericTwokRow from "./twok/GenericTwokRow";
 import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer} from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 import {reloadApp} from "../viewmodel/initApp";
+import {checkConnection} from "../viewmodel/ConnectionHandler";
 
 let tidSequence = -1
 
@@ -21,31 +22,40 @@ function GenericWall({route, navigation}) {
     const TabHeight = useBottomTabBarHeight()
     const [listUpdater, setListUpdater] = useState(0); // used to re-render page when new batch of twok is loaded
     const [listrefresher, setListrefresher] = useState(true) // used to re-render page when the twok buffer is reset
-    let [offline, setOffline] = useState(false)
+    let [online, setOnline] = useState(true)
 
     DeviceEventEmitter.addListener("event.goback", (page) => {navigation.navigate(page.key)}) // this is used to create event to go back to GenericWall
 
-    if (listUpdater === 0) {
-        initGeneralWall(tidSequence).then(() => {
-            if (tidSequence !== -1) {
-                tidSequence = tidSequence + 8 // add 8 because getGeneralTwoks (called in initGeneralWall) performs 8 getTwok requests
-            }
-            setListUpdater(listUpdater + 1)
-        }).catch((err) => {
-            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-            setOffline(true)
-        });
-    } else if (!listrefresher) {
-        resetGeneralBuffer(tidSequence).then(() => {
-            if (tidSequence !== -1) {
-                tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
-            }
-            setListrefresher(true);
-        }).catch((err) => {
-            Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
-            setOffline(true)
-        });
-    }
+    useEffect(() => {
+        checkConnection(setOnline)
+    });
+
+    useEffect(() => {
+        if (listUpdater === 0) {
+            initGeneralWall(tidSequence).then(() => {
+                if (tidSequence !== -1) {
+                    tidSequence = tidSequence + 8 // add 8 because getGeneralTwoks (called in initGeneralWall) performs 8 getTwok requests
+                }
+                setListUpdater(listUpdater + 1)
+            }).catch((err) => {
+                Alert.alert("Error", "Is not possible to initialize user wall");
+            });
+        }
+    }, [listUpdater]);
+
+    useEffect(() => {
+        if (!listrefresher) {
+            resetGeneralBuffer(tidSequence).then(() => {
+                if (tidSequence !== -1) {
+                    tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
+                }
+                setListrefresher(true);
+            }).catch((err) => {
+                Alert.alert("Error", "Is not possible to retrieve twoks.");
+                setOnline(true)
+            });
+        }
+    }, [listrefresher]);
 
     function displayContent() {
         if (listrefresher) {
@@ -90,7 +100,7 @@ function GenericWall({route, navigation}) {
                                 setListUpdater(listUpdater + 1);
                             }
                         }).catch(() => {
-                            setOffline(true)
+                            setOnline(true)
                             Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
                         });
                     }}
@@ -106,7 +116,7 @@ function GenericWall({route, navigation}) {
         }
     }
 
-    if (offline) {
+    if (!online) {
         return (
             <View style={style.waiting}>
                 <Text style={{fontSize: 25, fontStyle: "italic"}}>Connection error. Is not possible to retrive data of followed users, please check your connection and retry. Try to click button below or restart app</Text>
