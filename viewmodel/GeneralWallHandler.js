@@ -2,60 +2,73 @@ import TwokBuffer from "../model/TwokBuffer";
 import {getGeneralTwoks} from "./TwokHandler";
 import CommunicationController from "../model/CommunicationController";
 import UtilityStorageManager from "../model/UtilityStorageManager";
-import {Alert} from "react-native";
 
-const generalTwoks = new TwokBuffer();
+export default class GeneralWallHandler {
+    static instance = null
+    #generalTwoks = null
 
-export function getGeneralData() {
-    return generalTwoks.getImmutableData();
-}
-
-export async function initGeneralWall(tidSequence) {
-    let sid = await UtilityStorageManager.getSid();
-    await emptyGeneralBuffer()
-    let elements
-    if (tidSequence !== -1) {
-        elements = await getGeneralTwoks(tidSequence);
-    } else {
-        elements = await getGeneralTwoks();
+    constructor() {
+        this.#generalTwoks = new TwokBuffer();
     }
 
-    elements.map(async (element) => {
-        element.followed = (await CommunicationController.isFollowed(sid, element.uid)).followed;
-    });
-    for (let element of elements) {
-        generalTwoks.add(element);
-    }
-}
-
-export async function updateGeneralBuffer(tidSequence) {
-    let elements
-    if (generalTwoks.getLength() > 32) {
-        return true;
+    static getGeneralWallInstance() {
+        if (this.instance === null) {
+            GeneralWallHandler.instance = new GeneralWallHandler()
+        }
+        return this.instance
     }
 
-    if (tidSequence !== -1) {
-        elements = await getGeneralTwoks(tidSequence)
-    } else {
-        elements = await getGeneralTwoks()
+    getGeneralData() {
+        return this.#generalTwoks.getImmutableData();
     }
 
-    for (let element of elements) {
-        generalTwoks.add(element);
-    }
-    return false
-}
+    async initGeneralWall(tidSequence) {
+        let sid = await UtilityStorageManager.getSid();
+        await this.emptyGeneralBuffer()
+        let elements
+        if (tidSequence !== -1) {
+            elements = await getGeneralTwoks(tidSequence);
+        } else {
+            elements = await getGeneralTwoks();
+        }
 
-export async function resetGeneralBuffer(tidSequence) {
-    let newTwoks
-    if (tidSequence !== -1) {
-        newTwoks = await getGeneralTwoks(tidSequence)
-    } else {
-        newTwoks = await getGeneralTwoks()
+        elements.map(async (element) => {
+            element.followed = (await CommunicationController.isFollowed(sid, element.uid)).followed;
+        });
+        for (let element of elements) {
+            this.#generalTwoks.add(element);
+        }
     }
-    generalTwoks.reset(newTwoks);
-}
 
-export async function emptyGeneralBuffer() {
-    generalTwoks.empty()
+    async updateGeneralBuffer(tidSequence) {
+        let elements
+        if (this.#generalTwoks.getLength() > 32) {
+            return true;
+        }
+
+        if (tidSequence !== -1) {
+            elements = await getGeneralTwoks(tidSequence)
+        } else {
+            elements = await getGeneralTwoks()
+        }
+
+        for (let element of elements) {
+            this.#generalTwoks.add(element);
+        }
+        return false
+    }
+
+    async resetGeneralBuffer(tidSequence) {
+        let newTwoks
+        if (tidSequence !== -1) {
+            newTwoks = await getGeneralTwoks(tidSequence)
+        } else {
+            newTwoks = await getGeneralTwoks()
+        }
+        this.#generalTwoks.reset(newTwoks);
+    }
+
+    async emptyGeneralBuffer() {
+        this.#generalTwoks.empty()
+    }
 }

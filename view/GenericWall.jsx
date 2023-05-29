@@ -11,7 +11,7 @@ import {
     Button, NativeModules
 } from "react-native";
 import GenericTwokRow from "./twok/GenericTwokRow";
-import {getGeneralData, initGeneralWall, resetGeneralBuffer, updateGeneralBuffer} from "../viewmodel/GeneralWallHandler";
+import GeneralWallHandler from "../viewmodel/GeneralWallHandler";
 import {useBottomTabBarHeight} from "@react-navigation/bottom-tabs";
 import {reloadApp} from "../viewmodel/initApp";
 import {checkConnection} from "../viewmodel/ConnectionHandler";
@@ -32,7 +32,7 @@ function GenericWall({route, navigation}) {
 
     useEffect(() => {
         if (listUpdater === 0) {
-            initGeneralWall(tidSequence).then(() => {
+            GeneralWallHandler.getGeneralWallInstance().initGeneralWall(tidSequence).then(() => {
                 if (tidSequence !== -1) {
                     tidSequence = tidSequence + 8 // add 8 because getGeneralTwoks (called in initGeneralWall) performs 8 getTwok requests
                 }
@@ -45,7 +45,7 @@ function GenericWall({route, navigation}) {
 
     useEffect(() => {
         if (!listrefresher) {
-            resetGeneralBuffer(tidSequence).then(() => {
+            GeneralWallHandler.getGeneralWallInstance().resetGeneralBuffer(tidSequence).then(() => {
                 if (tidSequence !== -1) {
                     tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
                 }
@@ -63,7 +63,7 @@ function GenericWall({route, navigation}) {
                 <FlatList
                     style={style.listStyle}
                     extraData={listrefresher}
-                    data={getGeneralData()}
+                    data={GeneralWallHandler.getGeneralWallInstance().getGeneralData()}
                     renderItem={(twok) => {
                         return <GenericTwokRow data={twok.item}
                                                navigate={() => {
@@ -90,7 +90,7 @@ function GenericWall({route, navigation}) {
                     snapToAlignment="start"
                     decelerationRate="fast"
                     onEndReached={() => {
-                        updateGeneralBuffer(tidSequence).then((res) => {
+                        GeneralWallHandler.getGeneralWallInstance().updateGeneralBuffer(tidSequence).then((res) => {
                             if (tidSequence !== -1) {
                                 tidSequence = tidSequence + 8 // add 8 because resetGeneralBuffer (called in initGeneralWall) performs 8 getTwok requests
                             }
