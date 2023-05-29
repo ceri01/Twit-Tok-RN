@@ -1,11 +1,12 @@
-import CommunicationController from "../model/CommunicationController";
-import UtilityStorageManager from "../model/UtilityStorageManager";
-import Followed from "../model/Followed";
-import {getUserPicture} from "./PictureHandler";
+import CommunicationController from "../model/CommunicationController"
+import UtilityStorageManager from "../model/UtilityStorageManager"
+import Followed from "../model/Followed"
+import {getUserPicture} from "./PictureHandler"
 
 export default class FollowHandler {
     static instance = null
     #followed = null
+
     constructor() {
         this.#followed = new Followed()
     }
@@ -33,7 +34,6 @@ export default class FollowHandler {
         UtilityStorageManager.getSid().then(sid => {
             CommunicationController.unfollow(sid, uid).then(() => {
                 this.#followed.remove(uid)
-                console.log("fine")
             }).catch(() => {
                 onError()
             })

@@ -1,19 +1,18 @@
-import * as Location from 'expo-location';
-import {LocationAccuracy} from "expo-location";
+import * as Location from 'expo-location'
 
 export async function getCurrentPosition() {
-    let havePermission = false;
-    const grantedPermission = await Location.getForegroundPermissionsAsync();
+    let havePermission = false
+    const grantedPermission = await Location.getForegroundPermissionsAsync()
     if (grantedPermission.status === "granted") {
-        havePermission = true;
+        havePermission = true
     } else {
-        const permissionResponse = await Location.requestForegroundPermissionsAsync();
+        const permissionResponse = await Location.requestForegroundPermissionsAsync()
         if (permissionResponse.status === "granted") {
-            havePermission = true;
+            havePermission = true
         }
     }
     if (havePermission) {
-        let location = await Location.getLastKnownPositionAsync();
+        let location = await Location.getLastKnownPositionAsync()
         if (location === null) {
             location = await Location.getCurrentPositionAsync()
         }

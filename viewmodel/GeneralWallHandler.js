@@ -1,14 +1,14 @@
-import TwokBuffer from "../model/TwokBuffer";
-import {getGeneralTwoks} from "./TwokHandler";
-import CommunicationController from "../model/CommunicationController";
-import UtilityStorageManager from "../model/UtilityStorageManager";
+import TwokBuffer from "../model/TwokBuffer"
+import {getGeneralTwoks} from "./TwokHandler"
+import CommunicationController from "../model/CommunicationController"
+import UtilityStorageManager from "../model/UtilityStorageManager"
 
 export default class GeneralWallHandler {
     static instance = null
     #generalTwoks = null
 
     constructor() {
-        this.#generalTwoks = new TwokBuffer();
+        this.#generalTwoks = new TwokBuffer()
     }
 
     static getGeneralWallInstance() {
@@ -19,31 +19,31 @@ export default class GeneralWallHandler {
     }
 
     getGeneralData() {
-        return this.#generalTwoks.getImmutableData();
+        return this.#generalTwoks.getImmutableData()
     }
 
     async initGeneralWall(tidSequence) {
-        let sid = await UtilityStorageManager.getSid();
+        let sid = await UtilityStorageManager.getSid()
         await this.emptyGeneralBuffer()
         let elements
         if (tidSequence !== -1) {
-            elements = await getGeneralTwoks(tidSequence);
+            elements = await getGeneralTwoks(tidSequence)
         } else {
-            elements = await getGeneralTwoks();
+            elements = await getGeneralTwoks()
         }
 
         elements.map(async (element) => {
-            element.followed = (await CommunicationController.isFollowed(sid, element.uid)).followed;
-        });
+            element.followed = (await CommunicationController.isFollowed(sid, element.uid)).followed
+        })
         for (let element of elements) {
-            this.#generalTwoks.add(element);
+            this.#generalTwoks.add(element)
         }
     }
 
     async updateGeneralBuffer(tidSequence) {
         let elements
         if (this.#generalTwoks.getLength() > 32) {
-            return true;
+            return true
         }
 
         if (tidSequence !== -1) {
@@ -53,7 +53,7 @@ export default class GeneralWallHandler {
         }
 
         for (let element of elements) {
-            this.#generalTwoks.add(element);
+            this.#generalTwoks.add(element)
         }
         return false
     }
@@ -65,7 +65,7 @@ export default class GeneralWallHandler {
         } else {
             newTwoks = await getGeneralTwoks()
         }
-        this.#generalTwoks.reset(newTwoks);
+        this.#generalTwoks.reset(newTwoks)
     }
 
     async emptyGeneralBuffer() {
