@@ -31,7 +31,7 @@ function UserWall(props) {
 
     useEffect(() => {
         if (listUpdater === 0) {
-            UserWallHandler.getFollowedInstance().initUserWall(uid).then(() => {
+            UserWallHandler.getUserWallInstance().initUserWall(uid).then(() => {
                 setListUpdater(listUpdater + 1)
             }).catch(() => {
                 Alert.alert("Error", "Is not possible to initialize user wall");
@@ -41,7 +41,7 @@ function UserWall(props) {
 
     useEffect(() => {
         if (!listrefresher) {
-            UserWallHandler.getFollowedInstance().resetUserBuffer().then(() => {
+            UserWallHandler.getUserWallInstance().resetUserBuffer().then(() => {
                 setListrefresher(true);
             }).catch(() => {
                 Alert.alert("Error", "Is not possible to retrieve twoks.");
@@ -67,7 +67,7 @@ function UserWall(props) {
                     <FlatList
                         style={style.listStyle}
                         extraData={listrefresher}
-                        data={UserWallHandler.getFollowedInstance().getUserData()}
+                        data={UserWallHandler.getUserWallInstance().getUserData()}
                         renderItem={(twok) => {
                             return <UserTwokRow data={twok.item}
                                                 navigate={() => {
@@ -90,7 +90,7 @@ function UserWall(props) {
                         snapToAlignment="start"
                         decelerationRate="fast"
                         onEndReached={(info) => {
-                            UserWallHandler.getFollowedInstance().updateUserBuffer(uid).then(() => {
+                            UserWallHandler.getUserWallInstance().updateUserBuffer(uid).then(() => {
                                 setListUpdater(listUpdater + 1);
                             }).catch(() => {
                                 Alert.alert("Connection Error", "Is not possible to retrieve data from server, check your internet connection");
