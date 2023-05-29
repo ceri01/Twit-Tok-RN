@@ -238,6 +238,7 @@ function AddTwok({route}) {
                                 latitudeData.current,
                                 longitudeData.current).then(() => {
                                 resetPageState()
+                                Alert.alert("Success!", "Twok sent")
                             }).catch(() => {
                                 Alert.alert("Connection error.", "Is not possible to send twok, check your connection")
                             })
