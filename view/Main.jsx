@@ -14,6 +14,7 @@ const WindowWidth = Dimensions.get("window").width
 const StatusBarHeight = StatusBar.currentHeight
 
 function Main({navigation}) {
+    // this hook prevent to come back to previous page (prevent to come back to register page)
     React.useEffect(() => navigation.addListener('beforeRemove', (event) => {
             event.preventDefault()
         }),
