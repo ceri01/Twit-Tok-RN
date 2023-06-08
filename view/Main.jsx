@@ -13,7 +13,12 @@ const WindowHeight = Dimensions.get("window").height
 const WindowWidth = Dimensions.get("window").width
 const StatusBarHeight = StatusBar.currentHeight
 
-function Main() {
+function Main({navigation}) {
+    React.useEffect(() => navigation.addListener('beforeRemove', (event) => {
+            event.preventDefault()
+        }),
+        [navigation]
+    );
     return (
         <SafeAreaProvider>
             <Tab.Navigator
