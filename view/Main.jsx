@@ -6,12 +6,17 @@ import {SafeAreaProvider} from "react-native-safe-area-context"
 import {Dimensions, StatusBar} from "react-native"
 import Walls from "./Walls"
 import ProfileStack from "./ProfileStack"
+import {Platform} from "react-native";
+import Constants from "expo-constants";
 
 const Tab = createBottomTabNavigator()
 
 const WindowHeight = Dimensions.get("window").height
 const WindowWidth = Dimensions.get("window").width
-const StatusBarHeight = StatusBar.currentHeight
+let StatusBarHeight = StatusBar.currentHeight
+if (Platform.OS === 'ios') {
+    StatusBarHeight = Constants.statusBarHeight
+}
 
 function Main({navigation}) {
     // this hook prevent to come back to previous page (prevent to come back to register page)
